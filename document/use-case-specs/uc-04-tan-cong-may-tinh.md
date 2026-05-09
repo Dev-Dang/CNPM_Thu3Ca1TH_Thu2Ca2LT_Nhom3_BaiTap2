@@ -2,10 +2,10 @@
 
 ## Lịch sử chỉnh sửa
 
-| Phiên bản | Ngày | Tác giả | Mô tả |
-|-----------|------|---------|-------|
-| 1.0 | 27/04/2026 | Đặng Văn Trung | Phiên bản đầu tiên — sinh từ URD v2.0 (US-08) |
-| 1.1 | 08/05/2026 | Đặng Văn Trung | Thêm bước 4.3 (kiểm tra hợp lệ) và bước 4.7 (chờ 500ms trước chuyển lượt) vào Normal Flow; thêm bước 4.A3.2 (chờ 500ms trước UC-05); cập nhật Post-condition 3. |
+| Phiên bản | Ngày       | Tác giả | Mô tả                                                                                                                        |
+|-----------|------------|---------|------------------------------------------------------------------------------------------------------------------------------|
+| 1.0       | 27/04/2026 | Đặng Văn Trung | Phiên bản đầu tiên — sinh từ URD v2.0 (US-08)                                                                                |
+| 1.2       | 09/05/2026 | Đặng Văn Trung | Bước 4.7 (chờ 500ms trước chuyển lượt) vào Normal Flow; thêm bước 4.A3.2 (chờ 500ms trước UC-05); cập nhật Post-condition 3. |
 
 ## 1. Giới thiệu
 
@@ -41,23 +41,22 @@ Máy tính tự động thực hiện lượt tấn công lên bảng của `Pla
 
 > Luồng chính khi Máy tính chọn ô hợp lệ trên bảng `Player` và kết quả là trượt.
 
-| Bước | Actor | Hành động / Phản hồi |
-|------|-------|----------------------|
+| Bước    | Actor | Hành động / Phản hồi |
+|---------|-------|----------------------|
 | **4.1** | Hệ thống | Nhận tín hiệu bắt đầu lượt Máy tính sau khi UC-03 hoàn tất. |
 | **4.2** | Máy tính | Chọn một ô chưa bị tấn công trên bảng `Player` theo logic cơ bản. |
-| **4.3** | Hệ thống | Kiểm tra tính hợp lệ của ô được chọn → kết quả hợp lệ. *\[EP: invalid-cell\] Nếu phát hiện lỗi → 4.E1.* |
-| **4.4** | Hệ thống | Xác định kết quả tấn công — ô không chứa tàu của `Player` → kết quả "Trượt" (Miss). |
-| **4.5** | Hệ thống | Đánh dấu ô vừa bị tấn công bằng ký hiệu Miss trên bảng `Player`, hiển thị rõ ràng để `Player` theo dõi. |
-| **4.6** | Hệ thống | Kiểm tra điều kiện kết thúc ván — còn ít nhất một tàu `Player` chưa bị nhấn chìm → chưa kết thúc. *\[EP: end-game\] Nếu toàn bộ tàu `Player` bị nhấn chìm → kích hoạt UC-05 (4.A3).* |
-| **4.7** | Hệ thống | Chờ tối thiểu 500ms để `Player` quan sát kết quả lượt tấn công trước khi chuyển lượt. |
-| **4.8** | Hệ thống | Chuyển sang lượt `Player`, kích hoạt UC-03. |
-| **4.9** | Hệ thống | Kết thúc. |
+| **4.3** | Hệ thống | Xác định kết quả tấn công — ô không chứa tàu của `Player` → kết quả "Trượt" (Miss). |
+| **4.4** | Hệ thống | Đánh dấu ô vừa bị tấn công bằng ký hiệu Miss trên bảng `Player`, hiển thị rõ ràng để `Player` theo dõi. |
+| **4.5** | Hệ thống | Kiểm tra điều kiện kết thúc ván — còn ít nhất một tàu `Player` chưa bị nhấn chìm → chưa kết thúc. *\[EP: end-game\] Nếu toàn bộ tàu `Player` bị nhấn chìm → kích hoạt UC-05 (4.A3).* |
+| **4.6** | Hệ thống | Chờ tối thiểu 500ms để `Player` quan sát kết quả lượt tấn công trước khi chuyển lượt. |
+| **4.7** | Hệ thống | Chuyển sang lượt `Player`, kích hoạt UC-03. |
+| **4.8** | Hệ thống | Kết thúc. |
 
 ## 7. Luồng thay thế (Alternate Flows)
 
 ### 7.1. Luồng thay thế 4.A1 — Máy tính tấn công trúng, tàu chưa bị nhấn chìm (Hit)
 
-> Rẽ nhánh từ bước **4.4** — Áp dụng khi ô Máy tính chọn có tàu của `Player` nhưng tàu chưa bị nhấn chìm hoàn toàn.
+> Rẽ nhánh từ bước **4.3** — Áp dụng khi ô Máy tính chọn có tàu của `Player` nhưng tàu chưa bị nhấn chìm hoàn toàn.
 
 | Bước | Actor | Hành động / Phản hồi |
 |------|-------|----------------------|
@@ -67,7 +66,7 @@ Máy tính tự động thực hiện lượt tấn công lên bảng của `Pla
 
 ### 7.2. Luồng thay thế 4.A2 — Máy tính nhấn chìm tàu (Sunk)
 
-> Rẽ nhánh từ bước **4.4** — Áp dụng khi lượt tấn công của Máy tính hoàn thành việc nhấn chìm một tàu của `Player`.
+> Rẽ nhánh từ bước **4.3** — Áp dụng khi lượt tấn công của Máy tính hoàn thành việc nhấn chìm một tàu của `Player`.
 
 | Bước | Actor | Hành động / Phản hồi |
 |------|-------|----------------------|
@@ -77,7 +76,8 @@ Máy tính tự động thực hiện lượt tấn công lên bảng của `Pla
 
 ### 7.3. Luồng thay thế 4.A3 — Toàn bộ tàu Player bị nhấn chìm (Player thua)
 
-> Rẽ nhánh từ bước **4.6** *(EP: end-game)* — Áp dụng khi lượt tấn công của Máy tính làm toàn bộ tàu của `Player` bị nhấn chìm.
+> Rẽ nhánh từ bước **4.5** *(EP: end-game)* — Áp dụng khi lượt tấn công của Máy tính làm toàn bộ tàu của `Player` bị 
+> nhấn chìm.
 
 | Bước | Actor | Hành động / Phản hồi |
 |------|-------|----------------------|
@@ -90,7 +90,8 @@ Máy tính tự động thực hiện lượt tấn công lên bảng của `Pla
 
 ### 8.1. Ngoại lệ 4.E1 — Lỗi logic chọn ô tấn công của Máy tính
 
-> Rẽ nhánh từ bước **4.3** — Áp dụng khi hệ thống gặp lỗi trong quá trình kiểm tra tính hợp lệ của ô được Máy tính chọn (ví dụ: lỗi runtime hoặc không tìm được ô hợp lệ do lỗi trạng thái).
+> Rẽ nhánh từ bước **4.2** — Áp dụng khi hệ thống gặp lỗi trong quá trình kiểm tra tính hợp lệ của ô được Máy tính 
+> chọn (ví dụ: lỗi runtime hoặc không tìm được ô hợp lệ do lỗi trạng thái).
 
 | Bước | Actor | Hành động / Phản hồi |
 |------|-------|----------------------|
