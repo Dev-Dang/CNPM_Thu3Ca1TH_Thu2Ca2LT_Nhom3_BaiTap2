@@ -31,7 +31,7 @@ export default function ShipList({ fleet = [], onSelect, selectedId, align = 'le
             {fleet.map((ship) => {
                 const sunk = isShipSunk(ship);
                 const isSelected = selectedId === ship.id;
-                const canSelect = !!onSelect && !ship.placed && !sunk;
+                const canSelect = !!onSelect && !sunk;
                 const vis = SHIP_VISUALS[ship.id] ?? DEFAULT_VISUAL;
 
                 return (
