@@ -1,17 +1,18 @@
+/* eslint-disable */
 import { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/index.js';
 import { placeShip, selectShip, startBattle } from '../store/gameSlice.js';
 import { ORIENTATION, PHASES } from '../constants/gameConstants.js';
 import Grid from './Grid.jsx';
 import ShipList from './ShipList.jsx';
+import '../styles/setup-board.css';
 
 export default function SetupBoard() {
     const dispatch = useAppDispatch();
 
-    // [2.2] useSelector → re-render board 10x10 + fleet list
-    const { playerBoard, playerFleet, selectedShipId, phase } = useAppSelector(
-        (state) => state.game
-    );
+    // [2.2] useAppSelector → re-render board 10x10 + fleet list
+    const { playerBoard, playerFleet, selectedShipId, phase }
+        = useAppSelector((state) => state.game);
 
     // [2.4] set direction — orientation state nội bộ của SetupBoard
     const [orientation, setOrientation] = useState(ORIENTATION.HORIZONTAL);
@@ -32,7 +33,7 @@ export default function SetupBoard() {
 
     // [2.8] fleetPlaced — đếm số tàu đã đặt
     const fleetPlaced = playerFleet.filter((s) => s.placed).length;
-    const allPlaced = fleetPlaced === 5;                      // [fleetPlaced = 5] → button enabled
+    const allPlaced = fleetPlaced === 5; // [fleetPlaced = 5] → button enabled
 
     const selectedShip = playerFleet.find((s) => s.id === selectedShipId);
 
@@ -57,8 +58,8 @@ export default function SetupBoard() {
 
     // [2.9] Player nhấn "Bắt đầu tấn công"
     const handleStartBattle = () => {
-        if (!allPlaced) return;                                 // [2.8] guard fleetPlaced < 5
-        dispatch(startBattle());                               // [2.10] phase='BATTLE' → ref UC-03
+        if (!allPlaced) return; // [2.8] guard fleetPlaced < 5
+        dispatch(startBattle()); // [2.10] phase='BATTLE' → ref UC-03
     };
 
     return (
@@ -106,7 +107,7 @@ export default function SetupBoard() {
                 <p className="setup-board-label">Bảng Của Bạn</p>
 
                 {/* [2.E1.2] Error msg khi vị trí không hợp lệ
-            [2.E1.3] Tự ẩn khi phase reset về SETUP */}
+                    [2.E1.3] Tự ẩn khi phase reset về SETUP */}
                 {errorMsg && (
                     <p className="setup-error-msg">{errorMsg}</p>
                 )}

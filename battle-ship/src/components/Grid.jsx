@@ -1,4 +1,5 @@
 import Cell from './Cell.jsx';
+import '../styles/grid.css';
 
 const COL_LABELS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 

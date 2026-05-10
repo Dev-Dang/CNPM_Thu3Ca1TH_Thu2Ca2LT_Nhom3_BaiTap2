@@ -2,15 +2,15 @@
 // boardUtils.js — UC-02 (Đặt Tàu)
 // ================================================================
 
-import { BOARD_SIZE, CELL_STATE } from '../constants/gameConstants.js';
+import {BOARD_SIZE, CELL_STATE} from '../constants/gameConstants.js';
 
 /**
  * Tạo bảng 10×10 rỗng (RUL-01). Đã implement — không cần thay đổi.
  * @returns {Cell[][]}
  */
 export function createBoard() {
-    return Array.from({ length: BOARD_SIZE }, (_, row) =>
-        Array.from({ length: BOARD_SIZE }, (_, col) => ({
+    return Array.from({length: BOARD_SIZE}, (_, row) =>
+        Array.from({length: BOARD_SIZE}, (_, col) => ({
             row,
             col,
             state: CELL_STATE.EMPTY,
@@ -28,7 +28,7 @@ export function createBoard() {
  * @returns {{ row: number, col: number }[]}
  */
 export function getShipPositions(row, col, size, orientation) {
-    return Array.from({ length: size }, (_, i) => ({
+    return Array.from({length: size}, (_, i) => ({
         row: orientation === 'V' ? row + i : row,
         col: orientation === 'H' ? col + i : col,
     }));
@@ -82,7 +82,7 @@ export function placeShipOnBoard(board, row, col, size, orientation, shipId) {
     const positions = getShipPositions(row, col, size, orientation);
 
     // [2.6] Deep copy board (immutable)
-    const newBoard = board.map((r) => r.map((cell) => ({ ...cell })));
+    const newBoard = board.map((r) => r.map((cell) => ({...cell})));
 
     for (const pos of positions) {
         newBoard[pos.row][pos.col] = {
@@ -92,7 +92,7 @@ export function placeShipOnBoard(board, row, col, size, orientation, shipId) {
         };
     }
 
-    return { board: newBoard, positions };                   // [2.6] → newBoard
+    return {board: newBoard, positions};                   // [2.6] → newBoard
 }
 
 /**
@@ -103,7 +103,7 @@ export function placeShipOnBoard(board, row, col, size, orientation, shipId) {
  */
 export function removeShipFromBoard(board, positions) {
     // Deep copy board (immutable)
-    const newBoard = board.map((r) => r.map((cell) => ({ ...cell })));
+    const newBoard = board.map((r) => r.map((cell) => ({...cell})));
 
     for (const pos of positions) {
         newBoard[pos.row][pos.col] = {
@@ -138,7 +138,7 @@ export function isCellAlreadyAttacked(board, row, col) {
  * @returns {{ board: Cell[][], fleet: Ship[] }}
  */
 export function placeFleetRandomly(board, fleet) {
-    let currentBoard = board.map((r) => r.map((cell) => ({ ...cell })));
+    let currentBoard = board.map((r) => r.map((cell) => ({...cell})));
     const orientations = ['H', 'V'];
 
     // [2.1] Lặp qua từng tàu trong fleet, thử ngẫu nhiên cho đến khi đặt được
@@ -158,12 +158,12 @@ export function placeFleetRandomly(board, fleet) {
                 positions = result.positions;
                 placed = true;
 
-                return { ...ship, orientation, positions, placed: true };
+                return {...ship, orientation, positions, placed: true};
             }
         }
 
-        return { ...ship, positions, placed: true };
+        return {...ship, positions, placed: true};
     });
 
-    return { board: currentBoard, fleet: placedFleet };     // [2.1] → { computerBoard, computerFleet }
+    return {board: currentBoard, fleet: placedFleet};     // [2.1] → { computerBoard, computerFleet }
 }

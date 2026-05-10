@@ -1,3 +1,5 @@
+import '../styles/cell.css';
+
 const STATE_CLASS = {
     empty: 'cell-empty',
     ship:  'cell-ship',

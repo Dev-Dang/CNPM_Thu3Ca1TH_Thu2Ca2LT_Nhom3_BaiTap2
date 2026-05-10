@@ -5,6 +5,7 @@ export const PHASES = {
   PLAYER_TURN: 'PLAYER_TURN',
   CPU_TURN: 'CPU_TURN',
   GAME_OVER: 'GAME_OVER',
+  INVALID_PLACEMENT: 'INVALID_PLACEMENT'
 };
 
 export const CELL_STATE = {
@@ -21,15 +22,15 @@ export const ORIENTATION = {
 };
 
 export const SHIP_TYPES = {
-  CARRIER:    { id: 'carrier',    name: 'Tàu Sân Bay',     size: 5 },
-  BATTLESHIP: { id: 'battleship', name: 'Thiết Giáp Hạm',  size: 4 },
-  CRUISER:    { id: 'cruiser',    name: 'Tàu Tuần Dương',  size: 3 },
-  SUBMARINE:  { id: 'submarine',  name: 'Tàu Ngầm',        size: 3 },
-  DESTROYER:  { id: 'destroyer',  name: 'Tàu Khu Trục',    size: 2 },
+  CARRIER: {id: 'carrier', name: 'Tàu Sân Bay', size: 5},
+  BATTLESHIP: {id: 'battleship', name: 'Thiết Giáp Hạm', size: 4},
+  CRUISER: {id: 'cruiser', name: 'Tàu Tuần Dương', size: 3},
+  SUBMARINE: {id: 'submarine', name: 'Tàu Ngầm', size: 3},
+  DESTROYER: {id: 'destroyer', name: 'Tàu Khu Trục', size: 2},
 };
 
 export const WINNER = {
-  PLAYER:   'player',
+  PLAYER: 'player',
   COMPUTER: 'computer',
 };
 

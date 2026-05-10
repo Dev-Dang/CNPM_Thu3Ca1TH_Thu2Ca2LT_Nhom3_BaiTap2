@@ -1,4 +1,5 @@
 import { isShipSunk } from '../utils/fleetConfig.js';
+import '../styles/ship-list.css';
 
 const SHIP_VISUALS = {
     carrier:    { emoji: '✈️', color: '#1e40af', bgLight: 'rgba(30,64,175,0.12)',   bgPlaced: 'rgba(30,64,175,0.30)'   },
