@@ -1,0 +1,45 @@
+.start-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex: 1;
+  padding: 60px 0;
+}
+
+.start-icon {
+  font-size: 52px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.start-title {
+  font-size: 44px;
+  font-weight: 900;
+  letter-spacing: 6px;
+  color: #2d3a8c;
+}
+
+.start-subtitle {
+  font-size: 15px;
+  color: #7888b0;
+}
+
+.start-btn {
+  margin-top: 20px;
+  padding: 14px 44px;
+  font-size: 16px;
+  font-weight: 700;
+  background: #4361ee;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(67, 97, 238, 0.35);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.start-btn:hover {
+  background: #3451d1;
+  box-shadow: 0 4px 18px rgba(67, 97, 238, 0.5);
+}
