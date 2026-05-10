@@ -1,6 +1,7 @@
+/* eslint-disable no-unused-vars */
 import { createSlice } from '@reduxjs/toolkit';
-import { PHASES } from '../constants/gameConstants.js';
-//state<-initial
+
+// 1.4a Trạng thái game ban đầu
 const initialState = {
   phase: null,
   playerBoard: null,
@@ -8,7 +9,8 @@ const initialState = {
   playerFleet: [],
   computerFleet: [],
   selectedShipId: null,
-  winner: null, //1.E1.1: Trạng thái lưu trữ lỗi hệ thống
+  winner: null,
+  error: null, // 1.E1.1: Trạng thái lưu trữ lỗi hệ thống
 };
 
 const gameSlice = createSlice({
@@ -19,16 +21,18 @@ const gameSlice = createSlice({
      * UC-01: Khởi tạo ván chơi mới.
      */
     startGame(state) {
-//          PHASES = SETUP
-            try{
-                state.phase = PHASES.SETUP;
-                state.error = null;//reset lỗi nếu không thành công
-            } catch(error){
-            //1.E1.1 ERR js runtime/ out of memory - stateUpdate(error)
-            state.error = "không thể bắt đầu ván chơi. vui lòng tải lại trạng thái trang";
-            state.phase = null; //reset state
-            }
-        },
+        try {
+            // 1.4b gán PHASE = SETUP
+            state.phase = PHASES.SETUP;
+            state.error = null; // Reset lỗi nếu thành công
+        } catch (error) {
+            // 1.E1.1 ERR Javascript runtime / Out of memory -> stateUpdated(error)
+            state.error = "Không thể bắt đầu ván chơi. Vui lòng tải lại trang.";
+            state.phase = null; // Reset state
+        }
+
+	// 1.6 Kích hoạt UC-02 (phase = SETUP)
+    },
 
     /**
      * UC-02: Chọn tàu từ danh sách để đặt lên bảng.
@@ -76,6 +80,7 @@ const gameSlice = createSlice({
 
 export const {
   startGame,
+  setGameError,
   selectShip,
   placeShip,
   startBattle,
