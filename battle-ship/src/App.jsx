@@ -9,6 +9,8 @@ export default function App() {
   return (
     <div className="app">
       <StatusBar />
+
+    {/*  1.1c render(<StartScreen />)  */}
       {phase === null && <StartScreen />}
     </div>
   );

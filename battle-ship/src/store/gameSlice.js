@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-
+import { PHASES } from '../constants/gameConstants.js';
+//state<-initial
 const initialState = {
   phase: null,
   playerBoard: null,
@@ -7,7 +8,7 @@ const initialState = {
   playerFleet: [],
   computerFleet: [],
   selectedShipId: null,
-  winner: null,
+  winner: null, //1.E1.1: Trạng thái lưu trữ lỗi hệ thống
 };
 
 const gameSlice = createSlice({
@@ -17,9 +18,17 @@ const gameSlice = createSlice({
     /**
      * UC-01: Khởi tạo ván chơi mới.
      */
-    startGame() {
-      // TODO: UC-01 — Implement
-    },
+    startGame(state) {
+//          PHASES = SETUP
+            try{
+                state.phase = PHASES.SETUP;
+                state.error = null;//reset lỗi nếu không thành công
+            } catch(error){
+            //1.E1.1 ERR js runtime/ out of memory - stateUpdate(error)
+            state.error = "không thể bắt đầu ván chơi. vui lòng tải lại trạng thái trang";
+            state.phase = null; //reset state
+            }
+        },
 
     /**
      * UC-02: Chọn tàu từ danh sách để đặt lên bảng.
