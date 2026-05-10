@@ -4,15 +4,15 @@ import '../styles/start-screen.css';
 
 export default function StartScreen() {
     const dispatch = useAppDispatch();
-    const error = useAppSelector((state) => state.game.error);
+    const errorMsg = useAppSelector((state) => state.game.errorMessage);
 
     return (
         <>
             {/* 1.E1.2 toast: "Không thể bắt đầu ván chơi" */}
-            {error &&
+            {errorMsg &&
                 <div className="error-screen">
                     <div className="error-message">
-                        <p>Không thể bắt đầu ván chơi</p>
+                        <p>${errorMsg}</p>
                         <button className="error-reload-btn"
                                 onClick={() => window.location.reload()}>
                             Tải lại trang
