@@ -5,6 +5,7 @@
 | Phiên bản | Ngày | Tác giả | Mô tả |
 |-----------|------|---------|-------|
 | 1.0 | 27/04/2026 | Cao Văn Vượng | Phiên bản đầu tiên — sinh từ URD v2.0 (US-09, US-10) |
+| 1.1 | 13/05/2026 | Cao Văn Vượng | Cập nhật đánh số các bước; Thêm bước 0 vào luồng chính và luồng thay thế để xác định tiền điều kiện và trigger |
 
 ## 1. Giới thiệu
 
@@ -42,29 +43,31 @@ Hệ thống tự động phát hiện điều kiện kết thúc sau khi xử l
 
 | Bước | Actor | Hành động / Phản hồi |
 |------|-------|----------------------|
-| **5.1** | Hệ thống | Phát hiện toàn bộ tàu của Máy tính đã bị nhấn chìm sau lượt tấn công của `Player` (từ UC-03). |
-| **5.2** | Hệ thống | Xác định kết quả — `Player` thắng. |
-| **5.3** | Hệ thống | Hiển thị thông báo kết thúc với text label "THẮNG" và lý do "Toàn bộ tàu đối thủ đã bị nhấn chìm." trên màn hình hiện tại, không cần thao tác thêm từ `Player`. |
-| **5.4** | Hệ thống | Vô hiệu hóa toàn bộ tương tác tấn công — `Player` không thể click thêm ô trên bảng đối thủ. |
-| **5.5** | Hệ thống | Tiết lộ toàn bộ vị trí hạm đội Máy tính trên bảng để `Player` xem lại. |
-| **5.6** | Hệ thống | Hiển thị nút "Chơi lại" để `Player` bắt đầu ván mới. |
-| **5.7** | Hệ thống | Kết thúc. |
+| **5.1.0** | Hệ thống |Ván chơi đang trong lượt tấn công và hệ thống ghi nhận tàu cuối cùng của máy tính bị nhấn trìm từ  UC-03 |
+| **5.1.1** | Hệ thống | Phát hiện toàn bộ tàu của Máy tính đã bị nhấn chìm sau lượt tấn công của `Player` (từ UC-03). |
+| **5.1.2** | Hệ thống | Xác định kết quả — `Player` thắng. |
+| **5.1.3** | Hệ thống | Hiển thị thông báo kết thúc với text label "THẮNG" và lý do "Toàn bộ tàu đối thủ đã bị nhấn chìm." trên màn hình hiện tại, không cần thao tác thêm từ `Player`. |
+| **5.1.4** | Hệ thống | Vô hiệu hóa toàn bộ tương tác tấn công — `Player` không thể click thêm ô trên bảng đối thủ. |
+| **5.1.5** | Hệ thống | Tiết lộ toàn bộ vị trí hạm đội Máy tính trên bảng để `Player` xem lại. |
+| **5.1.6** | Hệ thống | Hiển thị nút "Chơi lại" để `Player` bắt đầu ván mới. |
+| **5.1.7** | Hệ thống | Kết thúc. |
 
 ## 7. Luồng thay thế (Alternate Flows)
 
-### 7.1. Luồng thay thế 5.A1 — Player thua
+### 7.1. Luồng thay thế 5.2 — Player thua
 
 > Rẽ nhánh từ bước **5.1** — Áp dụng khi điều kiện kích hoạt là toàn bộ tàu của `Player` bị nhấn chìm (từ UC-04), thay vì toàn bộ tàu Máy tính bị nhấn chìm.
 
 | Bước | Actor | Hành động / Phản hồi |
 |------|-------|----------------------|
-| **5.A1.1** | Hệ thống | Phát hiện toàn bộ tàu của `Player` đã bị nhấn chìm sau lượt tấn công của Máy tính (từ UC-04). |
-| **5.A1.2** | Hệ thống | Xác định kết quả — `Player` thua. |
-| **5.A1.3** | Hệ thống | Hiển thị thông báo kết thúc với text label "THUA" và lý do "Toàn bộ tàu của bạn đã bị nhấn chìm." trên màn hình hiện tại. |
-| **5.A1.4** | Hệ thống | Vô hiệu hóa toàn bộ tương tác tấn công. |
-| **5.A1.5** | Hệ thống | Tiết lộ toàn bộ vị trí hạm đội Máy tính trên bảng để `Player` xem lại. |
-| **5.A1.6** | Hệ thống | Hiển thị nút "Chơi lại" để `Player` bắt đầu ván mới. |
-| **5.A1.7** | Hệ thống | Kết thúc. |
+| **5.2.0** | Hệ thống | Ván chơi đang trong lượt tấn công của Máy tính và hệ thống ghi nhận tàu cuối cùng của Player bị nhấn chìm từ UC-04. |
+| **5.2.1** | Hệ thống | Phát hiện toàn bộ tàu của `Player` đã bị nhấn chìm sau lượt tấn công của Máy tính (từ UC-04). |
+| **5.2.2** | Hệ thống | Xác định kết quả — `Player` thua. |
+| **5.2.3** | Hệ thống | Hiển thị thông báo kết thúc với text label "THUA" và lý do "Toàn bộ tàu của bạn đã bị nhấn chìm." trên màn hình hiện tại. |
+| **5.2.4** | Hệ thống | Vô hiệu hóa toàn bộ tương tác tấn công. |
+| **5.2.5** | Hệ thống | Tiết lộ toàn bộ vị trí hạm đội Máy tính trên bảng để `Player` xem lại. |
+| **5.2.6** | Hệ thống | Hiển thị nút "Chơi lại" để `Player` bắt đầu ván mới. |
+| **5.2.7** | Hệ thống | Kết thúc. |
 
 ## 8. Luồng ngoại lệ (Exception Flows)
 
