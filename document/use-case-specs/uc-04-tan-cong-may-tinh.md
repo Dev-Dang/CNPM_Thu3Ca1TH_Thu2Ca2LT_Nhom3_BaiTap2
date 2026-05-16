@@ -2,20 +2,21 @@
 
 ## Lịch sử chỉnh sửa
 
-| Phiên bản | Ngày       | Tác giả | Mô tả                                                                                                                        |
-|-----------|------------|---------|------------------------------------------------------------------------------------------------------------------------------|
-| 1.0       | 27/04/2026 | Đặng Văn Trung | Phiên bản đầu tiên — sinh từ URD v2.0 (US-08)                                                                                |
+| Phiên bản | Ngày       | Tác giả | Mô tả |
+|-----------|------------|---------|-------|
+| 1.0       | 27/04/2026 | Đặng Văn Trung | Phiên bản đầu tiên — sinh từ URD v2.0 (US-08) |
 | 1.2       | 09/05/2026 | Đặng Văn Trung | Bước 4.7 (chờ 500ms trước chuyển lượt) vào Normal Flow; thêm bước 4.A3.2 (chờ 500ms trước UC-05); cập nhật Post-condition 3. |
+| 1.3       | 16/05/2026 | Đặng Văn Trung | Thêm Step 0 (4.1.0) cho Luồng chính xác định điểm bắt đầu UC-04; tách thành 2 step riêng (4.1.0 — hệ thống cập nhật state, 4.1.1 — Máy tính nhận lượt); đánh số lại toàn bộ các bước theo cú pháp 4.[Index of Flow].[Step]; thay thế ký hiệu cũ 4.A1/4.A2/4.A3/4.E1 bằng 4.2/4.3/4.4/4.5; cập nhật tất cả tham chiếu bước trong luồng thay thế và ngoại lệ. |
 
 ## 1. Giới thiệu
 
-| Trường | Nội dung |
-|--------|----------|
-| Use Case ID | UC-04 |
-| Tên Use Case | Thực Hiện Lượt Tấn Công (Máy Tính) |
+| Trường | Nội dung                                                                                                     |
+|--------|--------------------------------------------------------------------------------------------------------------|
+| Use Case ID | UC-04                                                                                                        |
+| Tên Use Case | Thực Hiện Lượt Tấn Công (Máy Tính)                                                                           |
 | Độ ưu tiên | MUST - Phải có, vì máy tính phải thực hiện lượt tấn công để duy trì vòng lặp luân phiên sau lượt của Player. |
-| Actor chính | Máy tính |
-| Actor phụ | Không có |
+| Actor chính | Máy tính                                                                                                     |
+| Actor phụ | Không có                                                                                                     |
 
 ## 2. Mô tả Use Case
 
@@ -41,63 +42,62 @@ Máy tính tự động thực hiện lượt tấn công lên bảng của `Pla
 
 > Luồng chính khi Máy tính chọn ô hợp lệ trên bảng `Player` và kết quả là trượt.
 
-| Bước    | Actor | Hành động / Phản hồi |
-|---------|-------|----------------------|
-| **4.1** | Hệ thống | Nhận tín hiệu bắt đầu lượt Máy tính sau khi UC-03 hoàn tất. |
-| **4.2** | Máy tính | Chọn một ô chưa bị tấn công trên bảng `Player` theo logic cơ bản. |
-| **4.3** | Hệ thống | Xác định kết quả tấn công — ô không chứa tàu của `Player` → kết quả "Trượt" (Miss). |
-| **4.4** | Hệ thống | Đánh dấu ô vừa bị tấn công bằng ký hiệu Miss trên bảng `Player`, hiển thị rõ ràng để `Player` theo dõi. |
-| **4.5** | Hệ thống | Kiểm tra điều kiện kết thúc ván — còn ít nhất một tàu `Player` chưa bị nhấn chìm → chưa kết thúc. *\[EP: end-game\] Nếu toàn bộ tàu `Player` bị nhấn chìm → kích hoạt UC-05 (4.A3).* |
-| **4.6** | Hệ thống | Chờ tối thiểu 500ms để `Player` quan sát kết quả lượt tấn công trước khi chuyển lượt. |
-| **4.7** | Hệ thống | Chuyển sang lượt `Player`, kích hoạt UC-03. |
-| **4.8** | Hệ thống | Kết thúc. |
+| Bước      | Actor | Hành động / Phản hồi                                                                                                                                                                             |
+|-----------|-------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **4.1.0** | Hệ thống | UC-03 hoàn tất mà không kết thúc ván chơi → hệ thống cập nhật trạng thái lượt sang Máy tính.                                                                                                     |
+| **4.1.1** | Máy tính | Nhận lượt từ hệ thống; bắt đầu xử lý lượt tấn công.                                                                                                                                              |
+| **4.1.2** | Máy tính | Chọn một ô chưa bị tấn công trên bảng `Player` theo logic cơ bản.                                                                                                                                |
+| **4.1.3** | Hệ thống | Xác định kết quả tấn công — ô không chứa tàu của `Player` → kết quả "Trượt" (Miss).                                                                                                              |
+| **4.1.4** | Hệ thống | Đánh dấu ô vừa bị tấn công bằng ký hiệu Miss trên bảng `Player`, hiển thị rõ ràng để `Player` theo dõi.                                                                                          |
+| **4.1.5** | Hệ thống | Kiểm tra điều kiện kết thúc ván — còn ít nhất một tàu `Player` chưa bị nhấn chìm → chưa kết thúc. *[EP: end-game] Nếu toàn bộ tàu `Player` bị nhấn chìm → kích hoạt UC-05 (Luồng thay thế 4.4).* |
+| **4.1.6** | Hệ thống | Chờ tối thiểu 500ms để `Player` quan sát kết quả lượt tấn công trước khi chuyển lượt.                                                                                                            |
+| **4.1.7** | Hệ thống | Chuyển sang lượt `Player`, kích hoạt UC-03.                                                                                                                                                      |
+| **4.1.8** | Hệ thống | Kết thúc.                                                                                                                                                                                        |
 
 ## 7. Luồng thay thế (Alternate Flows)
 
-### 7.1. Luồng thay thế 4.A1 — Máy tính tấn công trúng, tàu chưa bị nhấn chìm (Hit)
+### 7.1. Luồng thay thế 4.2 — Máy tính tấn công trúng, tàu chưa bị nhấn chìm (Hit)
 
-> Rẽ nhánh từ bước **4.3** — Áp dụng khi ô Máy tính chọn có tàu của `Player` nhưng tàu chưa bị nhấn chìm hoàn toàn.
-
-| Bước | Actor | Hành động / Phản hồi |
-|------|-------|----------------------|
-| **4.A1.1** | Hệ thống | Xác định kết quả — ô chứa tàu `Player`, tàu còn ít nhất một ô khác chưa bị tấn công → kết quả "Trúng" (Hit). |
-| **4.A1.2** | Hệ thống | Đánh dấu ô vừa bị tấn công bằng ký hiệu Hit trên bảng `Player`. |
-| **→** | Hệ thống | Quay lại bước 4.6 của Luồng chính. |
-
-### 7.2. Luồng thay thế 4.A2 — Máy tính nhấn chìm tàu (Sunk)
-
-> Rẽ nhánh từ bước **4.3** — Áp dụng khi lượt tấn công của Máy tính hoàn thành việc nhấn chìm một tàu của `Player`.
+> Rẽ nhánh từ bước **4.1.3** — Áp dụng khi ô Máy tính chọn có tàu của `Player` nhưng tàu chưa bị nhấn chìm hoàn toàn.
 
 | Bước | Actor | Hành động / Phản hồi |
 |------|-------|----------------------|
-| **4.A2.1** | Hệ thống | Xác định kết quả — ô chứa tàu `Player` và đây là ô cuối cùng còn lại của tàu đó → kết quả "Nhấn chìm" (Sunk). |
-| **4.A2.2** | Hệ thống | Đánh dấu toàn bộ ô của tàu bị nhấn chìm bằng ký hiệu Sunk trên bảng `Player`. |
-| **→** | Hệ thống | Quay lại bước 4.6 của Luồng chính. |
+| **4.2.1** | Hệ thống | Xác định kết quả — ô chứa tàu `Player`, tàu còn ít nhất một ô khác chưa bị tấn công → kết quả "Trúng" (Hit). |
+| **4.2.2** | Hệ thống | Đánh dấu ô vừa bị tấn công bằng ký hiệu Hit trên bảng `Player`. |
+| **4.2.3** | Hệ thống | Quay lại bước **4.1.6** của Luồng chính. |
 
-### 7.3. Luồng thay thế 4.A3 — Toàn bộ tàu Player bị nhấn chìm (Player thua)
+### 7.2. Luồng thay thế 4.3 — Máy tính nhấn chìm tàu (Sunk)
 
-> Rẽ nhánh từ bước **4.5** *(EP: end-game)* — Áp dụng khi lượt tấn công của Máy tính làm toàn bộ tàu của `Player` bị 
-> nhấn chìm.
+> Rẽ nhánh từ bước **4.1.3** — Áp dụng khi lượt tấn công của Máy tính hoàn thành việc nhấn chìm một tàu của `Player`.
 
 | Bước | Actor | Hành động / Phản hồi |
 |------|-------|----------------------|
-| **4.A3.1** | Hệ thống | Xác định toàn bộ tàu `Player` đã bị nhấn chìm. |
-| **4.A3.2** | Hệ thống | Hiển thị kết quả lượt tấn công tối thiểu 500ms để `Player` quan sát trước khi kết thúc ván. |
-| **4.A3.3** | Hệ thống | Kích hoạt UC-05 với kết quả `Player` thua. |
-| **4.A3.4** | Hệ thống | Kết thúc. |
+| **4.3.1** | Hệ thống | Xác định kết quả — ô chứa tàu `Player` và đây là ô cuối cùng còn lại của tàu đó → kết quả "Nhấn chìm" (Sunk). |
+| **4.3.2** | Hệ thống | Đánh dấu toàn bộ ô của tàu bị nhấn chìm bằng ký hiệu Sunk trên bảng `Player`. |
+| **4.3.3** | Hệ thống | Quay lại bước **4.1.6** của Luồng chính. |
+
+### 7.3. Luồng thay thế 4.4 — Toàn bộ tàu Player bị nhấn chìm (Player thua)
+
+> Rẽ nhánh từ bước **4.1.5** *(EP: end-game)* — Áp dụng khi lượt tấn công của Máy tính làm toàn bộ tàu của `Player` bị nhấn chìm.
+
+| Bước | Actor | Hành động / Phản hồi |
+|------|-------|----------------------|
+| **4.4.1** | Hệ thống | Xác định toàn bộ tàu `Player` đã bị nhấn chìm. |
+| **4.4.2** | Hệ thống | Hiển thị kết quả lượt tấn công tối thiểu 500ms để `Player` quan sát trước khi kết thúc ván. |
+| **4.4.3** | Hệ thống | Kích hoạt UC-05 với kết quả `Player` thua. |
+| **4.4.4** | Hệ thống | Kết thúc. |
 
 ## 8. Luồng ngoại lệ (Exception Flows)
 
-### 8.1. Ngoại lệ 4.E1 — Lỗi logic chọn ô tấn công của Máy tính
+### 8.1. Ngoại lệ 4.5 — Lỗi logic chọn ô tấn công của Máy tính
 
-> Rẽ nhánh từ bước **4.2** — Áp dụng khi hệ thống gặp lỗi trong quá trình kiểm tra tính hợp lệ của ô được Máy tính 
-> chọn (ví dụ: lỗi runtime hoặc không tìm được ô hợp lệ do lỗi trạng thái).
+> Rẽ nhánh từ bước **4.1.2** — Áp dụng khi hệ thống gặp lỗi trong quá trình kiểm tra tính hợp lệ của ô được Máy tính chọn (ví dụ: lỗi runtime hoặc không tìm được ô hợp lệ do lỗi trạng thái).
 
 | Bước | Actor | Hành động / Phản hồi |
 |------|-------|----------------------|
-| **4.E1.1** | Hệ thống | Phát hiện lỗi khi kiểm tra tính hợp lệ của ô tại bước 4.3 (ví dụ: lỗi JavaScript runtime hoặc toàn bộ ô đã bị tấn công nhưng điều kiện kết thúc chưa được kích hoạt đúng). |
-| **4.E1.2** | Hệ thống | Hiển thị thông báo lỗi "Kết quả lượt chơi gặp lỗi. Vui lòng tải lại trang." |
-| **4.E1.3** | Hệ thống | Kết thúc không thành công. |
+| **4.5.1** | Hệ thống | Phát hiện lỗi khi kiểm tra tính hợp lệ của ô tại bước **4.1.3** (ví dụ: lỗi JavaScript runtime hoặc toàn bộ ô đã bị tấn công nhưng điều kiện kết thúc chưa được kích hoạt đúng). |
+| **4.5.2** | Hệ thống | Hiển thị thông báo lỗi "Kết quả lượt chơi gặp lỗi. Vui lòng tải lại trang." |
+| **4.5.3** | Hệ thống | Kết thúc không thành công. |
 
 ## 9. Quan hệ Use Case (Includes / Extends)
 
@@ -105,7 +105,7 @@ Máy tính tự động thực hiện lượt tấn công lên bảng của `Pla
 Không có.
 
 **«extend» — được mở rộng bởi:**
-- **UC-05** — Kết thúc ván chơi: UC-05 mở rộng UC-04 tại extension point “điều kiện kết thúc ván chơi được thỏa mãn” — khi toàn bộ tàu `Player` bị nhấn chìm (bước 4.A3).
+- **UC-05** — Kết thúc ván chơi: UC-05 mở rộng UC-04 tại extension point “điều kiện kết thúc ván chơi được thỏa mãn” — khi toàn bộ tàu `Player` bị nhấn chìm (bước 4.4).
 
 ## 10. Quy tắc nghiệp vụ áp dụng
 
