@@ -1,92 +1,168 @@
+import React, { useState } from 'react';
 import { useAppSelector, useAppDispatch } from '../store/index.js';
 import { startGame } from '../store/gameSlice.js';
-import { WINNER } from '../constants/gameConstants.js';
+import { WINNER, CELL_STATE } from '../constants/gameConstants.js';
 import '../styles/game-over.css';
 
 /**
- * UC-05: KẾT THÚC VÁN CHƠI
- * Component này hiển thị màn hình kết quả khi hệ thống phát hiện điều kiện kết thúc.
+ * COMPONENT PHỤ: EnemyBoardReveal
+ * Đáp ứng Hậu điều kiện số 3 (Mục 5) & Bước 5.1.5 / 5.2.5: 
+ * Tiết lộ toàn bộ vị trí hạm đội Máy tính để Player xem lại.
+ */
+function EnemyBoardReveal({ board, fleet }) {
+    // 1. Thu thập tất cả tọa độ có tàu của máy tính từ danh sách hạm đội (fleet)
+    const shipCells = new Set();
+    if (Array.isArray(fleet)) {
+        fleet.forEach((ship) => {
+            ship.positions?.forEach(({ row, col }) => {
+                shipCells.add(`${row}-${col}`);
+            });
+        });
+    }
+
+    return (
+        <div className="rs-board-grid">
+            {board.map((rowArr, r) =>
+                rowArr.map((cell, c) => {
+                    const key = `${r}-${c}`;
+                    // Lấy trạng thái của ô cờ (hỗ trợ cả trường hợp cell là Object hoặc String)
+                    const state = cell?.state ?? cell;
+
+                    let cellClass = 'rs-cell';
+
+                    // 2. Phân loại hiển thị theo đúng logic trạng thái ô cờ
+                    if (state === CELL_STATE.SUNK) {
+                        cellClass += ' rs-cell--sunk';
+                    } else if (state === CELL_STATE.HIT) {
+                        cellClass += ' rs-cell--hit'; 
+                    } else if (state === CELL_STATE.MISS) {
+                        cellClass += ' rs-cell--miss';
+                    } 
+                    // Nếu ô cờ có trạng thái SHIP gốc hoặc nằm trong danh sách hạm đội của máy tính
+                    else if (state === CELL_STATE.SHIP || shipCells.has(key)) {
+                        cellClass += ' rs-cell--ship-reveal'; 
+                    }
+
+                    return <div key={key} className={cellClass} />;
+                })
+            )}
+        </div>
+    );
+}
+/**
+ * COMPONENT CHÍNH: ResultScreen
+ * Thực hiện giao diện kết thúc ván chơi (UC-05).
  */
 export default function ResultScreen() {
     const dispatch = useAppDispatch();
+    const [showEnemyBoard, setShowEnemyBoard] = useState(false);
 
-    /* TRUY XUẤT DỮ LIỆU TỪ HỆ THỐNG
-       Sau khi UC-03 hoặc UC-04 xác định kết quả (Bước 5.2 hoặc 5.A1.2 trong flow),
-       dữ liệu sẽ được lấy từ store để hiển thị.
-    */
-    const { winner, stats } = useAppSelector((state) => state.game);
+    // Bước 5.1.0 & 5.2.0: Kích hoạt tự động lấy dữ liệu trạng thái từ Redux Store
+    const { winner, computerBoard, computerFleet } = useAppSelector((state) => state.game);
+    
+    // Bước 5.1.1, 5.1.2 & 5.2.1, 5.2.2: Kiểm tra điều kiện phân tách Luồng chính / Luồng thay thế
     const isPlayerWinner = winner === WINNER.PLAYER;
 
-    /* XỬ LÝ LỰA CHỌN: CHƠI LẠI (Bước 5.6 & 5.6.1 trong Luồng chính)
-       Kích hoạt lại UC-01 để khởi tạo một ván chơi hoàn toàn mới.
-    */
+    // Luồng phụ 8.1 (Bước 1): Hàm xử lý khi Player click nút "Chơi lại"
     const handleRestart = () => dispatch(startGame());
-
-    /* XỬ LÝ LỰA CHỌN: QUAY VỀ MENU (Bước 5.6.2 trong Activity Diagram)
-       Đưa người chơi trở lại màn hình chính của ứng dụng.
-    */
+    
+    // Luồng phụ 8.2 (Bước 1): Hàm xử lý khi Player click nút "Quay về menu chính"
     const handleBackToMenu = () => window.location.reload();
 
     return (
-        /* GIAO DIỆN KẾT THÚC (Hậu điều kiện 1 - Đặc tả §5)
-           Thông báo kết quả hiển thị trên cùng một màn hình (Non-Functional Req §11).
+        /* Hậu điều kiện 2 (Mục 5) & Bước 5.1.4 / 5.2.4: 
+           Lớp phủ '.rs-overlay' chặn tương tác, vô hiệu hóa toàn bộ click lên bảng đối thủ phía dưới.
+           Mục 11 (Yêu cầu phi chức năng): Hiển thị overlay trên cùng màn hình, không cần cuộn trang.
         */
-        <div className="result-overlay">
-            <div className="result-modal" role="dialog" aria-modal="true">
+        <div className="rs-overlay">
+            <div className="rs-modal" role="dialog" aria-modal="true">
 
-                {/* PHẦN 1: THÔNG BÁO KẾT QUẢ & LÝ DO (Bước 5.3 hoặc 5.A1.3)
-                    Hiển thị text label THẮNG/THUA rõ ràng và lý do tương ứng.
-                */}
-                <div className="result-header">
-                    <div className={`result-icon ${isPlayerWinner ? 'icon-win' : 'icon-lose'}`}>
+                {/* KHỐI HIỂN THỊ KẾT QUẢ RẼ NHÁNH THEO TỪNG LUỒNG ĐẶC TẢ */}
+                <div className="rs-header-dark">
+                    <div className="rs-icon-circle">
                         {isPlayerWinner ? '🏆' : '💀'}
                     </div>
-                    <h1 className={`result-title ${isPlayerWinner ? 'title-win' : 'title-lose'}`}>
-                        {isPlayerWinner ? 'Bạn đã thắng!' : 'Bạn đã thua!'}
-                    </h1>
-                    <p className="result-reason">
-                        {/* Hiển thị lý do kết thúc dựa trên quy tắc RUL-03 */}
-                        {isPlayerWinner
-                            ? 'Toàn bộ tàu đối thủ đã bị nhấn chìm.'
-                            : 'Toàn bộ tàu của bạn đã bị nhấn chìm.'}
-                    </p>
+                    
+                    {isPlayerWinner ? (
+                        /* --- LUỒNG CHÍNH: PLAYER THẮNG --- */
+                        <>
+                            {/* Bước 5.1.3: Render text label kết quả Thắng rõ ràng, dễ đọc (RUL-03) */}
+                            <h1 className="rs-title">BẠN ĐÃ THẮNG!</h1>
+                            <p className="rs-reason">Toàn bộ tàu đối thủ đã bị nhấn chìm.</p>
+                        </>
+                    ) : (
+                        /* --- LUỒNG THAY THẾ 5.2: PLAYER THUA --- */
+                        <>
+                            {/* Bước 5.2.3: Render text label kết quả Thua rõ ràng, dễ đọc */}
+                            <h1 className="rs-title">BẠN ĐÃ THUA!</h1>
+                            <p className="rs-reason">Toàn bộ tàu của bạn đã bị nhấn chìm.</p>
+                        </>
+                    )}
                 </div>
 
-                <hr className="result-divider" />
+                <div className="rs-modal-body">
+                    <hr className="rs-divider" />
 
-                {/* PHẦN 2: TÓM TẮT VÁN CHƠI (Bước 5.4 trong Activity Diagram)
-                    Hiển thị các thông số thống kê cơ bản của ván đấu vừa kết thúc.
-                */}
-                <p className="stats-label">Tóm tắt ván chơi</p>
-                <div className="stats-grid">
-                    <div className="stat-card">
-                        <span className="stat-card-label">
-                            <span className="dot dot-player" />
-                            Lượt bắn của bạn
-                        </span>
-                        <strong className="stat-card-value">{stats?.playerShots ?? 0}</strong>
-                    </div>
-                    <div className="stat-card">
-                        <span className="stat-card-label">
-                            <span className="dot dot-cpu" />
-                            Lượt bắn của máy
-                        </span>
-                        <strong className="stat-card-value">{stats?.cpuShots ?? 0}</strong>
-                    </div>
-                </div>
+                    {/* Hậu điều kiện 3 (Mục 5) & Bước 5.1.5 / 5.2.5: 
+                        Tiết lộ hạm đội của Máy tính để Player xem lại vị trí. 
+                    */}
+                    <div className="rs-reveal-section">
+                        {!showEnemyBoard ? (
+                            <button
+                                className="rs-btn-outline"
+                                onClick={() => setShowEnemyBoard(true)}
+                            >
+                                👁️ Xem vị trí tàu đối thủ
+                            </button>
+                        ) : (
+                            <div className="rs-enemy-reveal-box">
+                                <p className="rs-stats-label">Hạm đội của Máy tính</p>
 
-                {/* PHẦN 3: CÁC NÚT LỰA CHỌN ĐIỀU HƯỚNG (Bước 5.5 trong Activity Diagram)
-                    Cung cấp các tùy chọn sau khi ván chơi kết thúc (Chơi lại / Menu / Thoát).
-                */}
-                <div className="result-actions">
-                    {/* Nút "Chơi lại": Quay lại UC-01 (Yêu cầu phi chức năng §11) */}
-                    <button className="btn btn-primary" onClick={handleRestart}>
-                        🔄 Chơi lại (ván mới)
-                    </button>
-                    {/* Nút "Menu": Quay về màn hình chính (Bước 5.6.2) */}
-                    <button className="btn" onClick={handleBackToMenu}>
-                        🏠 Quay về menu chính
-                    </button>
+                                <EnemyBoardReveal
+                                    board={computerBoard}
+                                    fleet={computerFleet}
+                                />
+
+                                {/* Legend giải thích các ký hiệu trên bảng khi kết thúc */}
+                                <div className="rs-legend">
+                                    <span className="rs-legend-item">
+                                        <span className="rs-legend-dot rs-legend-dot--miss" />
+                                        Bắn trượt
+                                    </span>
+                                    <span className="rs-legend-item">
+                                        <span className="rs-legend-dot rs-legend-dot--sunk" />
+                                        Nhấn chìm
+                                    </span>
+                                </div>
+
+                                <button
+                                    className="rs-link-action"
+                                    onClick={() => setShowEnemyBoard(false)}
+                                >
+                                    Đóng lại
+                                </button>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Bước 5.1.6 / 5.2.6 & Mục 11 (NFR): 
+                        Hiển thị nhóm nút chức năng điều hướng tập trung tại chân màn hình kết quả.
+                    */}
+                    <div className="rs-actions">
+                        {/* Bước 5.1.7 -> Kích hoạt Luồng phụ 8.1: 
+                            Gửi tín hiệu reset dữ liệu (dispatch(startGame())) đưa hệ thống về UC-01 
+                        */}
+                        <button className="rs-btn rs-btn-primary" onClick={handleRestart}>
+                            🔄 CHƠI LẠI VÁN MỚI
+                        </button>
+
+                        {/* Bước 5.2.7 -> Kích hoạt Luồng phụ 8.2: 
+                            Gọi lệnh reload trình duyệt, giải phóng bộ nhớ tạm đưa người chơi về Menu chính 
+                        */}
+                        <button className="rs-btn rs-btn-secondary" onClick={handleBackToMenu}>
+                            🏠 QUAY VỀ MENU CHÍNH
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
