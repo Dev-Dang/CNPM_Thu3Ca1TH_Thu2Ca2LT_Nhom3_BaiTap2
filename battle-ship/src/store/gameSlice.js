@@ -2,7 +2,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {PHASES, WINNER, CELL_STATE} from '../constants/gameConstants.js';
 import {createBoard} from '../utils/boardUtils.js';
-import {createFleet, validateFleetConfig} from '../utils/fleetConfig.js';
+import {createFleet} from '../utils/fleetConfig.js';
 import {
     isValidPlacement,
     placeShipOnBoard,
@@ -27,7 +27,6 @@ const initialState = {
     selectedShipId: null,
     winner: null,
     lastAttackResult: null,
-    errorMessage: null,
 };
 
 const gameSlice = createSlice({
@@ -38,29 +37,6 @@ const gameSlice = createSlice({
          * UC-01: Khởi tạo ván chơi mới.
          */
         startGame(state) {
-            try {
-                // 1.4b gán PHASE = SETUP
-                state.phase = PHASES.SETUP;
-                state.errorMessage = null; // Reset lỗi nếu thành công
-
-                // [2.E2.1] kiểm tra sizes = {5,4,3,3,2}
-                validateFleetConfig();
-            } catch (error) {
-                // 1.E1.1 ERR Javascript runtime / Out of memory -> stateUpdated(error)
-                state.errorMessage = "Không thể bắt đầu ván chơi. Vui lòng tải lại trang.";
-                state.phase = null; // Reset state
-
-                // [2.E2.1] error="FLEET_CONFIG_MISMATCH"
-                // [2.E2.2] phase='ERROR', block + ghi log
-                console.error('FLEET_CONFIG_MISMATCH', error.message);
-
-                // [2.E2.2] phase='ERROR', block
-                state.phase = PHASES.ERROR;
-
-                // [2.E2.3] kết thúc không thành công
-            }
-
-            // 1.6 Kích hoạt UC-02 (phase = SETUP)
             // [2.1] createFleet(FLEET_CONFIG) → fleet[5]
             const playerFleet = createFleet();
 
@@ -77,6 +53,7 @@ const gameSlice = createSlice({
             state.playerFleet = playerFleet;
             state.computerFleet = computerFleet;
             state.selectedShipId = null;
+
             state.winner = null;
 
             // [2.2] store updated → useSelector re-render board 10×10 + fleet list
@@ -167,9 +144,6 @@ const gameSlice = createSlice({
 
         /**
          * UC-03: Player tấn công một ô trên bảng máy tính.
-         * Sequence: 3.2 onClick(row,col) → 3.3 validateCoordinate
-         *         → 3.4 checkCell → 3.5/3.A1.2/3.A2.2 markCell
-         *         → 3.6 checkEndGame → 3.7 setTurn(COMPUTER)
          */
         playerAttack(state, action) {
             const {row, col} = action.payload;
@@ -178,6 +152,7 @@ const gameSlice = createSlice({
                 state.errorMessage = 'Ô này đã bị tấn công. Vui lòng chọn ô khác.';
                 return;
             }
+
             state.errorMessage = null;
             // [3.4] checkCell — kiểm tra ô có tàu không, trả về ship và remainingCells
             const {hasShip, ship, remainingCells} = checkCell(
@@ -205,7 +180,6 @@ const gameSlice = createSlice({
             // [3.6] checkEndGame — kiểm tra toàn bộ tàu địch đã bị nhấn chìm chưa
             state.computerBoard = newBoard;
             if (checkEndGame(state.computerFleet, newBoard)) {
-                // [3.A3.2] Player thắng → setPhase(RESULT), setWinner(PLAYER) — ref UC-05
                 state.phase = PHASES.GAME_OVER;
                 state.winner = WINNER.PLAYER;
             } else {
@@ -214,38 +188,32 @@ const gameSlice = createSlice({
             }
         },
 
-
         addError(state) {
             state.errorMessage = state.message;
         },
 
-        // ── Xóa thông báo lỗi ────────────────────────────────────────────────────
         clearError(state) {
             state.errorMessage = null;
         },
-
 
         /**
          * UC-04: Máy tính tấn công một ô trên bảng Player.
          */
         computerAttack(state, action) {
-            const { row, col } = action.payload;
+            const {row, col} = action.payload;
 
-            // 4.1.3b Xử lý logic lượt tấn công
+            // 4.3b processAttack(playerBoard, playerFleet, row, col)
             const attack = processAttack(state.playerBoard, state.playerFleet, row, col);
 
-            // 4.1.3d Update state
+            // 4.3d Update state
             state.playerBoard = attack.board;
             state.playerFleet = attack.fleet;
 
-            // 4.1.4 Kiểm tra điều kiện kết thúc ván
+            // 4.5a Kiểm tra điều kiện kết thúc
             if (attack.isGameOver) {
-                // 4.2.1a Xác định toàn bộ tàu `Player` đã bị nhấn chìm -> Update state
                 state.phase = PHASES.GAME_OVER;
                 state.winner = WINNER.COMPUTER;
             } else {
-                // 4.5b Update state {phase='PLAYER_TURN'}
-                // 4.7 phase = PLAYER_TURN -> Kích hoạt UC-05
                 state.phase = PHASES.PLAYER_TURN;
             }
         },
