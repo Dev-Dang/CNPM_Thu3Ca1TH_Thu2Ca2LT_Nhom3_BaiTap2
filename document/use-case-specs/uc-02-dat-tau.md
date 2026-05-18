@@ -75,7 +75,7 @@ Hệ thống chuyển tự động sang giai đoạn thiết lập sau khi UC-01
 |------|-------|----------------------|
 | **2.3.1** | Hệ thống | Kiểm tra vị trí mới — không hợp lệ (vượt biên hoặc chồng ô tàu khác)|
 | **2.3.2** | Hệ thống |  hiển thị thông báo lỗi "Vị trí không hợp lệ. Vui lòng chọn vị trí khác."  |
-| **→** | Hệ thống | Quay lại bước 2.1.3 của luồng chính. |
+| **→** | Hệ thống | Quay lại bước 2.1.4của luồng chính. |
 
 ## 8. Quan hệ Use Case (Includes / Extends)
 
