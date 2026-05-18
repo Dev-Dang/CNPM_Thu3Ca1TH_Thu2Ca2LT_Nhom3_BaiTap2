@@ -44,7 +44,7 @@ Hệ thống chuyển tự động sang giai đoạn thiết lập sau khi UC-01
 
 | Bước | Actor | Hành động / Phản hồi |
 |------|-------|----------------------|
-| **2.1.0** | Hệ thống | Kích hoạt sự kiện đặt tàu — chuyển trạng thái sang giai đoạn thiết lập (phase = SETUP). |
+| **2.1.0** | Hệ thống | Kích hoạt sự kiện đặt tàu |
 | **2.1.1** | Hệ thống | Khởi tạo hạm đội Máy tính với cấu hình tiêu chuẩn (Carrier 5 ô, Battleship 4 ô, Cruiser 3 ô, Submarine 3 ô, Destroyer 2 ô) và đặt ngẫu nhiên lên bảng Máy tính (ẩn khỏi `Player`). |
 | **2.1.2** | Hệ thống | Hiển thị bảng 10×10 của `Player` cùng danh sách 5 tàu cần đặt. |
 | **2.1.3** | `Player` | Chọn một tàu chưa đặt từ danh sách. |
