@@ -2,8 +2,7 @@ import {BOARD_SIZE, CELL_STATE} from '../constants/gameConstants';
 import {isFleetDefeated} from "./fleetConfig.js";
 
 /**
- * 3.3 — Kiểm tra tọa độ hợp lệ và chưa bị tấn công.
- * @returns {boolean} isValid
+ * [3.1.3] / [3.6.2] Kiểm tra ô đã chọn: xác nhận nằm trong bảng 10x10 và chưa bị tấn công.
  */
 export function validateCoordinate(row, col, board) {
     if (row < 0 || row >= BOARD_SIZE || col < 0 || col >= BOARD_SIZE) return false;
@@ -12,9 +11,7 @@ export function validateCoordinate(row, col, board) {
 }
 
 /**
- * 3.4 — Kiểm tra ô có tàu không, trả về thông tin tàu và số ô còn lại.
- * fleet[i].positions = [{ row, col }, ...]   ← shape từ boardUtils
- * @returns {{ hasShip: boolean, ship: object|null, remainingCells: number }}
+ * [3.1.4] / [3.2.1] / [3.3.1] Xác định kết quả tấn công (kiểm tra tàu và đếm số ô còn lại)
  */
 export function getCellAttackInfo(row, col, board, fleet) {
     const cell = board[row][col];
@@ -32,8 +29,7 @@ export function getCellAttackInfo(row, col, board, fleet) {
 }
 
 /**
- * 3.5 / 3.A1.2 / 3.A2.2 — Đánh dấu một ô.
- * @returns {Cell[][]} newBoard (immutable)
+ * [3.1.5] / [3.2.2] Đánh dấu ô vừa tấn công bằng ký hiệu Miss/Hit
  */
 export function markCell(row, col, newState, board) {
     const newBoard = board.map((r) => r.map((c) => ({...c})));
@@ -42,8 +38,7 @@ export function markCell(row, col, newState, board) {
 }
 
 /**
- * 3.A2.2 — Đánh dấu toàn bộ ô của tàu bị nhấn chìm thành SUNK.
- * @returns {Cell[][]} newBoard (immutable)
+ * [3.3.2] Đánh dấu toàn bộ ô của tàu bị nhấn chìm đồng loạt bằng ký hiệu Sunk.
  */
 export function markAllShipCells(ship, board) {
     const newBoard = board.map((r) => r.map((c) => ({...c})));
@@ -54,8 +49,7 @@ export function markAllShipCells(ship, board) {
 }
 
 /**
- * 3.6 — Kiểm tra tất cả tàu địch đã bị nhấn chìm chưa.
- * @returns {boolean} isOver
+ * [3.1.6] / [3.4.1] Kiểm tra điều kiện kết thúc ván (toàn bộ tàu đối thủ bị nhấn chìm)
  */
 export function checkEndGame(fleet, board) {
     return fleet.every((ship) =>
