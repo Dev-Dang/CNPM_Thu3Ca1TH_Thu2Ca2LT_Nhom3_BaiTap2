@@ -39,11 +39,12 @@ export default function GameBoard() {
 
         return () => clearTimeout(timer);
     }, [phase, playerBoard, dispatch]);
-
+// [3.1.1] / [3.1.7] isClickable = true ở lượt Player (bảng kích hoạt), false ở lượt CPU (vô hiệu hóa)
     const isClickable = phase === PHASES.PLAYER_TURN;
 
     function handleCellClick(row, col) {
         if (!isClickable) return;
+         // [3.1.2] / [3.5.1] Player click vào một ô trên bảng đối thủ.
         dispatch(clearError());
         dispatch(playerAttack({row, col}));
     }
