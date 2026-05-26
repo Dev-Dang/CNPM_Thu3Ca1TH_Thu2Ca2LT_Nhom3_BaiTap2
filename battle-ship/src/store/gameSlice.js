@@ -170,44 +170,50 @@ const gameSlice = createSlice({
          */
         playerAttack(state, action) {
             const {row, col} = action.payload;
-            // [3.3] validateCoordinate — tọa độ hợp lệ và chưa bị tấn công
+            // [3.1.3] Hệ thống kiểm tra ô đã chọn — xác nhận nằm trong bảng và chưa bị tấn công.
             if (!validateCoordinate(row, col, state.computerBoard)) {
                 state.errorMessage = 'Ô này đã bị tấn công. Vui lòng chọn ô khác.';
                 return;
             }
 
             state.errorMessage = null;
-            // [3.4] checkCell — kiểm tra ô có tàu không, trả về ship và remainingCells
+            // [3.1.4] / [3.2.1] / [3.3.1] Hệ thống xác định kết quả tấn công (Trượt, Trúng, hoặc Nhấn chìm)
             const {hasShip, ship, remainingCells} = getCellAttackInfo(
                 row, col, state.computerBoard, state.computerFleet
             );
 
             let newBoard;
-            // [3.5] Miss — đánh dấu ô MISS
+             // [3.1.4] Ô không chứa tàu đối thủ → kết quả "Trượt" (Miss).
+                // [3.1.5] Đánh dấu ô vừa tấn công bằng ký hiệu Miss.
             if (!hasShip) {
                 newBoard = markCell(row, col, CELL_STATE.MISS, state.computerBoard);
                 state.lastAttackResult = 'miss';
             } else {
-                // [3.A1.2] Hit — tàu chưa bị nhấn chìm, đánh dấu ô HIT
+                // [3.2.1] Ô chứa tàu đối thủ. Đánh dấu Hit tạm thời.
                 newBoard = markCell(row, col, CELL_STATE.HIT, state.computerBoard);
                 const shipIndex = state.computerFleet.findIndex((s) => s.id === ship.id);
                 if (shipIndex !== -1) state.computerFleet[shipIndex].hitCount += 1;
-                // [3.A2.2] Sunk — đánh dấu HIT ô vừa bắn, cập nhật hitCount, rồi mark toàn tàu SUNK
                 if (remainingCells === 0) {
+                     // [3.3.1] Đây là ô cuối cùng chưa bị tấn công của tàu đó → kết quả "Nhấn chìm" (Sunk).
+                    // [3.3.2] Đánh dấu toàn bộ ô của tàu bị nhấn chìm đồng loạt bằng ký hiệu Sunk.
                     newBoard = markAllShipCells(ship, newBoard);
                     state.lastAttackResult = 'sunk';
                 } else {
+                    // [3.2.1] Tàu còn ít nhất một ô khác chưa bị tấn công → kết quả "Trúng" (Hit).
+                    // [3.2.2] Đánh dấu ô vừa tấn công bằng ký hiệu Hit.
                     state.lastAttackResult = 'hit';
                 }
             }
-            // [3.6] checkEndGame — kiểm tra toàn bộ tàu địch đã bị nhấn chìm chưa
+            // [3.1.6] / [3.4.1] Kiểm tra điều kiện kết thúc ván.
             state.computerBoard = newBoard;
             if (checkEndGame(state.computerFleet, newBoard)) {
-                // [3.A3.2] Player thắng → setPhase(RESULT), setWinner(PLAYER) — ref UC-05
+                // [3.4.1] Xác định toàn bộ tàu đối thủ đã bị nhấn chìm.
+                // [3.4.2] Kích hoạt UC-05 với kết quả Player thắng.
                 state.phase = PHASES.GAME_OVER;
                 state.winner = WINNER.PLAYER;
             } else {
-                // [3.7] setTurn(COMPUTER) — chuyển lượt sang máy, ref UC-04
+                // [3.1.6] Còn ít nhất một tàu đối thủ chưa bị nhấn chìm → chưa kết thúc.
+                // [3.1.7] Vô hiệu hóa bảng đối thủ. Chuyển sang lượt Máy tính, kích hoạt UC-04.
                 state.phase = PHASES.CPU_TURN;
             }
         },
