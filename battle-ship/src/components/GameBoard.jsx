@@ -6,6 +6,7 @@ import Grid from './Grid.jsx';
 import {useEffect} from "react";
 import {selectAttackCell} from "../utils/computerLogic.js";
 import ShipList from "./ShipList.jsx";
+import AttackToast from "./AttackToast.jsx"
 import '../styles/game-board.css';
 
 export default function GameBoard() {
@@ -46,6 +47,9 @@ export default function GameBoard() {
 
     return (
         <div className="board-wrapper">
+
+            {/* 2. THÊM ATTACK TOAST VÀO GIAO DIỆN VÀ TRUYỀN RESULT */}
+            <AttackToast result={lastAttackResult} />
 
             {/* 4.E1.2c toast: "Kết quả lượt chơi gặp lỗi. Vui lòng tải lại trang." */}
             {errorMsg &&
