@@ -1,9 +1,9 @@
 # Tài Liệu Yêu Cầu Nghiệp Vụ (Business Requirements)
 
 **Dự án:** Trò chơi Battleship  
-**Phiên bản:** 1.1  
+**Phiên bản:** 1.2.1  
 **Ngày tạo:** 21-04-2026  
-**Ngày cập nhật:** 27-04-2026  
+**Ngày cập nhật:** 05-06-2026  
 **Tác giả:** Nhóm dự án (5 thành viên)  
 
 ---
@@ -15,6 +15,7 @@
 | 1.0 | 21-04-2026 | Nhóm dự án | Phiên bản BRD đầu tiên.                                                                                                                                                                                                                                                                                                                                            |
 | 1.1 | 27-04-2026 | Nhóm dự án | Trình bày lại và sắp xếp lại cấu trúc nội dung.<br>- Bổ sung lịch sử phiên bản.<br>- Bổ sung sản phẩm bàn giao (DEL-XX) và lộ trình tổng quan.<br>- Bổ sung metadata cho yêu cầu nghiệp vụ (Mức độ ưu tiên, Bên yêu cầu).<br>- Bổ sung cấu hình đội tàu tiêu chuẩn.<br>- Rút gọn và cập nhật bảng thuật ngữ.<br>- Làm rõ dự án không bao gồm AI module/integration. |
 | 1.2 | 04-06-2026 | Nhóm dự án | Mở rộng phạm vi sang phiên bản 2 (v2).<br>- Cập nhật phần 3 (Phạm Vi), bổ sung BG-04, BG-05, tiêu chí nghiệm thu v2, BR-11 đến BR-19, RUL-07 đến RUL-14.<br>- Xác định cụ thể cấu hình đội tàu Normal (12×12).<br>- Cập nhật rủi ro RSK-03 đến RSK-07.                                                                       |
+| 1.2.1 | 05-06-2026 | Nhóm dự án | Làm rõ một số yêu cầu v2 sau khi rà soát URD.<br>- Cập nhật SC-08 và BR-12: làm rõ thao tác trực tiếp với tàu trong giai đoạn thiết lập, bao gồm chọn tàu, di chuyển vị trí và đổi hướng đặt tàu.<br>- Cập nhật SC-10 và RUL-07: làm rõ quy tắc bắn tiếp khi trúng là bắn liên tiếp cho đến khi trượt.<br>- Cập nhật RUL-09, RUL-10 và bổ sung bảng cơ chế tính điểm v2: tính điểm theo loại tàu và combo.<br>- Cập nhật SC-12, BR-18 và RUL-11: làm rõ High Score là điểm cao nhất cục bộ duy nhất, được hiển thị trong ván chơi và chỉ cập nhật khi ván chơi kết thúc.<br>- Cập nhật EX-04 và EX-05: làm rõ ngoài phạm vi không có xếp hạng trực tuyến và không lưu lịch sử toàn bộ trận đấu. |
 
 ## 1. Tóm Tắt Dự Án
 
@@ -27,7 +28,7 @@ Sau khi hoàn thành phiên bản 1 (v1.0), nhóm tiếp tục phát triển phi
 
 Xây dựng trò chơi Battleship dạng ứng dụng web đơn trang (SPA) sử dụng React, hỗ trợ chế độ đơn người chơi đối đấu với đối thủ máy tính điều khiển bằng logic đơn giản (không dùng AI/ML). 
 
-Phiên bản 2 mở rộng trên nền tảng v1 với các tính năng: đặt tàu tự động, kéo thả tàu, lựa chọn độ khó (Easy 10×10 / Normal 12×12), quy tắc bắn tiếp khi trúng, hệ thống điểm số & high scores và tuỳ chọn giao diện sáng/tối.
+Phiên bản 2 mở rộng trên nền tảng v1 với các tính năng: đặt tàu tự động, kéo thả tàu, lựa chọn độ khó (Easy 10×10 / Normal 12×12), quy tắc bắn tiếp khi trúng, hệ thống điểm số & High Score và tuỳ chọn giao diện sáng/tối.
 ### 1.3. Kết Quả Kỳ Vọng
 
 - Trò chơi Battleship web hoàn chỉnh, có thể chơi được với quy tắc rõ ràng và gameplay ổn định.
@@ -50,7 +51,7 @@ Phiên bản 2 hướng đến nâng cao trải nghiệm người chơi và đ�
 | BG-02 | Cung cấp một sản phẩm có thể demo và đánh giá được. | Số sản phẩm bàn giao hoàn thành, không có lỗi nghiêm trọng (critical issue) chưa được giải quyết | 11/11 sản phẩm bàn giao (xem mục 3.3) | 09-05-2026 |
 | BG-03 | Đảm bảo phạm vi phiên bản 1 được kiểm soát và bàn giao đúng hạn. | Số hạng mục ngoài phạm vi đã chốt trong BRD v1.1 và thời hạn bàn giao | 0 - Không có hạng mục ngoài phạm vi được triển khai; bàn giao trước 10-05-2026 | 10-05-2026 |
 | BG-04 | Nâng cao trải nghiệm người chơi trong v2 qua các tính năng gameplay mở rộng (độ khó, cơ chế chọn mục tiêu tấn công của Máy tính được cải tiến, tính điểm, giao diện). | Tỷ lệ yêu cầu MUST của v2 được triển khai và PASS test                  | 100% các BR MUST của v2                    | 07-06-2026 |
-| BG-05 | Đảm bảo tính nhất quán dữ liệu high scores và tính điểm qua các ván chơi.                                                                                             | High scores được lưu, hiển thị đúng thứ tự và không bị mất khi reload   | Không có lỗi dữ liệu high scores           | 07-06-2026 |
+| BG-05 | Đảm bảo tính nhất quán dữ liệu High Score và tính điểm qua các ván chơi.                                                                                              | High Score được lưu, hiển thị đúng và không bị mất khi reload           | Không có lỗi dữ liệu High Score            | 07-06-2026 |
 
 ### 2.3. Tiêu Chí Nghiệm Thu
 
@@ -64,7 +65,7 @@ Phiên bản 2 hướng đến nâng cao trải nghiệm người chơi và đ�
 | Kéo thả tàu | Người chơi có thể kéo thả tàu để đặt lên bảng. | Kéo một tàu từ danh sách và thả vào ô hợp lệ trên bảng. |
 | Quy tắc bắn tiếp khi trúng | Bên trúng được bắn tiếp ngay lượt đó. | Kiểm tra bên trúng tiếp tục bắn mà không chuyển lượt. |
 | Tính điểm đơn và combo | Điểm được tính đúng cho từng phát trúng và chuỗi combo. | Kiểm tra điểm tăng đúng sau từng lượt trúng; kiểm tra hệ số combo. |
-| High scores | High scores được lưu và hiển thị đúng thứ tự. | Kết thúc ván, kiểm tra điểm được ghi nhận và bảng xếp hạng cập nhật. |
+| High Score | High Score cục bộ duy nhất được lưu và hiển thị đúng. | Kết thúc ván, kiểm tra điểm được ghi nhận nếu cao hơn High Score hiện tại. |
 | Tuỳ chọn theme | Người chơi có thể chuyển đổi giữa giao diện sáng và tối. | Bật/tắt theme; kiểm tra toàn bộ UI cập nhật đúng theo theme được chọn. |
 | Giới hạn phạm vi v1 | Phiên bản 1 không bao gồm chế độ trực tuyến. | Xác nhận không có tính năng ngoài phạm vi trong sản phẩm v1. |
 | Sẵn sàng bàn giao v1 | Sản phẩm và tài liệu bàn giao đạt trạng thái có thể đánh giá trước ngày 10-05-2026. | Kiểm tra danh sách 11 sản phẩm bàn giao tại mục 3.3. |
@@ -83,11 +84,11 @@ Phiên bản 2 hướng đến nâng cao trải nghiệm người chơi và đ�
 | SC-05 | Giao diện người dùng | Giao diện tập trung vào sự rõ ràng và dễ sử dụng.                                                                                                     | v1 |
 | SC-06 | Triển khai React frontend | Hệ thống được triển khai bằng React trên frontend.                                                                                                    | v1 |
 | SC-07 | Đặt tàu tự động | Người chơi có thể chọn để hệ thống tự động đặt toàn bộ đội tàu hợp lệ lên bảng.                                                                       | v2 |
-| SC-08 | Kéo thả khi đặt tàu | Người chơi có thể kéo thả tàu từ danh sách vào ô trên bảng trong giai đoạn thiết lập.                                                                 | v2 |
-| SC-09 | Lựa chọn độ khó (Easy / Normal) | Người chơi chọn độ khó trước ván đấu: Easy (10×10, Máy tính chọn ô tấn công ngẫu nhiên) hoặc Normal (12×12, Máy tính ưu tiên ô xung quanh khi trúng). | v2 |
-| SC-10 | Quy tắc bắn tiếp khi trúng | Bên (người chơi hoặc máy tính) bắn trúng được thực hiện thêm một lượt bắn ngay lập tức.                                                               | v2 |
+| SC-08 | Kéo thả khi đặt tàu | Người chơi có thể thao tác trực tiếp với tàu trong giai đoạn thiết lập, bao gồm chọn tàu, di chuyển vị trí và đổi hướng đặt tàu.                       | v2 |
+| SC-09 | Lựa chọn độ khó (Easy / Normal) | Người chơi chọn độ khó trước ván đấu; Easy dùng bảng 10×10 và Máy tính chọn ô tấn công ngẫu nhiên, Normal dùng bảng 12×12 và Máy tính ưu tiên chọn ô tấn công xung quanh điểm vừa bắn trúng. | v2 |
+| SC-10 | Quy tắc bắn tiếp khi trúng | Bên bắn trúng được tiếp tục bắn liên tiếp cho đến khi bắn trượt; khi bắn trượt thì chuyển lượt.                                                       | v2 |
 | SC-11 | Hệ thống tính điểm đơn và combo | Tính điểm cho từng phát trúng; bắn liên tiếp trúng nhân hệ số combo.                                                                                  | v2 |
-| SC-12 | Ghi nhận High Scores | Lưu và hiển thị bảng điểm cao nhất sau mỗi ván chơi.                                                                                                  | v2 |
+| SC-12 | Ghi nhận High Score | Lưu một điểm cao nhất cục bộ, hiển thị High Score hiện tại trong ván chơi và làm nổi bật khi Người chơi vượt High Score đang lưu.                    | v2 |
 | SC-13 | Tuỳ chọn giao diện sáng / tối | Người chơi có thể chuyển đổi giữa Light Theme và Dark Theme.                                                                                          | v2 |
 
 ### 3.2. Ngoài Phạm Vi
@@ -97,8 +98,8 @@ Phiên bản 2 hướng đến nâng cao trải nghiệm người chơi và đ�
 | EX-01 | Chế độ nhiều người chơi trực tuyến | Yêu cầu kết nối thời gian thực và hạ tầng backend phức tạp, vượt khả năng của nhóm trong thời gian này. |
 | EX-02 | Chế độ hai người chơi cùng thiết bị | Cần giao diện chia màn hình hoặc luân phiên thiết bị; không phải mục tiêu thiết kế của phiên bản này. |
 | EX-03 | Thư viện hoặc framework AI/ML | Đối thủ máy tính dùng logic đơn giản (không phải AI); tích hợp thư viện AI/ML tăng độ phức tạp không cần thiết. |
-| EX-04 | Hệ thống xếp hạng cạnh tranh trực tuyến | High Scores chỉ lưu cục bộ trong phiên bản 2; bảng xếp hạng trực tuyến phù hợp hơn cho phiên bản sau. |
-| EX-05 | Lưu trữ lịch sử toàn bộ trận đấu | Cần cơ chế persistence phức tạp; nằm ngoài phạm vi v2. Chỉ lưu high scores. |
+| EX-04 | Hệ thống xếp hạng cạnh tranh trực tuyến | v2 chỉ lưu một High Score cục bộ duy nhất; bảng xếp hạng trực tuyến phù hợp hơn cho phiên bản sau. |
+| EX-05 | Lưu trữ lịch sử toàn bộ trận đấu | Nằm ngoài phạm vi v2 vì hệ thống không ghi lại danh sách các ván đã chơi, diễn biến từng lượt bắn hoặc kết quả chi tiết của từng trận. |
 | EX-06 | Hoạt ảnh phức tạp, đồ họa chất lượng cao | Tốn thời gian phát triển frontend đáng kể mà không cải thiện tính năng gameplay. |
 | EX-07 | Bộ chỉnh sửa quy tắc hoặc thiết lập tùy chỉnh nâng cao | v2 chỉ hỗ trợ 2 mức độ khó đã định nghĩa; tuỳ chỉnh sâu hơn phù hợp cho phiên bản sau. |
 
@@ -131,7 +132,7 @@ Các sản phẩm bàn giao sau là tài liệu hoặc đầu ra thuộc phạm 
 | 5 | 07-05-2026 → 08-05-2026 | Execute test cases, fix lỗi và hoàn thiện Deploy Document. | Test execution result, Deploy Document. |
 | 6 | 09-05-2026 | Chuẩn bị Slide PPTX, Video Demo và review tổng thể. | Slide, video demo, bộ tài liệu hoàn chỉnh. |
 | Release v1 | Trước 10-05-2026 | Bàn giao phiên bản đầu tiên. | Sản phẩm và tài liệu sẵn sàng đánh giá. |
-| v2 – Phát triển | Trước 06-06-2026 | Implement tính năng v2: đặt tàu tự động, kéo thả, độ khó, bắn tiếp, điểm số, high scores, theme. | Phiên bản v2 có thể chạy đầy đủ tính năng. |
+| v2 – Phát triển | Trước 06-06-2026 | Implement tính năng v2: đặt tàu tự động, kéo thả, độ khó, bắn tiếp, điểm số, High Score, theme. | Phiên bản v2 có thể chạy đầy đủ tính năng. |
 | v2 – Bàn giao | 07-06-2026 | Kiểm thử toàn bộ tính năng v2, sửa lỗi, cập nhật tài liệu. | Sản phẩm v2 hoàn chỉnh, không có critical issue. |
 
 ## 4. Yêu Cầu Nghiệp Vụ
@@ -150,13 +151,13 @@ Các sản phẩm bàn giao sau là tài liệu hoặc đầu ra thuộc phạm 
 | BR-09 | Kết quả thắng hoặc thua cần được thông báo khi ván chơi kết thúc.                                     | SHOULD | Kết quả cuối ván hoàn thiện trải nghiệm chơi. | Khi kết thúc, kết quả thắng/thua được hiển thị tương ứng. | Người chơi | v1 |
 | BR-10 | Phiên bản 1 không bao gồm điểm số, bảng xếp hạng hoặc lưu lịch sử trận đấu.                           | SHOULD | Giới hạn phạm vi giúp v1 tập trung vào gameplay cốt lõi. | v1 không có tính năng điểm số, bảng xếp hạng hoặc lưu lịch sử. | Nhóm phát triển | v1 |
 | BR-11 | Người chơi cần có thể chọn đặt tàu tự động để hệ thống tạo bố cục hợp lệ ngẫu nhiên.                  | MUST | Tăng tốc độ thiết lập và hỗ trợ người chơi muốn bắt đầu nhanh. | Nhấn nút Auto-Place tạo bố cục tàu hợp lệ (không chồng ô, không ra ngoài bảng). | Người chơi | v2 |
-| BR-12 | Người chơi cần có thể kéo thả tàu để đặt vào ô trên bảng trong giai đoạn thiết lập.                   | MUST | Kéo thả là phương thức tương tác trực quan và thân thiện hơn click-to-place. | Người chơi kéo tàu từ danh sách và thả vào ô hợp lệ; tàu được đặt đúng vị trí. | Người chơi | v2 |
+| BR-12 | Người chơi cần có thể thao tác trực tiếp với tàu trong giai đoạn thiết lập, bao gồm chọn tàu, di chuyển vị trí và đổi hướng đặt tàu. | MUST | Cách thao tác trực quan giúp người chơi dễ sắp xếp đội tàu theo chiến thuật mong muốn. | Người chơi có thể chọn, di chuyển và đổi hướng tàu; hệ thống chỉ chấp nhận bố cục hợp lệ theo quy tắc đặt tàu. | Người chơi | v2 |
 | BR-13 | Người chơi cần có thể chọn độ khó trước khi bắt đầu ván đấu.                                          | MUST | Độ khó ảnh hưởng trực tiếp đến kích thước bảng và hành vi máy tính. | Màn hình chọn độ khó hiển thị trước ván đấu; người chơi chọn được Easy hoặc Normal. | Người chơi | v2 |
 | BR-14 | Ở độ khó Easy, Máy tính chọn ô tấn công ngẫu nhiên trên bảng 10×10.                                   | MUST | Logic đơn giản phù hợp với mức độ thách thức thấp cho người mới. | Các lượt bắn của máy tính ở Easy là ngẫu nhiên, không có mẫu ưu tiên. | Người chơi | v2 |
 | BR-15 | Ở độ khó Normal (12×12), Máy tính ưu tiên tấn công các ô xung quanh ô vừa trúng.                      | MUST | Logic cải tiến tăng mức thách thức, phù hợp người chơi có kinh nghiệm. | Sau khi trúng, máy tính ưu tiên bắn các ô liền kề trước khi quay về ngẫu nhiên. | Người chơi | v2 |
 | BR-16 | Bên bắn trúng được thực hiện thêm một lượt bắn ngay lập tức.                                          | MUST | Cơ chế thưởng lượt bắn tăng tính thú vị và chiến lược. | Sau khi trúng, bên bắn trúng tiếp tục lượt bắn thay vì chuyển lượt. | Người chơi | v2 |
 | BR-17 | Trò chơi cần tính điểm cho mỗi phát bắn trúng và nhân hệ số combo khi bắn trúng liên tiếp.            | MUST | Điểm số tạo động lực và tăng chiều sâu cạnh tranh. | Điểm tăng đúng sau mỗi lần trúng; combo tăng khi liên tiếp trúng, reset khi trượt. | Người chơi | v2 |
-| BR-18 | Sau mỗi ván chơi, điểm của người chơi cần được ghi nhận vào bảng High Scores.                         | MUST | High Scores thúc đẩy người chơi cải thiện kỹ năng và tái chơi. | Kết thúc ván, điểm được lưu và hiển thị trong High Scores theo thứ tự giảm dần. | Người chơi | v2 |
+| BR-18 | Trò chơi cần lưu một High Score cục bộ duy nhất, hiển thị High Score hiện tại trong ván chơi và làm nổi bật khi Người chơi vượt High Score đang lưu. | MUST | High Score thúc đẩy Người chơi cải thiện thành tích mà không cần lưu lịch sử trận đấu. | High Score hiện tại hiển thị trong ván chơi; khi điểm hiện tại vượt High Score đang lưu, hệ thống làm nổi bật trạng thái High Score mới; khi ván chơi kết thúc, nếu điểm hiện tại cao hơn High Score đang lưu, hệ thống cập nhật High Score bằng điểm hiện tại. | Người chơi | v2 |
 | BR-19 | Người chơi cần có thể chuyển đổi giữa Light Theme và Dark Theme.                                      | SHOULD | Tuỳ chọn theme tăng cá nhân hoá và giảm mỏi mắt. | Bật/tắt theme; toàn bộ UI cập nhật màu sắc đúng theo theme đã chọn. | Người chơi | v2 |
 
 ### 4.2. Quy Tắc Nghiệp Vụ
@@ -168,11 +169,11 @@ Các sản phẩm bàn giao sau là tài liệu hoặc đầu ra thuộc phạm 
 | RUL-04 | Tàu phải được đặt theo chiều ngang hoặc dọc, không chéo.                                                                                                                                  | Luật Battleship tiêu chuẩn | v1 |
 | RUL-05 | Các tàu không được chồng ô lên nhau; đặt liền kề được cho phép.                                                                                                                           | Luật Battleship tiêu chuẩn | v1 |
 | RUL-06 | Mỗi ô trên bảng chỉ có thể bị tấn công một lần trong ván chơi.                                                                                                                            | Luật Battleship tiêu chuẩn | v1 |
-| RUL-07 | Bên bắn trúng được thực hiện thêm một lượt bắn ngay lập tức; bên trượt mới chuyển lượt.                                                                                                   | Thiết kế hệ thống v2 | v2 |
+| RUL-07 | Bên bắn trúng được tiếp tục thực hiện lượt bắn liên tiếp cho đến khi bắn trượt; khi bắn trượt thì chuyển lượt.                                                                              | Thiết kế hệ thống v2 | v2 |
 | RUL-08 | Không áp dụng quy tắc đặc biệt khác ngoài danh sách này trong phiên bản 2.                                                                                                                | Quy định phạm vi v2 | v2 |
-| RUL-09 | Mỗi phát bắn trúng cộng điểm cơ bản; bắn trúng liên tiếp nhân hệ số combo tăng dần.                                                                                                       | Thiết kế hệ thống v2 | v2 |
-| RUL-10 | Hệ số combo reset về 1 khi bắn trượt hoặc chuyển lượt.                                                                                                                                    | Thiết kế hệ thống v2 | v2 |
-| RUL-11 | High Scores lưu trữ cục bộ (local storage); hiển thị tối thiểu top 10 điểm cao nhất.                                                                                                      | Thiết kế hệ thống v2 | v2 |
+| RUL-09 | Mỗi phát bắn trúng cộng điểm theo loại tàu bị bắn trúng; bắn trúng liên tiếp nhân hệ số combo tăng dần.                                                                                   | Thiết kế hệ thống v2 | v2 |
+| RUL-10 | Hệ số combo reset về 1 khi bên đang bắn trượt và lượt chuyển sang bên còn lại.                                                                                                            | Thiết kế hệ thống v2 | v2 |
+| RUL-11 | High Score là điểm cao nhất cục bộ của Người chơi; chỉ cập nhật khi ván chơi kết thúc và điểm cuối cao hơn High Score hiện tại.                                                            | Thiết kế hệ thống v2 | v2 |
 | RUL-12 | Đội tàu (Fleet) ở độ khó Normal (12×12) sử dụng cấu hình mở rộng: Carrier(1×5), Battleship(2×4), Cruiser(2×3), Submarine(1×3), Destroyer(2×2) — tổng 8 tàu, chiếm 25 ô (~17% trên 144 ô). | Thiết kế hệ thống v2 | v2 |
 | RUL-13 | Máy tính ở độ khó Normal ưu tiên các ô liền kề (trên, dưới, trái, phải) với ô vừa trúng trước khi quay lại chọn ngẫu nhiên (chiến thuật Hunt-and-Target).                                 | Thiết kế hệ thống v2 | v2 |
 | RUL-14 | Lựa chọn theme (sáng/tối) được lưu và áp dụng nhất quán trong toàn bộ phiên chơi.                                                                                                         | Thiết kế hệ thống v2 | v2 |
@@ -189,6 +190,36 @@ Các sản phẩm bàn giao sau là tài liệu hoặc đầu ra thuộc phạm 
 | Tổng | — | — | 5 tàu / 17 ô | 8 tàu / 25 ô |
 
 > ⚑ Tỷ lệ coverage: Easy = 17/100 = 17%; Normal = 25/144 ≈ 17.4% — đảm bảo độ thách thức gameplay tương đương giữa 2 chế độ.
+
+**Cơ chế tính điểm phiên bản 2:**
+
+| Loại tàu bị bắn trúng | Điểm mỗi ô trúng |
+| --- | ---: |
+| Tàu khu trục (Destroyer) | 20 |
+| Tàu ngầm (Submarine) | 30 |
+| Tàu tuần dương (Cruiser) | 30 |
+| Thiết giáp hạm (Battleship) | 40 |
+| Tàu sân bay (Carrier) | 50 |
+
+| Sự kiện | Điểm thưởng |
+| --- | ---: |
+| Nhấn chìm tàu | +50 |
+| Thắng ván | +100 |
+
+Công thức tính điểm cho một phát bắn trúng:
+
+```text
+Điểm lượt bắn = điểm loại tàu bị bắn trúng × hệ số combo
+```
+
+Quy tắc combo:
+
+| Điều kiện | Hệ số combo |
+| --- | ---: |
+| Phát bắn trúng đầu tiên trong lượt | ×1 |
+| Phát bắn trúng liên tiếp thứ 2 | ×2 |
+| Phát bắn trúng liên tiếp từ thứ 3 trở đi | ×3 |
+| Bắn trượt và chuyển lượt | Reset về ×1 |
 
 ## 5. Các Bên Liên Quan
 
@@ -215,7 +246,7 @@ Các sản phẩm bàn giao sau là tài liệu hoặc đầu ra thuộc phạm 
 | Nhân lực | Nhóm 5 thành viên, không có nguồn lực bổ sung.                                                                  | Trung bình |
 | UX/UI | Giao diện phải đơn giản và rõ ràng; v2 bổ sung tuỳ chọn theme sáng/tối.                                         | Thấp |
 | Phạm vi | v1 giới hạn trong bộ tính năng tối thiểu đã thống nhất. v2 mở rộng theo danh sách đã chốt trong BRD v1.2.       | Cao |
-| Lưu trữ dữ liệu | High Scores được lưu bằng local storage; không yêu cầu backend hoặc cơ sở dữ liệu.                              | Thấp |
+| Lưu trữ dữ liệu | High Score được lưu bằng local storage; không yêu cầu backend hoặc cơ sở dữ liệu.                               | Thấp |
 
 ### 6.3. Rủi Ro Dự Án
 
@@ -226,7 +257,7 @@ Các sản phẩm bàn giao sau là tài liệu hoặc đầu ra thuộc phạm 
 | RSK-03 | Logic chọn ô tấn công của Máy tính ở độ khó Normal (ưu tiên ô xung quanh) phức tạp hơn ước lượng | Trung bình | Trung bình | Triển khai theo từng bước: hoàn thành logic Máy tính chọn ô tấn công ngẫu nhiên (Easy) trước, sau đó mở rộng Hunt-and-Target cho Normal. |
 | RSK-04 | Yêu cầu bị lệch trong quá trình triển khai                                                       | Trung bình | Cao | Sử dụng BRD này làm tài liệu tham chiếu (baseline) cho các tài liệu yêu cầu tiếp theo và kiểm tra xác nhận.                             |
 | RSK-05 | Tính năng kéo thả không hoạt động nhất quán trên các trình duyệt / thiết bị                      | Thấp | Trung bình | Kiểm thử trên ít nhất 2 trình duyệt phổ biến (Chrome, Firefox); cung cấp fallback click-to-place.                                       |
-| RSK-06 | Dữ liệu high scores bị mất hoặc sai lệch do lỗi local storage                                    | Thấp | Trung bình | Validate dữ liệu trước khi lưu; xử lý lỗi khi đọc/ghi local storage.                                                                    |
+| RSK-06 | Dữ liệu High Score bị mất hoặc sai lệch do lỗi local storage                                     | Thấp | Trung bình | Validate dữ liệu trước khi lưu; xử lý lỗi khi đọc/ghi local storage.                                                                    |
 | RSK-07 | Hệ thống tính điểm combo không nhất quán với quy tắc bắn tiếp                                    | Trung bình | Trung bình | Viết test case riêng cho từng tổ hợp: bắn trúng → combo, bắn trúng → bắn tiếp → combo, trượt → reset.                                   |
 
 ### 6.4. Giả Định
@@ -235,7 +266,7 @@ Các sản phẩm bàn giao sau là tài liệu hoặc đầu ra thuộc phạm 
 - Đội tàu (Fleet) Battleship tiêu chuẩn có thể được triển khai mà không cần tùy chỉnh trong phiên bản đầu tiên.
 - Logic điều khiển đối thủ máy tính ở mức cơ bản (ngẫu nhiên) là chấp nhận được cho độ khó Easy.
 - Logic điều khiển đối thủ máy tính cải tiến cho độ khó Normal có thể triển khai bằng thuật toán Hunt-and-Target đơn giản, không cần thư viện AI/ML bên ngoài.
-- Local storage đủ đáp ứng yêu cầu lưu high scores trong phạm vi v2.
+- Local storage đủ đáp ứng yêu cầu lưu một High Score cục bộ duy nhất trong phạm vi v2.
 - Kéo thả tàu có thể sử dụng HTML5 Drag and Drop API hoặc thư viện React tương đương mà không cần backend.
 
 ## Phụ Lục
@@ -249,7 +280,7 @@ Các sản phẩm bàn giao sau là tài liệu hoặc đầu ra thuộc phạm 
 | Fleet | Đội tàu trong Battleship, gồm loại tàu, số lượng và kích thước theo quy tắc chuẩn.                                                                                                               |
 | Hit / Miss / Sunk | Trúng / Trượt / Nhấn chìm — ba kết quả có thể xảy ra sau mỗi lượt tấn công.                                                                                                                      |
 | Combo | Chuỗi bắn trúng liên tiếp không bị gián đoạn bởi lượt trượt; kích hoạt hệ số nhân điểm.                                                                                                          |
-| High Scores | Bảng điểm cao nhất được ghi nhận qua các ván chơi, lưu trong local storage.                                                                                                                      |
+| High Score | Điểm cao nhất cục bộ duy nhất của Người chơi, lưu trong local storage và chỉ cập nhật sau khi ván chơi kết thúc nếu điểm cuối cao hơn điểm đang lưu.                                             |
 | Hunt-and-Target | Chiến thuật chọn ô tấn công của Máy tính đơn giản: tấn công ngẫu nhiên (Hunt) cho đến khi trúng, sau đó ưu tiên các ô liền kề (Target).                                                          |
 | Easy / Normal | Hai mức độ khó: Easy sử dụng bảng 10×10 với chiến thuật chọn ô tấn công của Máy tính là ngẫu nhiên; Normal sử dụng bảng 12×12 với chiến thuật chọn ô tấn công của Máy tính theo Hunt-and-Target. |
 | Auto-Place | Tính năng đặt tàu tự động — hệ thống tự tạo bố cục hợp lệ ngẫu nhiên thay cho người chơi.                                                                                                        |
