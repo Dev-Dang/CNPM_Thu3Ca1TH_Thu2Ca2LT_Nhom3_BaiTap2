@@ -51,6 +51,9 @@ export default function GameBoard() {
 
     return (
         <div className="board-wrapper">
+            
+            {/* 2. THÊM ATTACK TOAST VÀO GIAO DIỆN VÀ TRUYỀN RESULT */}
+            <AttackToast result={lastAttackResult} />
 
             {/* [4.3.1b] Hiển thị hộp thoại thông báo lỗi */}
             {errorMsg &&
