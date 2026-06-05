@@ -5,6 +5,8 @@
 | Phiên bản | Ngày | Tác giả | Mô tả |
 |-----------|------|---------|-------|
 | 1.0 | 27/04/2026 | Hồ Ngọc Hoàn Sơn | Phiên bản đầu tiên — sinh từ URD v2.0 (US-06, US-07) |
+| 2.0 | 15/05/2026 | Hồ Ngọc Hoàn Sơn | Cập nhật lại số các bước ở BasicFlow ,AlterFlow ,ExeptionFlow |
+| 3.0 | 16/05/2026 | Hồ Ngọc Hoàn Sơn | Thêm bước 3.1.0 vào BasicFlow|
 
 ## 1. Giới thiệu
 
@@ -44,68 +46,69 @@ Hệ thống kích hoạt lượt `Player`: lần đầu tiên ngay sau khi UC-0
 
 | Bước | Actor | Hành động / Phản hồi |
 |------|-------|----------------------|
-| **3.1** | Hệ thống | Hiển thị bảng đối thủ 10×10; các ô chưa bị tấn công có thể click; các ô đã tấn công hiển thị trạng thái tương ứng. Giao diện bảng đối thủ được kích hoạt. |
-| **3.2** | `Player` | Quan sát bảng đối thủ và click vào một ô hợp lệ (chưa bị tấn công). |
-| **3.3** | Hệ thống | Kiểm tra ô đã chọn — xác nhận nằm trong bảng 10×10 và chưa bị tấn công trước đó. |
-| **3.4** | Hệ thống | Xác định kết quả tấn công — ô không chứa tàu đối thủ → kết quả "Trượt" (Miss). |
-| **3.5** | Hệ thống | Đánh dấu ô vừa tấn công bằng ký hiệu Miss (ví dụ: chấm trắng hoặc xám) trên bảng đối thủ. Hiển thị thông báo: "Trượt!" |
-| **3.6** | Hệ thống | Kiểm tra điều kiện kết thúc ván — còn ít nhất một tàu đối thủ chưa bị nhấn chìm → chưa kết thúc. *\[EP: end-game\] Nếu toàn bộ tàu đối thủ bị nhấn chìm → kích hoạt UC-05 (3.A3).* |
-| **3.7** | Hệ thống | Vô hiệu hóa bảng đối thủ, không cho `Player` click tiếp. Chuyển sang lượt Máy tính, kích hoạt UC-04. |
-| **3.8** | Hệ thống | Kết thúc. |
+| **3.1.0** | Hệ thống | Hệ thống kích hoạt lượt `Player`: lần đầu tiên ngay sau khi UC-02 hoàn tất; các lần tiếp theo ngay sau khi UC-04 hoàn tất. Giao diện bảng đối thủ kích hoạt tương tác click cho `Player`. |
+| **3.1.1** | Hệ thống | Hiển thị bảng đối thủ 10×10; các ô chưa bị tấn công có thể click; các ô đã tấn công hiển thị trạng thái tương ứng. Giao diện bảng đối thủ được kích hoạt. |
+| **3.1.2** | `Player` | Quan sát bảng đối thủ và click vào một ô hợp lệ (chưa bị tấn công). |
+| **3.1.3** | Hệ thống | Kiểm tra ô đã chọn — xác nhận nằm trong bảng 10×10 và chưa bị tấn công trước đó. |
+| **3.1.4** | Hệ thống | Xác định kết quả tấn công — ô không chứa tàu đối thủ → kết quả "Trượt" (Miss). |
+| **3.1.5** | Hệ thống | Đánh dấu ô vừa tấn công bằng ký hiệu Miss (ví dụ: chấm trắng hoặc xám) trên bảng đối thủ. Hiển thị thông báo: "Trượt!" |
+| **3.1.6** | Hệ thống | Kiểm tra điều kiện kết thúc ván — còn ít nhất một tàu đối thủ chưa bị nhấn chìm → chưa kết thúc. *\[EP: end-game\] Nếu toàn bộ tàu đối thủ bị nhấn chìm → kích hoạt UC-05 (3.4).* |
+| **3.1.7** | Hệ thống | Vô hiệu hóa bảng đối thủ, không cho `Player` click tiếp. Chuyển sang lượt Máy tính, kích hoạt UC-04. |
+| **3.1.8** | Hệ thống | Kết thúc. |
 
 ## 7. Luồng thay thế (Alternate Flows)
 
-### 7.1. Luồng thay thế 3.A1 — Tấn công trúng, tàu chưa bị nhấn chìm (Hit)
+### 7.1. Luồng thay thế 3.2 — Tấn công trúng, tàu chưa bị nhấn chìm (Hit)
 
-> Rẽ nhánh từ bước **3.4** — Áp dụng khi ô được chọn có tàu của Máy tính nhưng tàu chưa bị nhấn chìm hoàn toàn.
-
-| Bước | Actor | Hành động / Phản hồi |
-|------|-------|----------------------|
-| **3.A1.1** | Hệ thống | Xác định kết quả — ô chứa tàu đối thủ, tàu còn ít nhất một ô khác chưa bị tấn công → kết quả "Trúng" (Hit). |
-| **3.A1.2** | Hệ thống | Đánh dấu ô vừa tấn công bằng ký hiệu Hit (ví dụ: màu đỏ hoặc icon lửa) trên bảng đối thủ. Hiển thị thông báo: "Trúng!" |
-| **→** | Hệ thống | Quay lại bước 3.6 của Luồng chính. |
-
-### 7.2. Luồng thay thế 3.A2 — Tấn công nhấn chìm tàu (Sunk)
-
-> Rẽ nhánh từ bước **3.4** — Áp dụng khi lần tấn công này hoàn thành việc nhấn chìm một tàu của Máy tính.
+> Rẽ nhánh từ bước **3.1.4** — Áp dụng khi ô được chọn có tàu của Máy tính nhưng tàu chưa bị nhấn chìm hoàn toàn.
 
 | Bước | Actor | Hành động / Phản hồi |
 |------|-------|----------------------|
-| **3.A2.1** | Hệ thống | Xác định kết quả — ô chứa tàu đối thủ và đây là ô cuối cùng chưa bị tấn công của tàu đó → kết quả "Nhấn chìm" (Sunk). |
-| **3.A2.2** | Hệ thống | Đánh dấu toàn bộ ô của tàu bị nhấn chìm đồng loạt bằng ký hiệu Sunk (phân biệt rõ với ký hiệu Hit thông thường). Hiển thị thông báo: "Đã nhấn chìm một tàu!" |
-| **→** | Hệ thống | Quay lại bước 3.6 của Luồng chính. |
+| **3.2.1** | Hệ thống | Xác định kết quả — ô chứa tàu đối thủ, tàu còn ít nhất một ô khác chưa bị tấn công → kết quả "Trúng" (Hit). |
+| **3.2.2** | Hệ thống | Đánh dấu ô vừa tấn công bằng ký hiệu Hit (ví dụ: màu đỏ hoặc icon lửa) trên bảng đối thủ. Hiển thị thông báo: "Trúng!" |
+| **→** | Hệ thống | Quay lại bước 3.1.6 của Luồng chính. |
 
-### 7.3. Luồng thay thế 3.A3 — Toàn bộ tàu đối thủ bị nhấn chìm (Player thắng)
+### 7.2. Luồng thay thế 3.3 — Tấn công nhấn chìm tàu (Sunk)
 
-> Rẽ nhánh từ bước **3.6** *(EP: end-game)* — Áp dụng khi lần tấn công này nhấn chìm con tàu cuối cùng của Máy tính.
+> Rẽ nhánh từ bước **3.1.4** — Áp dụng khi lần tấn công này hoàn thành việc nhấn chìm một tàu của Máy tính.
 
 | Bước | Actor | Hành động / Phản hồi |
 |------|-------|----------------------|
-| **3.A3.1** | Hệ thống | Xác định toàn bộ tàu đối thủ đã bị nhấn chìm — điều kiện kết thúc được thỏa mãn. |
-| **3.A3.2** | Hệ thống | Kích hoạt UC-05 với kết quả `Player` thắng. |
-| **3.A3.3** | Hệ thống | Kết thúc. |
+| **3.3.1** | Hệ thống | Xác định kết quả — ô chứa tàu đối thủ và đây là ô cuối cùng chưa bị tấn công của tàu đó → kết quả "Nhấn chìm" (Sunk). |
+| **3.3.2** | Hệ thống | Đánh dấu toàn bộ ô của tàu bị nhấn chìm đồng loạt bằng ký hiệu Sunk (phân biệt rõ với ký hiệu Hit thông thường). Hiển thị thông báo: "Đã nhấn chìm một tàu!" |
+| **→** | Hệ thống | Quay lại bước 3.1.6 của Luồng chính. |
+
+### 7.3. Luồng thay thế 3.4 — Toàn bộ tàu đối thủ bị nhấn chìm (Player thắng)
+
+> Rẽ nhánh từ bước **3.1.6** *(EP: end-game)* — Áp dụng khi lần tấn công này nhấn chìm con tàu cuối cùng của Máy tính.
+
+| Bước | Actor | Hành động / Phản hồi |
+|------|-------|----------------------|
+| **3.4.1** | Hệ thống | Xác định toàn bộ tàu đối thủ đã bị nhấn chìm — điều kiện kết thúc được thỏa mãn. |
+| **3.4.2** | Hệ thống | Kích hoạt UC-05 với kết quả `Player` thắng. |
+| **3.4.3** | Hệ thống | Kết thúc. |
 
 ## 8. Luồng ngoại lệ (Exception Flows)
 
-### 8.1. Ngoại lệ 3.E1 — Player chọn ô đã bị tấn công
+### 8.1. Ngoại lệ 3.1.5 — Player chọn ô đã bị tấn công
 
-> Rẽ nhánh từ bước **3.3** — Áp dụng khi `Player` click vào một ô đã có kết quả Hit, Miss hoặc Sunk trên bảng đối thủ.
-
-| Bước | Actor | Hành động / Phản hồi |
-|------|-------|----------------------|
-| **3.E1.1** | `Player` | Click vào một ô đã bị tấn công trước đó trên bảng đối thủ. |
-| **3.E1.2** | Hệ thống | Không xử lý lượt tấn công; hiển thị thông báo "Ô này đã bị tấn công. Vui lòng chọn ô khác." Trạng thái ván chơi không thay đổi. |
-| **3.E1.3** | `Player` | Chọn lại ô hợp lệ từ bước 3.2. |
-
-### 8.2. Ngoại lệ 3.E2 — Player chọn ô ngoài giới hạn bảng
-
-> Rẽ nhánh từ bước **3.3** — Trường hợp hiếm gặp, thường được ngăn trước ở tầng giao diện.
+> Rẽ nhánh từ bước **3.1.3** — Áp dụng khi `Player` click vào một ô đã có kết quả Hit, Miss hoặc Sunk trên bảng đối thủ.
 
 | Bước | Actor | Hành động / Phản hồi |
 |------|-------|----------------------|
-| **3.E2.1** | `Player` | Thao tác bất thường dẫn đến việc chọn tọa độ nằm ngoài giới hạn bảng 10×10. |
-| **3.E2.2** | Hệ thống | Không xử lý lượt tấn công. Không thay đổi trạng thái ván chơi. Trạng thái lượt `Player` vẫn được giữ nguyên. |
-| **3.E2.3** | `Player` | Chọn lại ô hợp lệ từ bước 3.2. |
+| **3.5.1** | `Player` | Click vào một ô đã bị tấn công trước đó trên bảng đối thủ. |
+| **3.5.2** | Hệ thống | Không xử lý lượt tấn công; hiển thị thông báo "Ô này đã bị tấn công. Vui lòng chọn ô khác." Trạng thái ván chơi không thay đổi. |
+| **3.5.3** | `Player` | Chọn lại ô hợp lệ từ bước 3.1.2. |
+
+### 8.2. Ngoại lệ 3.1.6 — Player chọn ô ngoài giới hạn bảng
+
+> Rẽ nhánh từ bước **3.1.3** — Trường hợp hiếm gặp, thường được ngăn trước ở tầng giao diện.
+
+| Bước | Actor | Hành động / Phản hồi |
+|------|-------|----------------------|
+| **3.6.1** | `Player` | Thao tác bất thường dẫn đến việc chọn tọa độ nằm ngoài giới hạn bảng 10×10. |
+| **3.6.2** | Hệ thống | Không xử lý lượt tấn công. Không thay đổi trạng thái ván chơi. Trạng thái lượt `Player` vẫn được giữ nguyên. |
+| **3.6.3** | `Player` | Chọn lại ô hợp lệ từ bước 3.1.2. |
 
 ## 9. Quan hệ Use Case (Includes / Extends)
 
