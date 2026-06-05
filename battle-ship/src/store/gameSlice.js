@@ -14,7 +14,9 @@ import {
     checkCell,
     markCell,
     markAllShipCells,
-    checkEndGame, processAttack,
+    checkEndGame,
+    processAttack,
+    determineNextPhase,
 } from '../utils/attackUtils.js';
 
 // 1.4a Trạng thái game ban đầu
@@ -211,8 +213,8 @@ const gameSlice = createSlice({
                 state.phase = PHASES.GAME_OVER;
                 state.winner = WINNER.PLAYER;
             } else {
-                // [3.7] setTurn(COMPUTER) — chuyển lượt sang máy, ref UC-04
-                state.phase = PHASES.CPU_TURN;
+                // [3.7] Kiểm tra lượt bắn: Bắn trúng -> Tiếp tục lượt, Bắn trượt -> Mất lượt -> (COMPUTER_TURN)
+                state.phase = determineNextPhase(PHASES.PLAYER_TURN, state.lastAttackResult);
             }
         },
 

@@ -1,4 +1,4 @@
-import {BOARD_SIZE, CELL_STATE} from '../constants/gameConstants';
+import {BOARD_SIZE, CELL_STATE, PHASES} from '../constants/gameConstants';
 import {isFleetDefeated, isShipSunk} from "./fleetConfig.js";
 
 /**
@@ -111,4 +111,21 @@ export function processAttack(board, fleet, row, col) {
         result,
         isGameOver: isFleetDefeated(newFleet),
     };
+}
+
+
+/**
+ * Xác định trạng thái ván đấu (lượt đi) tiếp theo dựa trên kết quả cú bắn.
+ * Luật chơi: Bắn trúng (hit/sunk) -> giữ nguyên lượt. Bắn trượt (miss) -> đổi lượt.
+ * * @param {string} currentPhase - Lượt hiện tại (PHASES.PLAYER_TURN hoặc PHASES.CPU_TURN)
+ * @param {'miss' | 'hit' | 'sunk'} attackResult - Kết quả cú bắn
+ * @returns {string} Phase tiếp theo của game
+ */
+export function determineNextPhase(currentPhase, attackResult) {
+    if (attackResult === 'miss') {
+        // Nếu trượt: Player -> CPU, CPU -> Player
+        return currentPhase === PHASES.PLAYER_TURN ? PHASES.CPU_TURN : PHASES.PLAYER_TURN;
+    }
+    // Nếu trúng hoặc chìm tàu: Giữ nguyên lượt hiện tại để bắn tiếp
+    return currentPhase;
 }
