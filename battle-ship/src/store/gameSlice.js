@@ -77,6 +77,7 @@ const gameSlice = createSlice({
             state.playerFleet = playerFleet;
             state.computerFleet = computerFleet;
             state.selectedShipId = null;
+
             state.winner = null;
 
             // [2.2] store updated → useSelector re-render board 10×10 + fleet list
@@ -178,6 +179,7 @@ const gameSlice = createSlice({
                 state.errorMessage = 'Ô này đã bị tấn công. Vui lòng chọn ô khác.';
                 return;
             }
+
             state.errorMessage = null;
             // [3.4] checkCell — kiểm tra ô có tàu không, trả về ship và remainingCells
             const {hasShip, ship, remainingCells} = checkCell(
