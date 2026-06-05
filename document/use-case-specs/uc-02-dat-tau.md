@@ -1,4 +1,4 @@
-# Đặc tả Use Case: Đặt Tàu
+# Đặc tả Use Case: Thiết lập bảng và Đặt tàu (UC-02)
 
 ## Lịch sử chỉnh sửa
 
@@ -8,34 +8,39 @@
 | 2.0 | 09/05/2026 | Bùi Hữu Trí | Chỉnh sửa luồng, tách các responsibility ra 2.6 và 2.7 |
 | 3.0 | 18/05/2026 | Bùi Hữu Trí | Cấu trúc lại numbering — 1 luồng chính, 1 luồng ngoại lệ |
 | 4.0 | 18/05/2026 | Bùi Hữu Trí | Tách 2.1.0 kích hoạt, 2.1.1 khởi tạo hạm đội; chỉnh luồng ngoại lệ khớp code |
+| 5.0 | 05/06/2026 | Đặng Văn Trung | - Mở rộng phạm vi UC-02 từ nền v1 `10×10 / 5 tàu` sang thiết lập bảng và hạm đội theo độ khó `Easy / Normal`.<br>- Bổ sung phạm vi đặt tàu tự động, kéo thả và điều chỉnh vị trí/hướng đặt tàu trong giai đoạn thiết lập.<br>- Cập nhật mô tả, actor, độ ưu tiên và mã truy xuất yêu cầu theo BRD v1.2.1 / URD v2.1. |
 
 ## 1. Giới thiệu
 
 | Trường | Nội dung |
 |--------|----------|
 | Use Case ID | UC-02 |
-| Tên Use Case | Đặt Tàu |
-| Độ ưu tiên | MUST - Phải có, vì người chơi bắt buộc phải đặt đủ hạm đội hợp lệ trước khi bước vào giai đoạn tấn công. |
-| Actor chính | Player |
+| Tên Use Case | Thiết Lập Bảng Và Đặt Tàu |
+| Độ ưu tiên | MUST - Phải có, vì `Player` cần thiết lập bảng đúng kích thước theo độ khó đã chọn, sử dụng hạm đội phù hợp với kích thước bảng, đặt toàn bộ hạm đội hợp lệ trước lượt tấn công, có thể chọn đặt tàu tự động để rút ngắn thời gian thiết lập, và có thể chọn, di chuyển vị trí, đổi hướng tàu trong giai đoạn thiết lập. (BR-03, BR-04, BR-05, BR-11, BR-12) |
+| Actor chính | `Player` (ACT-01) |
 | Actor phụ | Không có |
 
 ## 2. Mô tả Use Case
 
-`Player` thiết lập hạm đội bằng cách đặt 5 tàu tiêu chuẩn lên bảng chơi 10×10 của mình trước khi bắt đầu giai đoạn tấn công. Hệ thống kiểm tra tính hợp lệ của từng vị trí đặt tàu và chỉ cho phép chuyển sang giai đoạn tấn công khi toàn bộ hạm đội đã được đặt đúng quy tắc.
+- `Player` thiết lập bảng và bố cục hạm đội theo độ khó đã chọn trước khi bắt đầu giai đoạn tấn công.
+- Hệ thống chỉ chấp nhận bố cục hạm đội hợp lệ và chỉ cho phép bắt đầu tấn công khi toàn bộ hạm đội của độ khó hiện tại đã được đặt.
+- `Player` có thể đặt tàu thủ công, kéo thả hoặc điều chỉnh vị trí/hướng đặt tàu, hoặc dùng đặt tàu tự động để hệ thống tạo bố cục hợp lệ ngẫu nhiên.
 
 ## 3. Điều kiện tiên quyết (Pre-conditions)
 
 1. UC-01 đã hoàn tất thành công — hệ thống đang ở trạng thái sẵn sàng thiết lập.
-2. `Player` đang ở giao diện thiết lập hạm đội (đặt tàu).
+2. `Player` đã chọn độ khó hợp lệ là `Easy` hoặc `Normal`.
+3. Hệ thống đã xác định cấu hình bảng và hạm đội tương ứng với độ khó đã chọn.
+4. `Player` đang ở giao diện thiết lập hạm đội (đặt tàu).
 
 ## 4. Sự kiện kích hoạt (Trigger)
 
-Hệ thống chuyển tự động sang giai đoạn thiết lập sau khi UC-01 hoàn tất; giao diện đặt tàu được hiển thị mà không cần thao tác thêm từ `Player`.
+1. Hệ thống chuyển tự động sang giai đoạn thiết lập sau khi UC-01 hoàn tất; giao diện đặt tàu được hiển thị mà không cần thao tác thêm từ `Player`.
 
 ## 5. Hậu điều kiện (Post-conditions)
 
-1. Toàn bộ 5 tàu của `Player` đã được đặt hợp lệ trên bảng 10×10.
-2. Hạm đội của Máy tính đã được đặt ngẫu nhiên (ẩn khỏi `Player`).
+1. Toàn bộ hạm đội của `Player` đã được đặt hợp lệ trên bảng theo độ khó đã chọn: `Easy` sử dụng bảng `10×10` với `5 tàu`; `Normal` sử dụng bảng `12×12` với `8 tàu`.
+2. Hạm đội của Máy tính đã được đặt ngẫu nhiên theo cấu hình hạm đội của độ khó đã chọn và được ẩn khỏi `Player`.
 3. Hệ thống ở trạng thái sẵn sàng cho giai đoạn tấn công (UC-03).
 
 ## 6. Luồng chính (Normal Flow)
