@@ -2,6 +2,17 @@ import {BOARD_SIZE, CELL_STATE} from '../constants/gameConstants';
 import {isFleetDefeated} from "./fleetConfig.js";
 
 /**
+ * Bảng điểm theo loại tàu
+ */
+export const SHIP_POINTS = {
+    destroyer: 20,
+    submarine: 30,
+    cruiser: 30,
+    battleship: 40,
+    carrier: 50,
+};
+
+/**
  * [3.1.3] / [3.6.2] Kiểm tra ô đã chọn: xác nhận nằm trong bảng 10x10 và chưa bị tấn công.
  */
 export function validateCoordinate(row, col, board) {
@@ -116,4 +127,16 @@ export function processAttack(board, fleet, row, col) {
         result: 'hit',
         isGameOver: false,
     };
+}
+
+/**
+ * Quy tắc tính hệ số combo dựa trên chuỗi bắn trúng liên tiếp
+ * - Phát thứ 1: x1
+ * - Phát thứ 2: x2
+ * - Phát thứ 3 trở đi: x3
+ */
+export function calculateComboMultiplier(streak) {
+    if (streak <= 1) return 1;
+    if (streak === 2) return 2;
+    return 3;
 }
