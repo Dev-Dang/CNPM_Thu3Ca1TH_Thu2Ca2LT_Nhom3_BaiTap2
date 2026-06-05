@@ -36,17 +36,18 @@ const gameSlice = createSlice({
         /**
          * UC-01: Khởi tạo ván chơi mới.
          */
+        // [2.1.0] kicjh hoạt đặt tàu startGame(state)
         startGame(state) {
-            // [2.1] createFleet(FLEET_CONFIG) → fleet[5]
+            // [2.1.1] createFleet(FLEET_CONFIG) → fleet[5]
             const playerFleet = createFleet();
 
-            // [2.1] placeFleetRandomly(emptyBoard, fleet) → {computerBoard, computerFleet}
+            // [2.1.1] placeFleetRandomly(emptyBoard, fleet) → {computerBoard, computerFleet}
             const {board: computerBoard, fleet: computerFleet} = placeFleetRandomly(
                 createBoard(),
                 createFleet()
             );
 
-            // [2.1] phase='SETUP', playerFleet, computerBoard
+            // [2.1.1] phase='SETUP', playerFleet, computerBoard
             state.phase = PHASES.SETUP;
             state.playerBoard = createBoard();
             state.computerBoard = computerBoard; // computerBoard — hidden from Player
@@ -56,53 +57,50 @@ const gameSlice = createSlice({
 
             state.winner = null;
 
-            // [2.2] store updated → useSelector re-render board 10×10 + fleet list
+            // [2.1.2] store updated → useSelector re-render board 10×10 + fleet list
         },
 
         /**
-         * UC-02 — Bước 2.3 / 2.A1.1: Player chọn tàu.
-         * - 2.3: chọn tàu chưa đặt
-         * - 2.A1.1: chọn tàu đã đặt → reposition
+         * UC-02 — Bước 2.1.3
          */
         selectShip(state, action) {
-            // [2.4.1] dispatch(selectShip(shipId)) → bindSelectedShip, fleetPlaced+1
+            // [2.1.4] dispatch(selectShip(shipId)) → bindSelectedShip, fleetPlaced+1
             state.selectedShipId = action.payload.shipId;
             // store updated → useSelector re-render (highlight tàu được chọn)
         },
 
         /**
-         * UC-02 — Bước 2.4 → 2.7: Đặt tàu lên bảng.
-         * Bao gồm cả luồng thay thế 2.A1 (reposition).
+         * UC-02 — Bước 2.1.4 → 2.1.7: Đặt tàu lên bảng.
          */
         placeShip(state, action) {
             const {shipId, row, col, orientation} = action.payload;
-            // [2.4] dispatch(placeShip(shipId, row, col, dir))
+            // [2.1.4] dispatch(placeShip(shipId, row, col, dir))
 
             const shipIndex = state.playerFleet.findIndex((s) => s.id === shipId);
             if (shipIndex === -1) return;
 
             const ship = state.playerFleet[shipIndex];
 
-            // [2.A1.2] Nếu tàu đã đặt → removeShipFromBoard trước khi validate
+            // [2.2.2] Nếu tàu đã đặt → removeShipFromBoard trước khi validate
             // (tái đặt — reposition: gỡ tàu khỏi vị trí cũ, ô trở về trống)
             let boardForValidation = state.playerBoard;
             if (ship.placed && ship.positions.length > 0) {
                 boardForValidation = removeShipFromBoard(state.playerBoard, ship.positions);
             }
 
-            // [2.5] isValidPlacement(board, row, col, size, dir) → boolean
+            // [2.1.5] isValidPlacement(board, row, col, size, dir) → boolean
             const valid = isValidPlacement(boardForValidation, row, col, ship.size, orientation);
 
             if (!valid) {
-                // [2.E1.1] valid = false
-                // [2.E1.2] phase='INVALID_PLACEMENT' → SetupBoard hiển thị error msg
+                // [2.3.1] valid = false
+                // [2.3.2] phase='INVALID_PLACEMENT' → SetupBoard hiển thị error msg
                 state.phase = PHASES.INVALID_PLACEMENT;
-                // [2.E1.3] Player nhận msg → back to 2.4
+                // [2.3.3] Player nhận msg → back to 2.4
                 return;
             }
 
             // alt [valid = true]
-            // [2.6] placeShipOnBoard(board, row, col, size, dir) → newBoard
+            // [2.1.6] placeShipOnBoard(board, row, col, size, dir) → newBoard
             let newBoard = boardForValidation; // board đã remove ship cũ nếu reposition
             const {board: updatedBoard, positions} = placeShipOnBoard(
                 newBoard,
@@ -113,7 +111,7 @@ const gameSlice = createSlice({
                 shipId
             );
 
-            // [2.6] show position → cập nhật board + ship.positions
+            // [2.1.6] show position → cập nhật board + ship.positions
             state.playerBoard = updatedBoard;
             state.playerFleet[shipIndex] = {
                 ...ship,
@@ -122,7 +120,7 @@ const gameSlice = createSlice({
                 placed: true,
             };
 
-            // [2.7] selectedShipId = null
+            // [2.1.7] selectedShipId = null
             state.selectedShipId = null;
 
             // Reset phase về SETUP (xoá INVALID_PLACEMENT nếu có)
@@ -131,14 +129,14 @@ const gameSlice = createSlice({
         },
 
         /**
-         * UC-02 — Bước 2.9 / 2.10: Bắt đầu tấn công.
+         * UC-02 — Bước 2.1.9 / 2.1.10: Bắt đầu tấn công.
          */
         startBattle(state) {
-            // [2.8] Guard: allPlaced = false → không làm gì
+            // [2.1.8] Guard: allPlaced = false → không làm gì
             const allPlaced = state.playerFleet.every((s) => s.placed);
             if (!allPlaced) return;
 
-            // [2.10] phase='BATTLE' → ref UC-03
+            // [2.1.10] phase='BATTLE' → ref UC-03
             state.phase = PHASES.PLAYER_TURN;
         },
 

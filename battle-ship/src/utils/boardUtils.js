@@ -52,11 +52,11 @@ export function isValidPlacement(board, row, col, size, orientation) {
     const positions = getShipPositions(row, col, size, orientation);
 
     for (const pos of positions) {
-        // [2.5] RUL-04: Không vượt biên bảng
+        // [2.1.5] RUL-04: Không vượt biên bảng
         if (pos.row < 0 || pos.row >= BOARD_SIZE || pos.col < 0 || pos.col >= BOARD_SIZE) {
             return false;                                        // [2.5] → boolean (false)
         }
-        // [2.5] RUL-05: Không đè lên tàu khác
+        // [2.1.5] RUL-05: Không đè lên tàu khác
         if (board[pos.row][pos.col].state !== CELL_STATE.EMPTY) {
             return false;                                        // [2.5] → boolean (false)
         }
@@ -81,7 +81,7 @@ export function isValidPlacement(board, row, col, size, orientation) {
 export function placeShipOnBoard(board, row, col, size, orientation, shipId) {
     const positions = getShipPositions(row, col, size, orientation);
 
-    // [2.6] Deep copy board (immutable)
+    // [2.1.6] Deep copy board (immutable)
     const newBoard = board.map((r) => r.map((cell) => ({...cell})));
 
     for (const pos of positions) {
@@ -141,7 +141,7 @@ export function placeFleetRandomly(board, fleet) {
     let currentBoard = board.map((r) => r.map((cell) => ({...cell})));
     const orientations = ['H', 'V'];
 
-    // [2.1] Lặp qua từng tàu trong fleet, thử ngẫu nhiên cho đến khi đặt được
+    // [2.1.1] Lặp qua từng tàu trong fleet, thử ngẫu nhiên cho đến khi đặt được
     const placedFleet = fleet.map((ship) => {
         let placed = false;
         let positions = [];
@@ -165,5 +165,5 @@ export function placeFleetRandomly(board, fleet) {
         return {...ship, positions, placed: true};
     });
 
-    return {board: currentBoard, fleet: placedFleet};     // [2.1] → { computerBoard, computerFleet }
+    return {board: currentBoard, fleet: placedFleet};     // [2.1.1] → { computerBoard, computerFleet }
 }
