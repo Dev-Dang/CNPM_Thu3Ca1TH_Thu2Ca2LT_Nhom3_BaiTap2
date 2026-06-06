@@ -7,6 +7,7 @@
 | 1.0 | 27/04/2026 | Hồ Ngọc Hoàn Sơn | Phiên bản đầu tiên — sinh từ URD v2.0 (US-06, US-07) |
 | 2.0 | 15/05/2026 | Hồ Ngọc Hoàn Sơn | Cập nhật lại số các bước ở BasicFlow ,AlterFlow ,ExeptionFlow |
 | 3.0 | 16/05/2026 | Hồ Ngọc Hoàn Sơn | Thêm bước 3.1.0 vào BasicFlow|
+| 4.0 | 06/06/2026 | Cao Văn Vượng | Thêm hậu điều kiện, sửa lại các bước, luồng thay thế, luồng ngoại lệ, quy tắc nghiệp vụ |
 
 ## 1. Giới thiệu
 
@@ -39,6 +40,7 @@ Hệ thống kích hoạt lượt `Player`: lần đầu tiên ngay sau khi UC-0
 2. Nếu kết quả là Sunk: toàn bộ ô của tàu bị nhấn chìm được đánh dấu đồng loạt bằng ký hiệu Sunk — phân biệt rõ với ký hiệu Hit thông thường.
 3. Trạng thái bảng và tàu được cập nhật chính xác, nhất quán giữa giao diện và dữ liệu nội bộ.
 4. Hệ thống chuyển sang lượt Máy tính (UC-04) — bảng đối thủ bị vô hiệu hóa, bảng của `Player` ở trạng thái chỉ xem trong lúc Máy tính xử lý lượt. Hoặc kích hoạt UC-05 nếu toàn bộ tàu đối thủ đã bị nhấn chìm.
+5. Điểm số (`score`) và hệ thống chuỗi combo (`comboStreak`, `comboMultiplier`) của `Player` được cập nhật tương ứng với kết quả lượt tấn công.
 
 ## 6. Luồng chính (Normal Flow) — Tấn công trượt (Miss)
 
@@ -51,7 +53,7 @@ Hệ thống kích hoạt lượt `Player`: lần đầu tiên ngay sau khi UC-0
 | **3.1.2** | `Player` | Quan sát bảng đối thủ và click vào một ô hợp lệ (chưa bị tấn công). |
 | **3.1.3** | Hệ thống | Kiểm tra ô đã chọn — xác nhận nằm trong bảng 10×10 và chưa bị tấn công trước đó. |
 | **3.1.4** | Hệ thống | Xác định kết quả tấn công — ô không chứa tàu đối thủ → kết quả "Trượt" (Miss). |
-| **3.1.5** | Hệ thống | Đánh dấu ô vừa tấn công bằng ký hiệu Miss (ví dụ: chấm trắng hoặc xám) trên bảng đối thủ. Hiển thị thông báo: "Trượt!" |
+| **3.1.5** | Hệ thống | Đánh dấu ô vừa tấn công bằng ký hiệu Miss (ví dụ: chấm trắng hoặc xám) trên bảng đối thủ. Hiển thị thông báo: "Trượt!". Hệ thống reset chuỗi combo (`comboStreak` = 0) và hệ số nhân về mặc định (`comboMultiplier` = 1). |
 | **3.1.6** | Hệ thống | Kiểm tra điều kiện kết thúc ván — còn ít nhất một tàu đối thủ chưa bị nhấn chìm → chưa kết thúc. *\[EP: end-game\] Nếu toàn bộ tàu đối thủ bị nhấn chìm → kích hoạt UC-05 (3.4).* |
 | **3.1.7** | Hệ thống | Vô hiệu hóa bảng đối thủ, không cho `Player` click tiếp. Chuyển sang lượt Máy tính, kích hoạt UC-04. |
 | **3.1.8** | Hệ thống | Kết thúc. |
@@ -66,6 +68,7 @@ Hệ thống kích hoạt lượt `Player`: lần đầu tiên ngay sau khi UC-0
 |------|-------|----------------------|
 | **3.2.1** | Hệ thống | Xác định kết quả — ô chứa tàu đối thủ, tàu còn ít nhất một ô khác chưa bị tấn công → kết quả "Trúng" (Hit). |
 | **3.2.2** | Hệ thống | Đánh dấu ô vừa tấn công bằng ký hiệu Hit (ví dụ: màu đỏ hoặc icon lửa) trên bảng đối thủ. Hiển thị thông báo: "Trúng!" |
+| **3.2.3** | Hệ thống | Tăng chuỗi combo thêm 1, cập nhật hệ số nhân combo. Tính và cộng điểm cho `Player` dựa trên: [Điểm nền của loại tàu] x [Hệ số nhân combo]. |
 | **→** | Hệ thống | Quay lại bước 3.1.6 của Luồng chính. |
 
 ### 7.2. Luồng thay thế 3.3 — Tấn công nhấn chìm tàu (Sunk)
@@ -76,6 +79,7 @@ Hệ thống kích hoạt lượt `Player`: lần đầu tiên ngay sau khi UC-0
 |------|-------|----------------------|
 | **3.3.1** | Hệ thống | Xác định kết quả — ô chứa tàu đối thủ và đây là ô cuối cùng chưa bị tấn công của tàu đó → kết quả "Nhấn chìm" (Sunk). |
 | **3.3.2** | Hệ thống | Đánh dấu toàn bộ ô của tàu bị nhấn chìm đồng loạt bằng ký hiệu Sunk (phân biệt rõ với ký hiệu Hit thông thường). Hiển thị thông báo: "Đã nhấn chìm một tàu!" |
+| **3.3.3** | Hệ thống | Tăng chuỗi combo thêm 1, cập nhật hệ số nhân combo. Tính và cộng điểm cho `Player` tương tự bước 3.2.3, đồng thời cộng thêm 50 điểm thưởng nhấn chìm tàu. |
 | **→** | Hệ thống | Quay lại bước 3.1.6 của Luồng chính. |
 
 ### 7.3. Luồng thay thế 3.4 — Toàn bộ tàu đối thủ bị nhấn chìm (Player thắng)
@@ -85,8 +89,9 @@ Hệ thống kích hoạt lượt `Player`: lần đầu tiên ngay sau khi UC-0
 | Bước | Actor | Hành động / Phản hồi |
 |------|-------|----------------------|
 | **3.4.1** | Hệ thống | Xác định toàn bộ tàu đối thủ đã bị nhấn chìm — điều kiện kết thúc được thỏa mãn. |
-| **3.4.2** | Hệ thống | Kích hoạt UC-05 với kết quả `Player` thắng. |
-| **3.4.3** | Hệ thống | Kết thúc. |
+| **3.4.2** | Hệ thống | Cộng thêm 100 điểm thưởng chiến thắng vào tổng điểm của `Player`. |
+| **3.4.3** | Hệ thống | Kích hoạt UC-05 với kết quả `Player` thắng. |
+| **3.4.4** | Hệ thống | Kết thúc. |
 
 ## 8. Luồng ngoại lệ (Exception Flows)
 
@@ -124,6 +129,8 @@ Không có.
 |----|---------|-------|
 | RUL-06 | Mỗi ô trên bảng chỉ có thể bị tấn công một lần trong ván chơi. | BRD §4.2 |
 | RUL-07 | Người chơi thực hiện lượt đầu tiên; sau đó luân phiên với đối thủ máy tính. | BRD §4.2 |
+| RUL-08 | Khi bắn trúng hoặc nhấn chìm tàu, người chơi được cộng điểm bằng điểm nền của loại tàu nhân với hệ số combo. Thưởng thêm 50 điểm khi nhấn chìm tàu và 100 điểm khi thắng ván chơi. | BRD / Design |
+| RUL-09 | Hệ số combo tăng theo chuỗi bắn trúng liên tiếp: Phát 1 (x1), phát 2 (x2), từ phát 3 trở đi (x3). Bắn trượt sẽ reset chuỗi combo về 0. | BRD / Design |
 
 ## 11. Yêu cầu phi chức năng (Non-Functional Requirements)
 
