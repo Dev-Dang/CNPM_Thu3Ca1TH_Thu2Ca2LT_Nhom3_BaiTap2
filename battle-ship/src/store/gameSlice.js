@@ -30,17 +30,17 @@ const initialState = {
     winner: null,
     lastAttackResult: null,
     errorMessage: null,
-<<<<<<< HEAD
+
     totalShots: 0,
     totalHits: 0,
-=======
+
 
     //Các state quản lý điểm và combo
     score: 0,
     comboStreak: 0,
     comboMultiplier: 1,
     lastScoreDelta: 0,
->>>>>>> fd6462dacc62ac7cd43f2f9d64fa0ecb02270429
+
 };
 
 const gameSlice = createSlice({
@@ -201,14 +201,10 @@ const gameSlice = createSlice({
 
             // Xóa thông báo lỗi cũ nếu tọa độ được chọn hoàn toàn hợp lệ
             state.errorMessage = null;
-<<<<<<< HEAD
+
             state.totalShots += 1;
             // [3.4] checkCell — kiểm tra ô có tàu không, trả về ship và remainingCells
-            const {hasShip, ship, remainingCells} = checkCell(
-=======
-            // [3.1.4] / [3.2.1] / [3.3.1] Hệ thống xác định kết quả tấn công (Trượt, Trúng, hoặc Nhấn chìm)
             const {hasShip, ship, remainingCells} = getCellAttackInfo(
->>>>>>> fd6462dacc62ac7cd43f2f9d64fa0ecb02270429
                 row, col, state.computerBoard, state.computerFleet
             );
 
@@ -229,12 +225,12 @@ const gameSlice = createSlice({
                 // Chuyển lượt sang máy (BR-16 / US-14)
                 state.phase = PHASES.CPU_TURN;
             } else {
-<<<<<<< HEAD
+
                 // [3.A1.2] Hit — tàu chưa bị nhấn chìm, đánh dấu ô HIT
                 state.totalHits += 1;
-=======
+
                 // [3.2.1] Ô chứa tàu đối thủ. Đánh dấu Hit tạm thời.
->>>>>>> fd6462dacc62ac7cd43f2f9d64fa0ecb02270429
+
                 newBoard = markCell(row, col, CELL_STATE.HIT, state.computerBoard);
                 // Cập nhật số lần trúng đạn (hitCount) vào thông tin hạm đội của Máy tính
                 const shipIndex = state.computerFleet.findIndex((s) => s.id === ship.id);
@@ -327,7 +323,11 @@ const gameSlice = createSlice({
          * UC-05: Chơi lại — reset toàn bộ về trạng thái ban đầu.
          */
         restartGame() {
-            // TODO: UC-05 — Implement
+            return {
+                ...initialState,
+                playerBoard: createBoard(),
+                computerBoard: createBoard(),
+            };
         },
     },
 });
