@@ -11,27 +11,13 @@ const SHIP_VISUALS = {
 
 const DEFAULT_VISUAL = { emoji: '🚢', color: '#6377d6', bgLight: 'rgba(99,119,214,0.12)', bgPlaced: 'rgba(99,119,214,0.30)' };
 
-/**
- * Fleet status panel — renders ship blocks matching the reference design.
- *
- * Used in:
- *   SetupBoard (UC-02) — with onSelect to pick a ship for placement
- *   GameBoard  (UC-03/04) — status display only (no onSelect)
- *
- * @param {{
- *   fleet: Ship[],
- *   onSelect?: (id: string) => void,
- *   selectedId?: string | null,
- *   align?: 'left' | 'right'
- * }} props
- */
 export default function ShipList({ fleet = [], onSelect, selectedId, align = 'left' }) {
     return (
         <div className={`ship-list ${align === 'right' ? 'ship-list-right' : ''}`}>
             {fleet.map((ship) => {
                 const sunk = isShipSunk(ship);
                 const isSelected = selectedId === ship.id;
-                const canSelect = !!onSelect && !ship.placed && !sunk;
+                const canSelect = !!onSelect && !sunk;
                 const vis = SHIP_VISUALS[ship.id] ?? DEFAULT_VISUAL;
 
                 return (
