@@ -6,6 +6,7 @@ import Grid from './Grid.jsx';
 import {useEffect, useState} from "react";
 import {selectAttackCell} from "../utils/computerLogic.js";
 import ShipList from "./ShipList.jsx";
+import AttackToast from "./AttackToast.jsx"
 import '../styles/game-board.css';
 import '../styles/error.css';
 
