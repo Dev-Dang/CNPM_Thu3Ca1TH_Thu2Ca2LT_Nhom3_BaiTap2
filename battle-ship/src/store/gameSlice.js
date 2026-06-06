@@ -30,6 +30,8 @@ const initialState = {
     winner: null,
     lastAttackResult: null,
     errorMessage: null,
+    totalShots: 0,
+    totalHits: 0,
 
     //Các state quản lý điểm và combo
     score: 0,
@@ -86,6 +88,8 @@ const gameSlice = createSlice({
             state.computerFleet = computerFleet;
             state.selectedShipId = null;
             state.winner = null;
+            state.totalShots = 0;
+            state.totalHits = 0;
 
             //Reset điểm số và combo
             state.score = 0;
@@ -216,6 +220,9 @@ const gameSlice = createSlice({
                 // Chuyển lượt sang máy (BR-16 / US-14)
                 state.phase = PHASES.CPU_TURN;
             } else {
+                // [3.A1.2] Hit — tàu chưa bị nhấn chìm, đánh dấu ô HIT
+                state.totalHits += 1;
+                
                 // [3.2.1] Ô chứa tàu đối thủ. Đánh dấu Hit tạm thời.
                 newBoard = markCell(row, col, CELL_STATE.HIT, state.computerBoard);
                 // Cập nhật số lần trúng đạn (hitCount) vào thông tin hạm đội của Máy tính
