@@ -348,8 +348,8 @@ const gameSlice = createSlice({
 
                 // [4.2.3] Kích hoạt UC-05 với kết quả `Player` thua
             } else if (
-                state.difficulty === 'normal' &&
-                (attack.result === 'hit' || attack.result === 'sunk')
+                attack.result === 'hit' ||
+                attack.result === 'sunk'
             ) {
                 // [UC-04 v2 / RUL-07] Normal + bắn trúng → tiếp tục lượt, giữ CPU_TURN
                 state.phase = PHASES.CPU_TURN;
