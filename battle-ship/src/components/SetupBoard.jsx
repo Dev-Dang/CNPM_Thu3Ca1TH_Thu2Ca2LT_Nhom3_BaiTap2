@@ -68,7 +68,7 @@ export default function SetupBoard() {
             {/* ── Fleet panel ── */}
             <div className="setup-sidebar">
 
-                {/* [2.2] Danh sách 5 tàu — re-render khi store update */}
+                {/* [2.2] Danh sách 5 tàu — 2.7 re-render khi store update */}
                 <ShipList
                     fleet={playerFleet}
                     selectedId={selectedShipId}
@@ -97,7 +97,7 @@ export default function SetupBoard() {
             {/* ── Board ── */}
             <div className="setup-board-area">
 
-                {/* [2.2] Bảng 10×10 — re-render khi store update */}
+                {/* [2.2] Bảng 10×10 — 2.6 re-render khi store update */}
                 <Grid
                     board={playerBoard}
                     onCellClick={handleCellClick}

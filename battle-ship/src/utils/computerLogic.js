@@ -1,5 +1,4 @@
-/* eslint-disable */
-import {CELL_STATE} from '../constants/gameConstants.js';
+import {validateCoordinate} from './attackUtils.js';
 
 /**
  * Chọn một ô ngẫu nhiên trên Player Board
@@ -9,23 +8,28 @@ import {CELL_STATE} from '../constants/gameConstants.js';
  */
 export function selectAttackCell(playerBoard) {
     try {
+        // Tạo mảng chứa danh sách cell hợp lệ
         const available = [];
+
         playerBoard.forEach((rowArr) =>
             rowArr.forEach((cell) => {
-                if (cell.state !== CELL_STATE.HIT
-                    && cell.state !== CELL_STATE.MISS
-                    && cell.state !== CELL_STATE.SUNK) {
+                // Kiểm tra tính hợp lệ của cell
+                if (validateCoordinate(cell.row, cell.col, playerBoard)) {
+                    // Thêm cell vào danh sách chờ
                     available.push({row: cell.row, col: cell.col});
                 }
             })
         );
-        const index = Math.floor(Math.random() * available.length);
 
-        // 4.2 Trả về ô hợp lệ chưa bị tấn công -> cell[row][col]
-        return available[index];
+        // Lựa chọn ngẫu nhiên 1 cell từ danh sách hợp lệ
+        const index = Math.floor(Math.random() * available.length);
+        const selectedCell = available[index];
+
+        // [4.1.2b] Trả về ô được chọn theo logic cơ bản
+        return selectedCell;
 
     } catch (error) {
-        // 4.E1.2a throw error
+        // [4.3.1] Phát hiện lỗi khi chọn ô tấn công
         throw error;
     }
 }

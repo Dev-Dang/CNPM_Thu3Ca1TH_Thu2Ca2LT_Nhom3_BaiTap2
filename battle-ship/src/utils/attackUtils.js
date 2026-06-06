@@ -1,5 +1,5 @@
 import {BOARD_SIZE, CELL_STATE} from '../constants/gameConstants';
-import {isFleetDefeated, isShipSunk} from "./fleetConfig.js";
+import {isFleetDefeated} from "./fleetConfig.js";
 
 /**
  * 3.3 — Kiểm tra tọa độ hợp lệ và chưa bị tấn công.
@@ -16,7 +16,7 @@ export function validateCoordinate(row, col, board) {
  * fleet[i].positions = [{ row, col }, ...]   ← shape từ boardUtils
  * @returns {{ hasShip: boolean, ship: object|null, remainingCells: number }}
  */
-export function checkCell(row, col, board, fleet) {
+export function getCellAttackInfo(row, col, board, fleet) {
     const cell = board[row][col];
     if (!cell.shipId) return {hasShip: false, ship: null, remainingCells: 0};
 
@@ -78,37 +78,48 @@ export function checkEndGame(fleet, board) {
  * }}
  */
 export function processAttack(board, fleet, row, col) {
-    const targetCell = board[row][col];
-    const newBoard = board.map((r) => r.map((cell) => ({...cell})));
-    let newFleet = fleet.map((ship) => ({...ship}));
-    let result;
+    // Kiểm tra ô bị tấn công
+    const {hasShip, ship, remainingCells} = getCellAttackInfo(row, col, board, fleet);
 
-    if (!targetCell.shipId) {
-        newBoard[row][col] = {...targetCell, state: CELL_STATE.MISS};
-        result = 'miss';
-    } else {
-        const shipIndex = newFleet.findIndex((s) => s.id === targetCell.shipId);
-        newFleet[shipIndex] = {
-            ...newFleet[shipIndex],
-            hitCount: newFleet[shipIndex].hitCount + 1,
+    if (!hasShip) {
+        // Cập nhật trạng thái board
+        // [4.1.3c] Trả kết quả lượt tấn công
+        return {
+            board: markCell(row, col, CELL_STATE.MISS, board),
+            fleet,
+            result: 'miss',
+            isGameOver: false,
         };
-
-        if (isShipSunk(newFleet[shipIndex])) {
-            newFleet[shipIndex].positions.forEach((pos) => {
-                newBoard[pos.row][pos.col] = {...newBoard[pos.row][pos.col], state: CELL_STATE.SUNK};
-            });
-            result = 'sunk';
-        } else {
-            newBoard[row][col] = {...targetCell, state: CELL_STATE.HIT};
-            result = 'hit';
-        }
     }
 
-    // 4.3c ← {board, fleet, result, isGameOver}
+    // Cập nhật đội tàu với hitCount mới
+    const newFleet = fleet.map((s) =>
+        s.id === ship.id ? {...s, hitCount: s.hitCount + 1} : s
+    );
+
+    if (remainingCells === 0) {
+        // Lấy ra tàu bị đánh trúng
+        const updatedShip = newFleet.find((s) => s.id === ship.id);
+
+        // Kiểm tra điều kiện kết thúc
+        const checkGameOver = isFleetDefeated(newFleet);
+
+        // Cập nhật trạng thái board
+        // [4.1.3c] Trả kết quả lượt tấn công
+        return {
+            board: markAllShipCells(updatedShip, markCell(row, col, CELL_STATE.HIT, board)),
+            fleet: newFleet,
+            result: 'sunk',
+            isGameOver: checkGameOver,
+        };
+    }
+
+    // Cập nhật trạng thái board
+    // [4.1.3c] Trả kết quả lượt tấn công
     return {
-        board: newBoard,
+        board: markCell(row, col, CELL_STATE.HIT, board),
         fleet: newFleet,
-        result,
-        isGameOver: isFleetDefeated(newFleet),
+        result: 'hit',
+        isGameOver: false,
     };
 }
