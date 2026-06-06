@@ -28,6 +28,8 @@ const initialState = {
     winner: null,
     lastAttackResult: null,
     errorMessage: null,
+    totalShots: 0,
+    totalHits: 0,
 };
 
 const gameSlice = createSlice({
@@ -79,6 +81,8 @@ const gameSlice = createSlice({
             state.selectedShipId = null;
 
             state.winner = null;
+            state.totalShots = 0;
+            state.totalHits = 0;
 
             // [2.2] store updated → useSelector re-render board 10×10 + fleet list
         },
@@ -181,6 +185,7 @@ const gameSlice = createSlice({
             }
 
             state.errorMessage = null;
+            state.totalShots += 1;
             // [3.4] checkCell — kiểm tra ô có tàu không, trả về ship và remainingCells
             const {hasShip, ship, remainingCells} = checkCell(
                 row, col, state.computerBoard, state.computerFleet
@@ -193,6 +198,7 @@ const gameSlice = createSlice({
                 state.lastAttackResult = 'miss';
             } else {
                 // [3.A1.2] Hit — tàu chưa bị nhấn chìm, đánh dấu ô HIT
+                state.totalHits += 1;
                 newBoard = markCell(row, col, CELL_STATE.HIT, state.computerBoard);
                 const shipIndex = state.computerFleet.findIndex((s) => s.id === ship.id);
                 if (shipIndex !== -1) state.computerFleet[shipIndex].hitCount += 1;
