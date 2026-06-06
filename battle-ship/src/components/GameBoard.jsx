@@ -15,7 +15,9 @@ export default function GameBoard() {
     const dispatch = useAppDispatch();
 
     // [4.2.2a] / [4.1.5a] Nhận trạng thái mới
-    const {phase, playerBoard, playerFleet, computerBoard, computerFleet, lastAttackResult} =
+    // [UC-04 v2] Thêm difficulty và computerTargetQueue từ Redux
+    const {phase, playerBoard, playerFleet, computerBoard, computerFleet, lastAttackResult,
+        difficulty, computerTargetQueue} =
         useAppSelector((state) => state.game);
 
     // [4.1.1] Nhận lượt từ hệ thống; bắt đầu xử lý. → (phase = CPU_TURN)
@@ -26,7 +28,11 @@ export default function GameBoard() {
             let cell = null;
             try {
                 // [4.1.2a] Yêu cầu máy tính chọn ô tấn công
-                cell = selectAttackCell(playerBoard);
+                // [UC-04 v2] Truyền difficulty và targetQueue để hỗ trợ Normal Hunt-and-Target
+                cell = selectAttackCell(playerBoard, {
+                    difficulty,
+                    targetQueue: computerTargetQueue,
+                });
             } catch (error) {
                 // [4.3.1a] Set giá trị Thông báo lỗi
                 setErrorMsg("Kết quả lượt chơi gặp lỗi. Vui lòng tải lại trang.");
@@ -39,20 +45,22 @@ export default function GameBoard() {
         }, DELAY_MS);
 
         return () => clearTimeout(timer);
-    }, [phase, playerBoard, dispatch]);
+        // [UC-04 v2] Thêm difficulty và computerTargetQueue vào dep array
+    }, [phase, playerBoard, difficulty, computerTargetQueue, dispatch]);
+
 // [3.1.1] / [3.1.7] isClickable = true ở lượt Player (bảng kích hoạt), false ở lượt CPU (vô hiệu hóa)
     const isClickable = phase === PHASES.PLAYER_TURN;
 
     function handleCellClick(row, col) {
         if (!isClickable) return;
-         // [3.1.2] / [3.5.1] Player click vào một ô trên bảng đối thủ.
+        // [3.1.2] / [3.5.1] Player click vào một ô trên bảng đối thủ.
         dispatch(clearError());
         dispatch(playerAttack({row, col}));
     }
 
     return (
         <div className="board-wrapper">
-            
+
             {/* 2. THÊM ATTACK TOAST VÀO GIAO DIỆN VÀ TRUYỀN RESULT */}
             <AttackToast result={lastAttackResult} />
 

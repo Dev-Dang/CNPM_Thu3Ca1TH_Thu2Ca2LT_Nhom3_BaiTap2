@@ -18,6 +18,7 @@ import {
     SHIP_POINTS,
     calculateComboMultiplier,
 } from '../utils/attackUtils.js';
+import {getAdjacentTargets} from '../utils/computerLogic.js';
 
 // 1.4a Trạng thái game ban đầu
 const initialState = {
@@ -36,6 +37,10 @@ const initialState = {
     comboStreak: 0,
     comboMultiplier: 1,
     lastScoreDelta: 0,
+
+    // [UC-04 v2] Độ khó và trạng thái Hunt-and-Target của Máy tính
+    difficulty: 'normal',                 // 'easy' | 'normal'
+    computerTargetQueue: [],            // hàng đợi ô liền kề cần ưu tiên (Normal)
 };
 
 const gameSlice = createSlice({
@@ -93,7 +98,19 @@ const gameSlice = createSlice({
             state.comboMultiplier = 1;
             state.lastScoreDelta = 0;
 
+            // [UC-04 v2] Reset trạng thái Máy tính — giữ nguyên difficulty đã chọn
+            state.computerTargetQueue = [];
+
             // [2.2] store updated → useSelector re-render board 10×10 + fleet list
+        },
+
+        /**
+         * [UC-04 v2] Đặt độ khó trước khi bắt đầu ván đấu.
+         * Gọi trước startBattle (hoặc sau startGame).
+         */
+        setDifficulty(state, action) {
+            // payload: 'easy' | 'normal'
+            state.difficulty = action.payload;
         },
 
         /**
@@ -210,9 +227,9 @@ const gameSlice = createSlice({
                 state.comboStreak = 0;
                 state.comboMultiplier = 1;
                 state.lastScoreDelta = 0;
-                
+
                 state.computerBoard = newBoard;
-                
+
                 // Chuyển lượt sang máy (BR-16 / US-14)
                 state.phase = PHASES.CPU_TURN;
             } else {
@@ -263,6 +280,12 @@ const gameSlice = createSlice({
                 // Cộng thêm +100 điểm thưởng chiến thắng ván đấu cho người chơi
                 state.score += 100;
                 state.lastScoreDelta += 100;
+            } else if (
+                state.difficulty === 'normal' &&
+                (state.lastAttackResult === 'hit' || state.lastAttackResult === 'sunk')
+            ) {
+                // [UC-04 v2 / RUL-07] Normal + bắn trúng → giữ lượt Player, bắn tiếp
+                state.phase = PHASES.PLAYER_TURN;
             } else {
                 // [3.1.6] Còn ít nhất một tàu đối thủ chưa bị nhấn chìm → chưa kết thúc.
                 // [3.1.7] Vô hiệu hóa bảng đối thủ. Chuyển sang lượt Máy tính, kích hoạt UC-04.
@@ -276,7 +299,13 @@ const gameSlice = createSlice({
         },
 
         /**
-         * UC-04: Máy tính tấn công một ô trên bảng Player.
+         * UC-04 v2: Máy tính tấn công một ô trên bảng Player.
+         *
+         * Thay đổi so với v1:
+         * - Normal + hit/sunk → giữ phase = CPU_TURN (bắn tiếp, RUL-07 / BR-16)
+         * - Easy hoặc Normal miss → chuyển phase = PLAYER_TURN
+         * - Normal: cập nhật computerTargetQueue sau khi hit (thêm ô liền kề)
+         * - Normal: loại ô vừa bắn ra khỏi queue dù kết quả nào
          */
         computerAttack(state, action) {
             const {row, col} = action.payload;
@@ -288,6 +317,28 @@ const gameSlice = createSlice({
             state.playerBoard = attack.board;
             state.playerFleet = attack.fleet;
 
+            // [UC-04 v2] Loại ô vừa bắn ra khỏi queue (dù trúng hay trượt)
+            state.computerTargetQueue = state.computerTargetQueue.filter(
+                (cell) => !(cell.row === row && cell.col === col)
+            );
+
+            // [UC-04 v2] Cập nhật computerTargetQueue cho Normal (Hunt-and-Target)
+            if (state.difficulty === 'normal') {
+                if (attack.result === 'hit' || attack.result === 'sunk') {
+                    // Thêm các ô liền kề hợp lệ quanh ô vừa bắn trúng vào queue
+                    const adjacents = getAdjacentTargets(row, col, attack.board);
+                    adjacents.forEach((adj) => {
+                        const alreadyQueued = state.computerTargetQueue.some(
+                            (cell) => cell.row === adj.row && cell.col === adj.col
+                        );
+                        if (!alreadyQueued) {
+                            state.computerTargetQueue.push(adj);
+                        }
+                    });
+                }
+                // miss: không thêm target mới, queue giữ nguyên (có thể vẫn còn từ hit trước)
+            }
+
             // [4.1.4a] Kiểm tra điều kiện kết thúc ván
             if (attack.isGameOver) {
                 // [4.2.1] Xác định toàn bộ tàu `Player` đã bị nhấn chìm
@@ -296,9 +347,14 @@ const gameSlice = createSlice({
                 state.winner = WINNER.COMPUTER;
 
                 // [4.2.3] Kích hoạt UC-05 với kết quả `Player` thua
+            } else if (
+                state.difficulty === 'normal' &&
+                (attack.result === 'hit' || attack.result === 'sunk')
+            ) {
+                // [UC-04 v2 / RUL-07] Normal + bắn trúng → tiếp tục lượt, giữ CPU_TURN
+                state.phase = PHASES.CPU_TURN;
             } else {
-
-                // [4.1.4b] Cập nhật trạng thái mới
+                // [4.1.4b] Cập nhật trạng thái mới (Easy bất kể kết quả; Normal miss)
                 state.phase = PHASES.PLAYER_TURN;
 
                 // [4.1.6] Kích hoạt UC-03
@@ -316,6 +372,7 @@ const gameSlice = createSlice({
 
 export const {
     startGame,
+    setDifficulty,
     setGameError,
     selectShip,
     placeShip,
