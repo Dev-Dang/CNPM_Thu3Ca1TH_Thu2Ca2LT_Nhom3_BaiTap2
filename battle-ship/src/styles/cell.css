@@ -1,0 +1,47 @@
+.cell {
+    width: 34px;
+    height: 34px;
+    background: #ffffff;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.1s;
+}
+
+.cell:hover:not(:disabled):not(.cell-hit):not(.cell-miss):not(.cell-sunk) {
+    background: #e8ecff;
+}
+
+.cell:disabled {
+    cursor: default;
+}
+
+.cell-empty { background: #ffffff; }
+.cell-ship  { background: rgba(99, 119, 214, 0.13); }
+.cell-hit   { background: #fff0f0; }
+.cell-miss  { background: #f5f6fc; }
+.cell-sunk  { background: #c0392b; }
+
+/* Miss: small gray dot */
+.cell-dot {
+    display: block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #a0aec0;
+}
+
+/* Hit: red ✕ */
+.cell-cross {
+    font-size: 14px;
+    font-weight: 900;
+    line-height: 1;
+    color: #e53e3e;
+}
+
+/* Sunk: white ✕, larger to stand out against dark background */
+.cell-sunk .cell-cross {
+    font-size: 18px;
+    color: #ffffff;
+}

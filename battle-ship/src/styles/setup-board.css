@@ -1,0 +1,67 @@
+.setup-board {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    padding: 8px 0;
+}
+
+.setup-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 140px;
+}
+
+.setup-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.setup-orient-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    background: #ffffff;
+    color: #4a5568;
+    border: 1px solid #c8d0e8;
+    border-radius: 6px;
+    transition: border-color 0.15s;
+}
+
+.setup-orient-btn:hover {
+    border-color: #6377d6;
+    color: #6377d6;
+}
+
+.setup-board-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.setup-board-label {
+    font-size: 13px;
+    color: #7888b0;
+}
+
+.setup-start-btn {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 700;
+    background: #4361ee;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    transition: background 0.15s;
+}
+
+.setup-start-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.setup-start-btn:not(:disabled):hover {
+    background: #3451d1;
+}

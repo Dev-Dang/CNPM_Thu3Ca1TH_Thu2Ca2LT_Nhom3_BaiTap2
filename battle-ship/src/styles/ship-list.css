@@ -1,0 +1,78 @@
+.ship-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-top: 22px; /* align with grid rows below header */
+}
+
+.ship-list-right {
+    align-items: flex-end;
+}
+
+/* ── Ship entry card ── */
+.ship-entry {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 5px 7px;
+    border-radius: 6px;
+    cursor: default;
+    transition: background 0.15s;
+}
+
+.ship-entry-selectable {
+    cursor: pointer;
+}
+
+.ship-entry-selectable:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.ship-entry-selected {
+    background: rgba(99, 119, 214, 0.08);
+    outline: 1.5px solid var(--ship-c, #6377d6);
+    outline-offset: 1px;
+}
+
+.ship-entry-sunk {
+    opacity: 0.30;
+}
+
+/* ── Block row: emoji + colored blocks ── */
+.ship-block-row {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.ship-icon {
+    font-size: 13px;
+    line-height: 1;
+    margin-right: 1px;
+    flex-shrink: 0;
+}
+
+/* Individual ship block */
+.ship-block {
+    display: block;
+    width: 15px;
+    height: 15px;
+    border: 1.5px solid #6377d6;
+    background: rgba(99, 119, 214, 0.12);
+    border-radius: 3px;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.ship-block-sunk {
+    border-color: #e53e3e !important;
+    background: rgba(229, 62, 62, 0.15) !important;
+}
+
+/* ── Ship name label ── */
+.ship-name {
+    font-size: 10px;
+    font-weight: 600;
+    color: #7888b0;
+    letter-spacing: 0.02em;
+    padding-left: 20px; /* indent to align under blocks */
+}

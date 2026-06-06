@@ -1,0 +1,41 @@
+/*
+ * Grid uses CSS Grid with gap: 1px acting as visible grid lines.
+ * The wrapper background (#c8d0e8) shows through the gaps.
+ */
+
+.grid {
+    display: grid;
+    grid-template-columns: 22px repeat(10, 34px);
+    gap: 1px;
+    background: #c8d0e8;
+    border: 1px solid #c8d0e8;
+    border-radius: 6px;
+    overflow: hidden;
+    width: fit-content;
+    user-select: none;
+}
+
+.grid-corner {
+    background: #eef0ff;
+}
+
+.grid-col-header {
+    background: #eef0ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #7888b0;
+    height: 22px;
+}
+
+.grid-row-header {
+    background: #eef0ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #7888b0;
+}
