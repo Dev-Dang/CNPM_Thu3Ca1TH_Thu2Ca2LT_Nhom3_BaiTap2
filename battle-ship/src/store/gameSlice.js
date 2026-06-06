@@ -199,6 +199,8 @@ const gameSlice = createSlice({
             // Xóa thông báo lỗi cũ nếu tọa độ được chọn hoàn toàn hợp lệ
             state.errorMessage = null;
             // [3.1.4] / [3.2.1] / [3.3.1] Hệ thống xác định kết quả tấn công (Trượt, Trúng, hoặc Nhấn chìm)
+            state.totalShots += 1;
+            // [3.4] checkCell — kiểm tra ô có tàu không, trả về ship và remainingCells
             const {hasShip, ship, remainingCells} = getCellAttackInfo(
                 row, col, state.computerBoard, state.computerFleet
             );
@@ -312,7 +314,11 @@ const gameSlice = createSlice({
          * UC-05: Chơi lại — reset toàn bộ về trạng thái ban đầu.
          */
         restartGame() {
-            // TODO: UC-05 — Implement
+            return {
+                ...initialState,
+                playerBoard: createBoard(),
+                computerBoard: createBoard(),
+            };
         },
     },
 });
