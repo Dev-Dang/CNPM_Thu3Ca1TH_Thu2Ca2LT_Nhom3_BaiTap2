@@ -263,10 +263,6 @@ const gameSlice = createSlice({
                 // Cộng thêm +100 điểm thưởng chiến thắng ván đấu cho người chơi
                 state.score += 100;
                 state.lastScoreDelta += 100;
-            } else {
-                // [3.1.6] Còn ít nhất một tàu đối thủ chưa bị nhấn chìm → chưa kết thúc.
-                // [3.1.7] Vô hiệu hóa bảng đối thủ. Chuyển sang lượt Máy tính, kích hoạt UC-04.
-                state.phase = PHASES.CPU_TURN;
             }
         },
 
