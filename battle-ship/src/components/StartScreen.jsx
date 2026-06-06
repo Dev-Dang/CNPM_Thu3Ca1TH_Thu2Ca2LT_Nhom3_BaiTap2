@@ -12,7 +12,7 @@ export default function StartScreen() {
             {errorMsg &&
                 <div className="error-screen">
                     <div className="error-message">
-                        <p>${errorMsg}</p>
+                        <p>{errorMsg}</p>
                         <button className="error-reload-btn"
                                 onClick={() => window.location.reload()}>
                             Tải lại trang
