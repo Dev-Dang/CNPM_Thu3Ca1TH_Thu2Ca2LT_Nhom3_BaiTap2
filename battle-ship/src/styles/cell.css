@@ -21,7 +21,7 @@
 .cell-ship  { background: rgba(99, 119, 214, 0.13); }
 .cell-hit   { background: #fff0f0; }
 .cell-miss  { background: #f5f6fc; }
-.cell-sunk  { background: #ffe8e8; }
+.cell-sunk  { background: #c0392b; }
 
 /* Miss: small gray dot */
 .cell-dot {
@@ -32,10 +32,16 @@
     background: #a0aec0;
 }
 
-/* Hit / Sunk: red ✕ */
+/* Hit: red ✕ */
 .cell-cross {
     font-size: 14px;
     font-weight: 900;
     line-height: 1;
     color: #e53e3e;
+}
+
+/* Sunk: white ✕, larger to stand out against dark background */
+.cell-sunk .cell-cross {
+    font-size: 18px;
+    color: #ffffff;
 }

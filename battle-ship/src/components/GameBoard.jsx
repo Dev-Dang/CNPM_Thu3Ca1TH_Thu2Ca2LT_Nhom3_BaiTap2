@@ -6,6 +6,7 @@ import Grid from './Grid.jsx';
 import {useEffect, useState} from "react";
 import {selectAttackCell} from "../utils/computerLogic.js";
 import ShipList from "./ShipList.jsx";
+import AttackToast from "./AttackToast.jsx"
 import '../styles/game-board.css';
 import '../styles/error.css';
 
@@ -39,17 +40,21 @@ export default function GameBoard() {
 
         return () => clearTimeout(timer);
     }, [phase, playerBoard, dispatch]);
-
+// [3.1.1] / [3.1.7] isClickable = true ở lượt Player (bảng kích hoạt), false ở lượt CPU (vô hiệu hóa)
     const isClickable = phase === PHASES.PLAYER_TURN;
 
     function handleCellClick(row, col) {
         if (!isClickable) return;
+         // [3.1.2] / [3.5.1] Player click vào một ô trên bảng đối thủ.
         dispatch(clearError());
         dispatch(playerAttack({row, col}));
     }
 
     return (
         <div className="board-wrapper">
+            
+            {/* 2. THÊM ATTACK TOAST VÀO GIAO DIỆN VÀ TRUYỀN RESULT */}
+            <AttackToast result={lastAttackResult} />
 
             {/* [4.3.1b] Hiển thị hộp thoại thông báo lỗi */}
             {errorMsg &&

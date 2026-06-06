@@ -1,92 +1,112 @@
-# Đặc tả Use Case: Đặt Tàu
+# Đặc tả Use Case: Thiết lập bảng và Đặt tàu (UC-02)
 
 ## Lịch sử chỉnh sửa
 
 | Phiên bản | Ngày | Tác giả | Mô tả |
 |-----------|------|---------|-------|
 | 1.0 | 27/04/2026 | Bùi Hữu Trí | Phiên bản đầu tiên — sinh từ URD v2.0 (US-03, US-04, US-05) |
-| 2.0 | 09/05/2026 | Bùi Hữu Trí | Chỉnh sửa luồng , tách các reponsibility ra 2.6 và 2.7|
+| 2.0 | 09/05/2026 | Bùi Hữu Trí | Chỉnh sửa luồng, tách các responsibility ra 2.6 và 2.7 |
+| 3.0 | 18/05/2026 | Bùi Hữu Trí | Cấu trúc lại numbering — 1 luồng chính, 1 luồng ngoại lệ |
+| 4.0 | 18/05/2026 | Bùi Hữu Trí | Tách 2.1.0 kích hoạt, 2.1.1 khởi tạo hạm đội; chỉnh luồng ngoại lệ khớp code |
+| 5.0 | 05/06/2026 | Đặng Văn Trung | - Mở rộng UC-02 theo BRD v1.2.1 / URD v2.1: hỗ trợ độ khó `Easy / Normal`, cấu hình bảng và hạm đội tương ứng.<br>- Bổ sung đặt tàu tự động, kéo thả, điều chỉnh vị trí/hướng tàu đã đặt trong giai đoạn thiết lập.<br>- Cập nhật phần giới thiệu, điều kiện, trigger, hậu điều kiện và Normal Flow, loại bỏ hard-code `10×10 / 5 tàu` ở luồng xử lý.<br>- Tách luồng thay thế cho điều chỉnh tàu và đặt tàu tự động; cập nhật luồng ngoại lệ cho vị trí không hợp lệ và lỗi hệ thống.<br>- Cập nhật quan hệ use case, quy tắc nghiệp vụ, yêu cầu phi chức năng, ghi chú và nguồn tham chiếu. |
+
 ## 1. Giới thiệu
 
 | Trường | Nội dung |
 |--------|----------|
 | Use Case ID | UC-02 |
-| Tên Use Case | Đặt Tàu |
-| Độ ưu tiên | MUST - Phải có, vì người chơi bắt buộc phải đặt đủ hạm đội hợp lệ trước khi bước vào giai đoạn tấn công. |
-| Actor chính | Player |
+| Tên Use Case | Thiết Lập Bảng Và Đặt Tàu |
+| Độ ưu tiên | MUST - Phải có, vì `Player` cần thiết lập bảng đúng kích thước theo độ khó đã chọn, sử dụng hạm đội phù hợp với kích thước bảng, đặt toàn bộ hạm đội hợp lệ trước lượt tấn công, có thể chọn đặt tàu tự động để rút ngắn thời gian thiết lập, và có thể chọn, di chuyển vị trí, đổi hướng tàu trong giai đoạn thiết lập. (BR-03, BR-04, BR-05, BR-11, BR-12) |
+| Actor chính | `Player` (ACT-01) |
 | Actor phụ | Không có |
 
 ## 2. Mô tả Use Case
 
-`Player` thiết lập hạm đội bằng cách đặt 5 tàu tiêu chuẩn lên bảng chơi 10×10 của mình trước khi bắt đầu giai đoạn tấn công. Hệ thống kiểm tra tính hợp lệ của từng vị trí đặt tàu và chỉ cho phép chuyển sang giai đoạn tấn công khi toàn bộ hạm đội đã được đặt đúng quy tắc.
+- `Player` thiết lập bảng và bố cục hạm đội theo độ khó đã chọn trước khi bắt đầu giai đoạn tấn công.
+- Hệ thống chỉ chấp nhận bố cục hạm đội hợp lệ và chỉ cho phép bắt đầu tấn công khi toàn bộ hạm đội của độ khó hiện tại đã được đặt.
+- `Player` có thể đặt tàu thủ công, kéo thả hoặc điều chỉnh vị trí/hướng đặt tàu, hoặc dùng đặt tàu tự động để hệ thống tạo bố cục hợp lệ ngẫu nhiên.
 
 ## 3. Điều kiện tiên quyết (Pre-conditions)
 
 1. UC-01 đã hoàn tất thành công — hệ thống đang ở trạng thái sẵn sàng thiết lập.
-2. `Player` đang ở giao diện thiết lập hạm đội (đặt tàu).
+2. `Player` đã chọn độ khó hợp lệ là `Easy` hoặc `Normal`.
+3. Hệ thống đã xác định cấu hình bảng và hạm đội tương ứng với độ khó đã chọn.
+4. `Player` đang ở giao diện thiết lập hạm đội (đặt tàu).
 
 ## 4. Sự kiện kích hoạt (Trigger)
 
-Hệ thống chuyển tự động sang giai đoạn thiết lập sau khi UC-01 hoàn tất; giao diện đặt tàu được hiển thị mà không cần thao tác thêm từ `Player`.
+1. Hệ thống chuyển tự động sang giai đoạn thiết lập sau khi UC-01 hoàn tất; giao diện đặt tàu được hiển thị mà không cần thao tác thêm từ `Player`.
 
 ## 5. Hậu điều kiện (Post-conditions)
 
-1. Toàn bộ 5 tàu của `Player` đã được đặt hợp lệ trên bảng 10×10.
-2. Hạm đội của Máy tính đã được đặt ngẫu nhiên (ẩn khỏi `Player`).
+1. Toàn bộ hạm đội của `Player` đã được đặt hợp lệ trên bảng theo độ khó đã chọn: `Easy` sử dụng bảng `10×10` với `5 tàu`; `Normal` sử dụng bảng `12×12` với `8 tàu`.
+2. Hạm đội của Máy tính đã được đặt ngẫu nhiên theo cấu hình hạm đội của độ khó đã chọn và được ẩn khỏi `Player`.
 3. Hệ thống ở trạng thái sẵn sàng cho giai đoạn tấn công (UC-03).
 
-## 6. Luồng chính (Normal Flow) — Đặt toàn bộ hạm đội
+## 6. Luồng chính (Normal Flow)
 
-> Luồng chính khi `Player` đặt toàn bộ hạm đội hợp lệ và bắt đầu giai đoạn tấn công.
-
-| Bước | Actor | Hành động / Phản hồi |
-|------|-------|----------------------|
-| **2.1** | Hệ thống | Khởi tạo hạm đội Máy tính với cấu hình tiêu chuẩn — Carrier (5 ô), Battleship (4 ô), Cruiser (3 ô), Submarine (3 ô), Destroyer (2 ô) — và đặt ngẫu nhiên lên bảng của Máy tính (ẩn khỏi `Player`). |
-| **2.2** | Hệ thống | Hiển thị bảng 10×10 của `Player` cùng danh sách 5 tàu cần đặt. |
-| **2.3** | `Player` | Chọn một tàu chưa đặt từ danh sách. |
-| **2.4** | `Player` | Chọn hướng đặt tàu (ngang hoặc dọc) và chọn ô bắt đầu trên bảng 10×10. |
-| **2.5** | Hệ thống | Kiểm tra vị trí hợp lệ — tàu nằm hoàn toàn trong bảng, không chồng ô với tàu đã đặt, không đặt chéo. Nếu không hợp lệ → **2.E1**. |
-| **2.6** | Hệ thống | Chấp nhận vị trí, hiển thị tàu trên bảng |
-| **2.7** | Hệ thống | Cập nhật danh sách tàu còn lại. |
-| **2.8** | Hệ thống | Kiểm tra số lượng tàu đã đặt — chưa đủ 5 tàu → vô hiệu hóa nút "Bắt đầu tấn công", quay lại bước 2.3; đủ 5 tàu → kích hoạt nút "Bắt đầu tấn công". |
-| **2.9** | `Player` | Nhấn nút "Bắt đầu tấn công". |
-| **2.10** | Hệ thống | Chuyển sang giai đoạn tấn công, kích hoạt UC-03. |
-| **2.11** | Hệ thống | Kết thúc. |
-
-## 7. Luồng thay thế (Alternate Flows)
-
-### 7.1. Luồng thay thế 2.A1 — Tái đặt tàu đã đặt trước đó (Reposition)
-
-> **Rẽ nhánh tại bước 2.3** — Áp dụng khi `Player` chọn một tàu đã đặt trên bảng để tái đặt vị trí thay vì chọn một tàu chưa đặt (trước khi nhấn “Bắt đầu tấn công”).
+**`Player` đặt toàn bộ hạm đội (thủ công) hợp lệ và bắt đầu giai đoạn tấn công.**
 
 | Bước | Actor | Hành động / Phản hồi |
 |------|-------|----------------------|
-| **2.A1.1** | `Player` | Chọn một tàu đã đặt trên bảng để điều chỉnh vị trí. |
-| **2.A1.2** | Hệ thống | Gỡ tàu khỏi vị trí hiện tại; các ô tương ứng trên bảng trở về trạng thái trống. Tàu được đưa lại vào trạng thái chờ đặt. |
-| **2.A1.3** | `Player` | Chọn hướng và vị trí mới cho tàu. |
-| **→** | Hệ thống | Quay lại bước 2.5 của Luồng chính để kiểm tra vị trí mới. |
+| **2.1.0** | Hệ thống | Kích hoạt sự kiện thiết lập bảng và đặt tàu sau khi UC-01 hoàn tất. |
+| **2.1.1** | Hệ thống | Khởi tạo hạm đội Máy tính theo cấu hình của độ khó đã chọn và đặt ngẫu nhiên lên bảng Máy tính, ẩn khỏi `Player`. |
+| **2.1.2** | Hệ thống | Hiển thị bảng của `Player` theo độ khó đã chọn cùng danh sách tàu cần đặt và hướng đặt tàu mặc định. |
+| **2.1.3** | `Player` | Chọn hướng đặt tàu mong muốn (ngang hoặc dọc). |
+| **2.1.4** | `Player` | Chọn một tàu chưa đặt từ danh sách và chọn ô bắt đầu đặt tàu trên bảng, hoặc kéo thả tàu đó đến vị trí mong muốn. |
+| **2.1.5** | Hệ thống | Kiểm tra vị trí hợp lệ — tàu nằm hoàn toàn trong bảng, không chồng ô với tàu đã đặt, không đặt chéo. |
+| **2.1.6** | Hệ thống | Chấp nhận vị trí, hiển thị tàu trên bảng. |
+| **2.1.7** | Hệ thống | Cập nhật danh sách tàu còn lại. |
+| **2.1.8** | Hệ thống | Xác nhận toàn bộ hạm đội của `Player` đã được đặt hợp lệ và kích hoạt nút "Bắt đầu tấn công". |
+| **2.1.9** | `Player` | Nhấn nút "Bắt đầu tấn công". |
+| **2.1.10** | Hệ thống | Chuyển sang giai đoạn tấn công, kích hoạt UC-03. |
 
-## 8. Luồng ngoại lệ (Exception Flows)
+## 7. Luồng thay thế (Alternative Flow)
 
-### 8.1. Ngoại lệ 2.E1 — Vị trí đặt tàu không hợp lệ
+### 7.1. AF1 — Điều chỉnh tàu đã đặt
 
-> Rẽ nhánh từ bước **2.5** — Áp dụng khi vị trí đặt tàu vi phạm quy tắc nằm trong bảng, không chồng ô, hoặc không đặt chéo.
-
-| Bước | Actor | Hành động / Phản hồi |
-|------|-------|----------------------|
-| **2.E1.1** | Hệ thống | Phát hiện vị trí đặt tàu không hợp lệ tại bước 2.5 — tàu vượt ra ngoài bảng, chồng ô với tàu đã đặt, hoặc đặt theo hướng chéo. |
-| **2.E1.2** | Hệ thống | Hiển thị thông báo lỗi tại vị trí tương tác, ví dụ: "Vị trí không hợp lệ. Vui lòng chọn vị trí khác." |
-| **2.E1.3** | `Player` | Điều chỉnh vị trí hoặc hướng đặt tàu và thử lại từ bước 2.4. |
-
-### 8.2. Ngoại lệ 2.E2 — Cấu hình hạm đội hệ thống không hợp lệ
-
-> Rẽ nhánh từ bước **2.1** — Áp dụng khi hệ thống khởi tạo hạm đội Máy tính không đúng cấu hình tiêu chuẩn.
+Tại bước **2.1.4** của Normal Flow, `Player` chọn một tàu đã đặt để điều chỉnh vị trí hoặc hướng đặt tàu.
 
 | Bước | Actor | Hành động / Phản hồi |
 |------|-------|----------------------|
-| **2.E2.1** | Hệ thống | Phát hiện cấu hình hạm đội khởi tạo tại bước 2.1 không khớp chuẩn (sai số lượng hoặc kích thước tàu). |
-| **2.E2.2** | Hệ thống | Không cho phép bắt đầu giai đoạn đặt tàu; ghi log lỗi cấu hình hạm đội. |
-| **2.E2.3** | Hệ thống | Kết thúc không thành công. |
+| **2.2.1** | `Player` | Chọn một tàu đã đặt trên bảng. |
+| **2.2.2** | Hệ thống | Làm nổi bật tàu được chọn trên bảng. |
+| **2.2.3** | `Player` | Điều chỉnh tàu đã chọn bằng cách kéo thả đến vị trí mới, dùng phím mũi tên để di chuyển từng ô, hoặc nhấn phím `Space` để đổi hướng đặt tàu. |
+| **2.2.4** | Hệ thống | Quay lại bước **2.1.5** của Normal Flow. |
+
+### 7.2. AF2 — Đặt tàu tự động
+
+Tại bước **2.1.2** của Normal Flow, `Player` chọn đặt tàu tự động.
+
+| Bước | Actor | Hành động / Phản hồi |
+|------|-------|----------------------|
+| **2.3.1** | `Player` | Chọn chức năng đặt tàu tự động. |
+| **2.3.2** | Hệ thống | Xoá bố cục hạm đội hiện tại của `Player` nếu đã có tàu được đặt trên bảng. |
+| **2.3.3** | Hệ thống | Tạo ngẫu nhiên vị trí và hướng đặt tàu hợp lệ cho toàn bộ hạm đội của `Player` theo độ khó đã chọn. |
+| **2.3.4** | Hệ thống | Hiển thị bố cục hạm đội mới trên bảng của `Player`. |
+| **2.3.5** | Hệ thống | Đánh dấu toàn bộ tàu trong danh sách hạm đội là đã đặt. |
+| **2.3.6** | Hệ thống | Quay lại bước **2.1.8** của Normal Flow. |
+
+## 8. Luồng ngoại lệ (Exception Flow)
+
+### 8.1. EF1 — Vị trí đặt hoặc điều chỉnh tàu không hợp lệ
+
+Tại bước **2.1.5** của Normal Flow, hệ thống phát hiện vị trí đặt tàu không hợp lệ.
+
+| Bước | Actor | Hành động / Phản hồi |
+|------|-------|----------------------|
+| **2.4.1** | Hệ thống | Không áp dụng thao tác vừa thực hiện; giữ nguyên bố cục hạm đội hợp lệ gần nhất và danh sách tàu cần đặt. |
+| **2.4.2** | Hệ thống | Hiển thị thông báo lỗi "Vị trí không hợp lệ. Vui lòng chọn vị trí khác." |
+| **2.4.3** | Hệ thống | Quay lại bước **2.1.3** của Normal Flow nếu đang đặt tàu mới; quay lại bước **2.2.3** của AF1 nếu đang điều chỉnh tàu đã đặt. |
+
+### 8.2. EF2 — Lỗi hệ thống
+
+Tại bước **2.1.1** của Normal Flow, hệ thống gặp lỗi khi tải hoặc áp dụng cấu hình bảng và hạm đội theo độ khó đã chọn.
+
+| Bước | Actor | Hành động / Phản hồi |
+|------|-------|----------------------|
+| **2.5.1** | Hệ thống | Hiển thị thông báo lỗi "Lỗi thiết lập hạm đội. Vui lòng tải lại trang." |
+| **2.5.2** | Hệ thống | Kết thúc thất bại. |
 
 ## 9. Quan hệ Use Case (Includes / Extends)
 
@@ -96,32 +116,40 @@ Không có.
 **«extend» — được mở rộng bởi:**
 Không có.
 
-> UC-02 được gọi bởi UC-01 thông qua quan hệ «include» (xem UC-01 §9).
+**Được include bởi:**
+UC-01 — Bắt đầu ván chơi và chọn độ khó.
+
+> UC-02 hoàn tất thành công thì hệ thống chuyển sang giai đoạn tấn công (UC-03); đây là chuyển trạng thái gameplay, không phải quan hệ «include» hoặc «extend».
 
 ## 10. Quy tắc nghiệp vụ áp dụng
 
 | ID | Quy tắc | Nguồn |
 |----|---------|-------|
-| RUL-01 | Kích thước bảng chơi cố định là 10×10. | BRD §4.2 |
-| RUL-02 | Đội tàu (Fleet) tuân theo cấu hình tiêu chuẩn: Carrier (5), Battleship (4), Cruiser (3), Submarine (3), Destroyer (2). | BRD §4.2 |
-| RUL-04 | Tàu phải được đặt theo chiều ngang hoặc dọc, không chéo. | BRD §4.2 |
-| RUL-05 | Các tàu không được chồng ô lên nhau; đặt liền kề được cho phép. | BRD §4.2 |
+| RUL-01 | Kích thước bảng chơi là `10×10` ở độ khó `Easy` và `12×12` ở độ khó `Normal`. | BRD v1.2.1 §4.2 |
+| RUL-02 | Đội tàu (Fleet) ở độ khó `Easy (10×10)` tuân theo cấu hình Battleship tiêu chuẩn: Carrier (1×5), Battleship (1×4), Cruiser (1×3), Submarine (1×3), Destroyer (1×2) — tổng `5 tàu`, chiếm `17 ô`. | BRD v1.2.1 §4.2 |
+| RUL-04 | Tàu phải được đặt theo chiều ngang hoặc dọc, không chéo. | BRD v1.2.1 §4.2 |
+| RUL-05 | Các tàu không được chồng ô lên nhau; đặt liền kề được cho phép. | BRD v1.2.1 §4.2 |
+| RUL-12 | Đội tàu (Fleet) ở độ khó `Normal (12×12)` sử dụng cấu hình mở rộng: Carrier (1×5), Battleship (2×4), Cruiser (2×3), Submarine (1×3), Destroyer (2×2) — tổng `8 tàu`, chiếm `25 ô` (~17% trên `144 ô`). | BRD v1.2.1 §4.2 |
 
 ## 11. Yêu cầu phi chức năng (Non-Functional Requirements)
 
-- Phản hồi kiểm tra vị trí đặt tàu ≤ 500 ms sau thao tác của `Player`. *(DoD — Tiêu chí hiệu năng)*
-- Bảng chơi 10×10 phân biệt ô bằng border/viền rõ ràng, duy trì nhất quán xuyên suốt ván chơi. *(US-03 — AC)*
-- Tàu đặt trên bảng phải hiển thị theo hướng ngang hoặc dọc; không có hướng chéo. *(RUL-04)*
-- Cấu hình hạm đội cố định: Carrier (5 ô), Battleship (4 ô), Cruiser (3 ô), Submarine (3 ô), Destroyer (2 ô) — `Player` không thể thay đổi cấu hình này. *(RUL-02, US-05 — AC)*
+1. Phản hồi kiểm tra vị trí đặt hoặc điều chỉnh tàu ≤ 500 ms sau thao tác của `Player`. *(DoD — Tiêu chí hiệu năng)*
+2. Bảng chơi phải hiển thị đúng kích thước theo độ khó đã chọn và phân biệt ô bằng border/viền rõ ràng, duy trì nhất quán xuyên suốt ván chơi. *(US-03 — AC; BR-03)*
+3. Tàu đặt trên bảng phải hiển thị theo hướng ngang hoặc dọc; không có hướng chéo. *(RUL-04)*
+4. `Player` không thể tự thay đổi số lượng, loại tàu hoặc kích thước tàu ngoài cấu hình hạm đội của độ khó đã chọn. *(RUL-02, RUL-12, US-05 — AC)*
+5. Lần đầu `Player` vào giao diện thiết lập hạm đội, hệ thống hiển thị hộp thoại hướng dẫn thao tác đặt và điều chỉnh tàu. Hộp thoại bao gồm minh họa kéo thả, hướng dẫn dùng phím mũi tên để di chuyển tàu đã đặt, phím `Space` để đổi hướng tàu, nút đóng và tùy chọn không hiển thị lại trong các lần thiết lập sau.
 
 ## 12. Ghi chú
 
 **Giả định và quyết định thiết kế:**
-- Cấu hình hạm đội tiêu chuẩn là cố định trong phiên bản 1; không có giao diện tùy chỉnh số lượng hoặc loại tàu. *(ASM-02)*
-- Quy tắc đặt tàu chỉ cho phép hướng ngang và dọc, không chồng ô, không đặt chéo. *(RUL-04, RUL-05)*
-- `Player` có thể tái đặt tàu đã đặt trước đó (xem luồng thay thế 7.1) nhưng không có tính năng "đặt ngẫu nhiên" trong phiên bản 1.
+
+- Cấu hình hạm đội được xác định theo độ khó đã chọn; `Player` không tự cấu hình số lượng, loại tàu hoặc kích thước tàu.
+- Quy tắc đặt tàu chỉ cho phép hướng ngang và dọc, không chồng ô, không đặt chéo; đặt liền kề được cho phép.
+- `Player` có thể đặt tàu thủ công, điều chỉnh tàu đã đặt hoặc dùng đặt tàu tự động trong giai đoạn thiết lập.
+- Khi điều chỉnh tàu đã đặt, hệ thống chỉ cập nhật bố cục hạm đội sau khi vị trí mới hợp lệ; nếu không hợp lệ, hệ thống giữ nguyên bố cục hợp lệ gần nhất.
 
 **Nguồn & Tham chiếu:**
-- **Nguồn URD:** US-03 (EP-02), US-04 (EP-02), US-05 (EP-02) — `document/user-requirements.md`
+- **Nguồn BRD:** BR-03, BR-04, BR-05, BR-11, BR-12; RUL-01, RUL-02, RUL-04, RUL-05, RUL-12 — `document/business-requirements.md`
+- **Nguồn URD:** US-03, US-04, US-05, US-11, US-12 — `document/user-requirements.md`
 - **Use case liên quan:** UC-01 kích hoạt UC-02; UC-02 hoàn tất kích hoạt UC-03.
 - **Sơ đồ use case:** `document/use-case-diagram.md`
