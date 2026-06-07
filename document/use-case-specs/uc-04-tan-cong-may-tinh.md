@@ -8,6 +8,7 @@
 | 1.2       | 09/05/2026 | Đặng Văn Trung   | Bước 4.7 (chờ 500ms trước chuyển lượt) vào Normal Flow; thêm bước 4.A3.2 (chờ 500ms trước UC-05); cập nhật Post-condition 3. |
 | 1.3       | 16/05/2026 | Đặng Văn Trung   | Thêm bước 4.1.0 xác định điểm bắt đầu UC-04; tách thành 2 step; đánh số lại toàn bộ các bước theo cú pháp 4.[Index].[Step]; gộp xác định kết quả Miss/Hit/Sunk vào một bước inline (4.1.3); đảo thứ tự kiểm tra end-game (4.1.4) trước hiển thị UI (4.1.5); xóa luồng thay thế Hit và Sunk riêng lẻ. |
 | 2.0       | 07/06/2026 | Bùi Hữu Trí      | Thêm chế độ khó (difficulty): Easy là luồng chính, Normal (Hunt-and-Target) là luồng thay thế 4.2. Thêm quy tắc RUL-07: Normal bắn trúng → giữ lượt CPU_TURN (bắn tiếp). Cập nhật computerTargetQueue sau hit/sunk. Đánh số lại luồng: 4.2 (Normal difficulty), 4.3 (end-game), 4.4 (lỗi). |
+| 2.1       | 07/06/2026 | Bùi Hữu Trí      | Tách 4.2.4 và 4.2.5 thành luồng thay thế riêng 4.5 (cập nhật computerTargetQueue sau bước 4.1.4); bỏ bước 4.3.2 (đã được xử lý ngầm trong processAttack ở 4.1.3); cập nhật luồng thay thế 4.2 chỉ còn 4.2.1 → 4.2.3. |
 
 ---
 
@@ -27,7 +28,7 @@
 
 Máy tính tự động thực hiện lượt tấn công lên bảng của `Player` theo logic phù hợp với độ khó đã chọn. Ở chế độ **Easy**, Máy tính chọn ô ngẫu nhiên trong số các ô chưa bị tấn công. Ở chế độ **Normal**, Máy tính áp dụng chiến thuật Hunt-and-Target: ưu tiên các ô liền kề quanh ô đã bắn trúng trước đó.
 
-Sau khi bắn, hệ thống xử lý kết quả (Hit, Miss, hoặc Sunk) và áp dụng quy tắc chung cho **cả hai chế độ**: nếu bắn trúng (Hit hoặc Sunk) và ván chưa kết thúc, Máy tính tiếp tục bắn ngay; nếu bắn trượt (Miss), trả lượt cho Player.
+Sau khi bắn, hệ thống cập nhật board và fleet, sau đó kiểm tra kết quả (Hit, Miss, hoặc Sunk) và áp dụng quy tắc chung cho **cả hai chế độ**: nếu bắn trúng (Hit hoặc Sunk) và ván chưa kết thúc, Máy tính tiếp tục bắn ngay; nếu bắn trượt (Miss), trả lượt cho Player.
 
 ---
 
@@ -41,7 +42,7 @@ Sau khi bắn, hệ thống xử lý kết quả (Hit, Miss, hoặc Sunk) và á
 
 ## 4. Sự kiện kích hoạt (Trigger)
 
-`Player` hoàn thành lượt tấn công hợp lệ tại UC-03; hệ thống tự động chuyển trạng thái `phase = CPU_TURN` và kích hoạt UC-04 ngay sau đó mà không cần thao tác từ `Player`.
+`Player` hoàn thành lượt tấn công hợp lệ tại UC-03; hệ thống tự động chuyển lượt sang Máy tính và kích hoạt UC-04 ngay sau đó mà không cần thao tác từ `Player`.
 
 ---
 
@@ -50,7 +51,7 @@ Sau khi bắn, hệ thống xử lý kết quả (Hit, Miss, hoặc Sunk) và á
 1. Ô được Máy tính chọn trên bảng `Player` hiển thị kết quả: ký hiệu Miss, Hit, hoặc Sunk (phân biệt bằng màu sắc/icon).
 2. Nếu kết quả là Sunk: toàn bộ ô của tàu bị nhấn chìm được đánh dấu bằng ký hiệu Sunk.
 3. Kết quả lượt tấn công của Máy tính được hiển thị tối thiểu 500ms trước khi hệ thống tự động chuyển lượt hoặc kết thúc ván chơi.
-4. Nếu kết quả là Hit hoặc Sunk và ván chưa kết thúc: Máy tính tiếp tục bắn ngay (`phase = CPU_TURN`) — áp dụng cho **cả Easy lẫn Normal**. Ở chế độ Normal, `computerTargetQueue` được cập nhật thêm các ô liền kề hợp lệ.
+4. Nếu kết quả là Hit hoặc Sunk và ván chưa kết thúc: Máy tính tiếp tục bắn ngay — áp dụng cho **cả Easy lẫn Normal**. Ở chế độ Normal, `computerTargetQueue` được cập nhật thêm các ô liền kề hợp lệ.
 5. Hệ thống chuyển sang lượt `Player` (UC-03) khi kết quả là Miss, hoặc kích hoạt UC-05 nếu toàn bộ tàu `Player` đã bị nhấn chìm.
 
 ---
@@ -61,13 +62,13 @@ Sau khi bắn, hệ thống xử lý kết quả (Hit, Miss, hoặc Sunk) và á
 
 | Bước      | Actor    | Hành động / Phản hồi |
 |-----------|----------|----------------------|
-| **4.1.0** | Hệ thống | UC-03 hoàn tất mà không kết thúc ván chơi → hệ thống cập nhật trạng thái lượt sang Máy tính (`phase = CPU_TURN`), kích hoạt UC-04. |
+| **4.1.0** | Hệ thống | UC-03 hoàn tất mà không kết thúc ván chơi → hệ thống chuyển lượt sang Máy tính và kích hoạt UC-04. |
 | **4.1.1** | Máy tính | Nhận lượt từ hệ thống; bắt đầu xử lý lượt tấn công. |
-| **4.1.2** | Máy tính | Chọn một ô chưa bị tấn công trên bảng `Player` theo logic tương ứng với độ khó (`selectAttackCell`): <br>- **Easy**: `selectRandomAttackCell` — chọn ngẫu nhiên trong danh sách ô hợp lệ còn lại. <br>- **Normal**: `selectNormalAttackCell` — ưu tiên ô trong `computerTargetQueue`; nếu queue rỗng thì fallback về `selectRandomAttackCell`. *[Xem Luồng thay thế 4.2 về chi tiết Normal]* |
-| **4.1.3** | Hệ thống | Xử lý lượt tấn công (`processAttack`). Xác định kết quả: <br>- Ô không chứa tàu → **"Trượt" (Miss)** <br>- Ô chứa tàu, tàu còn ô khác chưa bị tấn công → **"Trúng" (Hit)** <br>- Ô chứa tàu, là ô cuối cùng của tàu đó → **"Nhấn chìm" (Sunk)** |
-| **4.1.4** | Hệ thống | Kiểm tra điều kiện kết thúc ván (`isGameOver`). Nếu toàn bộ tàu `Player` bị nhấn chìm → kích hoạt UC-05 *(Luồng thay thế 4.3)*. |
-| **4.1.5** | Hệ thống | Đánh dấu ô vừa bị tấn công bằng ký hiệu tương ứng (Miss/Hit/Sunk) trên bảng `Player`; nếu Sunk, đánh dấu toàn bộ ô của tàu bị nhấn chìm. |
-| **4.1.6** | Hệ thống | Xác định lượt tiếp theo (áp dụng cho **cả Easy lẫn Normal** — RUL-07): <br>- Kết quả **Hit hoặc Sunk** → giữ lượt Máy tính (`phase = CPU_TURN`); quay lại **4.1.1** bắn tiếp. <br>- Kết quả **Miss** → chuyển sang lượt `Player` (`phase = PLAYER_TURN`), kích hoạt UC-03. |
+| **4.1.2** | Máy tính | Chọn một ô chưa bị tấn công trên bảng `Player` theo độ khó đang áp dụng: <br>- **Easy**: chọn ngẫu nhiên trong danh sách ô hợp lệ còn lại. <br>- **Normal**: ưu tiên ô trong `computerTargetQueue`; nếu queue rỗng thì chọn ngẫu nhiên. *[Xem Luồng thay thế 4.2 về chi tiết Normal]* |
+| **4.1.3** | Hệ thống | Xử lý lượt tấn công, xác định kết quả và cập nhật trạng thái board: <br>- Ô không chứa tàu → **"Trượt" (Miss)** — đánh dấu ô bằng ký hiệu Miss. <br>- Ô chứa tàu, tàu còn ô khác chưa bị tấn công → **"Trúng" (Hit)** — đánh dấu ô bằng ký hiệu Hit. <br>- Ô chứa tàu, là ô cuối cùng của tàu đó → **"Nhấn chìm" (Sunk)** — đánh dấu toàn bộ ô của tàu bằng ký hiệu Sunk. <br>Kết quả gồm: board đã cập nhật, fleet đã cập nhật, kết quả lượt (Miss/Hit/Sunk), và cờ kết thúc ván. |
+| **4.1.4** | Hệ thống | Cập nhật trạng thái ván chơi: gán board và fleet của `Player` theo kết quả vừa xử lý ở bước 4.1.3. *[Nếu difficulty = 'normal' → Luồng thay thế 4.5]* |
+| **4.1.5** | Hệ thống | Kiểm tra điều kiện kết thúc ván. Nếu toàn bộ tàu của `Player` đã bị nhấn chìm → kích hoạt UC-05 *(Luồng thay thế 4.3)*. |
+| **4.1.6** | Hệ thống | Xác định lượt tiếp theo (áp dụng cho **cả Easy lẫn Normal** — RUL-07): <br>- Kết quả **Hit hoặc Sunk** → giữ lượt Máy tính; quay lại **4.1.1** bắn tiếp. <br>- Kết quả **Miss** → chuyển sang lượt `Player`, kích hoạt UC-03. |
 | **4.1.7** | Hệ thống | Kết thúc. |
 
 ---
@@ -80,24 +81,32 @@ Sau khi bắn, hệ thống xử lý kết quả (Hit, Miss, hoặc Sunk) và á
 
 | Bước      | Actor    | Hành động / Phản hồi |
 |-----------|----------|----------------------|
-| **4.2.1** | Máy tính | Duyệt qua từng cell trong `computerTargetQueue`, gọi `validateCoordinate(row, col, playerBoard)` để lọc các ô còn hợp lệ → ra `validQueue`. |
-| **4.2.2** | Máy tính | Kiểm tra `validQueue`: <br>- `validQueue` **có ô hợp lệ** → chọn `validQueue[0]` (ô liền kề ưu tiên từ lần bắn trúng trước). <br>- `validQueue` **rỗng** → fallback: gọi `selectRandomAttackCell(playerBoard)` — chọn ngẫu nhiên trong toàn bộ ô hợp lệ còn lại trên bảng. |
-| **4.2.3** | Máy tính | Trả về ô được chọn `{row, col}` → nhập lại **bước 4.1.3** của luồng chính. |
-| **4.2.4** | Hệ thống | Loại ô vừa bắn ra khỏi `computerTargetQueue` (dù kết quả là gì). |
-| **4.2.5** | Hệ thống | Nếu kết quả là Hit hoặc Sunk: gọi `getAdjacentTargets(row, col, playerBoard)` → push các ô liền kề hợp lệ chưa có trong queue vào `computerTargetQueue`. Nếu Miss: giữ nguyên queue. → nhập lại **bước 4.1.4** của luồng chính. |
+| **4.2.1** | Máy tính | Duyệt qua từng ô trong `computerTargetQueue`, lọc ra các ô còn hợp lệ (chưa bị tấn công, nằm trong bảng) → ra danh sách ô ưu tiên hợp lệ. |
+| **4.2.2** | Máy tính | Kiểm tra danh sách ô ưu tiên hợp lệ: <br>- **Có ô** → chọn ô đầu tiên trong danh sách (ô liền kề được ưu tiên từ lần bắn trúng trước). <br>- **Rỗng** → chọn ngẫu nhiên trong toàn bộ ô hợp lệ còn lại trên bảng. |
+| **4.2.3** | Máy tính | Xác định được ô sẽ tấn công → nhập lại **bước 4.1.3** của luồng chính. |
 
 ---
 
 ### 7.2. Luồng thay thế 4.3 — Toàn bộ tàu Player bị nhấn chìm (Player thua)
 
-> Rẽ nhánh từ bước **4.1.5** *(EP: end-game)* — Áp dụng khi lượt tấn công của Máy tính làm toàn bộ tàu của `Player` bị nhấn chìm.
+> Rẽ nhánh từ bước **4.1.5** *(khi isGameOver = true)* — Áp dụng khi lượt tấn công của Máy tính làm toàn bộ tàu của `Player` bị nhấn chìm.
 
 | Bước      | Actor    | Hành động / Phản hồi |
 |-----------|----------|----------------------|
-| **4.3.1** | Hệ thống | Xác định toàn bộ tàu `Player` đã bị nhấn chìm (`isGameOver = true`). |
-| **4.3.2** | Hệ thống | Đánh dấu ô vừa bị tấn công và toàn bộ ô của tàu bị nhấn chìm bằng ký hiệu Sunk trên bảng `Player`. |
-| **4.3.3** | Hệ thống | Kích hoạt UC-05 với kết quả `Player` thua (`phase = GAME_OVER`, `winner = COMPUTER`). |
-| **4.3.4** | Hệ thống | Kết thúc. |
+| **4.3.1** | Hệ thống | Xác định toàn bộ tàu `Player` đã bị nhấn chìm (`isGameOver = true`). Board đã được đánh dấu đầy đủ ký hiệu Sunk từ bước 4.1.3. |
+| **4.3.2** | Hệ thống | Kích hoạt UC-05 với kết quả `Player` thua (`phase = GAME_OVER`, `winner = COMPUTER`). |
+| **4.3.3** | Hệ thống | Kết thúc. |
+
+---
+
+### 7.3. Luồng thay thế 4.5 — Cập nhật computerTargetQueue (Normal only)
+
+> Rẽ nhánh từ bước **4.1.4** *(khi difficulty = 'normal')* — Cập nhật `computerTargetQueue` sau khi board và fleet đã được gán vào state. Sau bước này, luồng **nhập lại bước 4.1.5** của luồng chính.
+
+| Bước      | Actor    | Hành động / Phản hồi |
+|-----------|----------|----------------------|
+| **4.5.1** | Hệ thống | Loại ô vừa bắn ra khỏi `computerTargetQueue` (dù kết quả là Miss, Hit hay Sunk). |
+| **4.5.2** | Hệ thống | Nếu kết quả là Hit hoặc Sunk: xác định các ô liền kề hợp lệ chưa có trong queue (dựa trên board đã cập nhật ở bước 4.1.4), bổ sung vào `computerTargetQueue`. Nếu Miss: giữ nguyên queue. |
 
 ---
 
@@ -129,7 +138,7 @@ Sau khi bắn, hệ thống xử lý kết quả (Hit, Miss, hoặc Sunk) và á
 | ID       | Quy tắc | Nguồn |
 |----------|---------|-------|
 | RUL-06   | Mỗi ô trên bảng chỉ có thể bị tấn công một lần trong ván chơi. | BRD §4.2 |
-| **RUL-07** | **Ở cả hai chế độ Easy và Normal, nếu Máy tính bắn trúng (Hit hoặc Sunk) và ván chưa kết thúc, Máy tính tiếp tục bắn ngay (giữ `phase = CPU_TURN`) thay vì trả lượt cho `Player`.** | **BR-16 / US-08** |
+| **RUL-07** | **Ở cả hai chế độ Easy và Normal, nếu Máy tính bắn trúng (Hit hoặc Sunk) và ván chưa kết thúc, Máy tính tiếp tục bắn ngay thay vì trả lượt cho `Player`.** | **BR-16 / US-08** |
 
 ---
 
@@ -146,9 +155,13 @@ Sau khi bắn, hệ thống xử lý kết quả (Hit, Miss, hoặc Sunk) và á
 ## 12. Ghi chú
 
 **Giả định và quyết định thiết kế:**
-- **Chế độ Easy**: Máy tính chọn ô tấn công hoàn toàn ngẫu nhiên (`selectRandomAttackCell`). Bắn trúng vẫn giữ lượt và bắn tiếp (RUL-07).
+- **Chế độ Easy**: Máy tính chọn ô tấn công hoàn toàn ngẫu nhiên (`selectRandomAttackCell`). Bắn trúng vẫn giữ lượt và bắn tiếp (RUL-07). Không dùng `computerTargetQueue`, luồng thay thế 4.5 không được kích hoạt.
 - **Chế độ Normal**: Máy tính áp dụng chiến thuật Hunt-and-Target (`selectNormalAttackCell`) — sau mỗi lần bắn trúng, thêm các ô liền kề hợp lệ vào `computerTargetQueue` và ưu tiên chúng ở lượt tiếp theo. Khi queue rỗng, fallback về random. Bắn trúng cũng giữ lượt và bắn tiếp (RUL-07).
-- Hai chế độ **chỉ khác nhau ở cách chọn ô** (bước 4.1.2). Toàn bộ xử lý kết quả, cập nhật board, kiểm tra end-game và quy tắc giữ lượt là **dùng chung**.
+- Hai chế độ **chỉ khác nhau ở cách chọn ô** (bước 4.1.2) và **cập nhật queue** (luồng thay thế 4.5). Toàn bộ xử lý kết quả, cập nhật board, kiểm tra end-game và quy tắc giữ lượt là **dùng chung**.
+- **Bước 4.1.3 (`processAttack`) đã xử lý ngầm việc đánh dấu board**: kết quả trả về `attack.board` đã bao gồm toàn bộ ô được đánh dấu đúng (Miss/Hit/Sunk), kể cả trường hợp Sunk toàn bộ tàu. Bước 4.1.4 chỉ gán board này vào state.
+- **Thứ tự xử lý trong `computerAttack`**: board và fleet được cập nhật trước (bước 4.1.4), sau đó mới cập nhật queue (4.5) rồi kiểm tra `isGameOver` (bước 4.1.5). `isGameOver` được tính sẵn bên trong `processAttack` nên thứ tự này không ảnh hưởng đến tính đúng đắn.
+- **`lastAttackResult`**: không được cập nhật trong `computerAttack` — `AttackToast` dùng giá trị này chỉ để hiển thị kết quả lượt Player, không dùng cho lượt Máy tính.
+- **`getAdjacentTargets` dùng `attack.board`** (board đã cập nhật sau bước 4.1.4): ô vừa bắn đã mang trạng thái HIT/SUNK nên `validateCoordinate` tự động loại nó khỏi danh sách adjacents trả về.
 - Máy tính không có khả năng học hoặc thích nghi theo chiến thuật của `Player` trong phiên bản 1. *(ASM-03)*
 - Mỗi ô trên bảng chỉ có thể bị tấn công một lần trong toàn bộ ván chơi (RUL-06).
 - Độ khó được giữ nguyên trong suốt một ván — `setDifficulty` chỉ có thể gọi trước khi `startBattle`.
