@@ -5,7 +5,8 @@
 
 .grid {
     display: grid;
-    grid-template-columns: 22px repeat(10, 34px);
+    /* [2.1.2] Số cột grid theo kích thước board của độ khó hiện tại. */
+    grid-template-columns: 22px repeat(var(--board-cols, 10), 34px);
     gap: 1px;
     background: #c8d0e8;
     border: 1px solid #c8d0e8;

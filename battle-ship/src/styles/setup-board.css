@@ -3,6 +3,30 @@
     gap: 24px;
     align-items: flex-start;
     padding: 8px 0;
+    user-select: none;
+}
+
+.setup-drag-ghost {
+    position: fixed;
+    z-index: 60;
+    display: flex;
+    gap: 1px;
+    padding: 2px;
+    background: rgba(255, 255, 255, 0.28);
+    border: 1px dashed rgba(30, 64, 175, 0.55);
+    pointer-events: none;
+    opacity: 0.52;
+}
+
+.setup-drag-ghost-vertical {
+    flex-direction: column;
+}
+
+.setup-drag-ghost-cell {
+    width: 34px;
+    height: 34px;
+    background: rgba(30, 64, 175, 0.10);
+    border: 2px dashed rgba(30, 64, 175, 0.48);
 }
 
 .setup-sidebar {
@@ -27,11 +51,31 @@
     border: 1px solid #c8d0e8;
     border-radius: 6px;
     transition: border-color 0.15s;
+    user-select: none;
 }
 
 .setup-orient-btn:hover {
     border-color: #6377d6;
     color: #6377d6;
+}
+
+/* [2.4.1] Style nút đặt tàu tự động trong giai đoạn thiết lập. */
+.setup-auto-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    background: #f7fafc;
+    color: #2d3748;
+    border: 1px solid #c8d0e8;
+    border-radius: 6px;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+    user-select: none;
+}
+
+.setup-auto-btn:hover {
+    background: #eef0ff;
+    border-color: #6377d6;
+    color: #2d3a8c;
 }
 
 .setup-board-area {
@@ -55,6 +99,7 @@
     border: none;
     border-radius: 8px;
     transition: background 0.15s;
+    user-select: none;
 }
 
 .setup-start-btn:disabled {
@@ -64,4 +109,70 @@
 
 .setup-start-btn:not(:disabled):hover {
     background: #3451d1;
+}
+
+/* [2.5.2] Style thông báo vị trí đặt tàu không hợp lệ. */
+.setup-error-msg {
+    max-width: 380px;
+    margin: 0;
+    color: #c53030;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* [2.1.2] Style lớp phủ modal hướng dẫn lần đầu vào setup. */
+.setup-guide-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(15, 23, 42, 0.45);
+}
+
+/* [2.1.2] Style nội dung modal hướng dẫn đặt và điều chỉnh tàu. */
+.setup-guide-modal {
+    width: min(420px, 100%);
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 18px 50px rgba(15, 23, 42, 0.28);
+}
+
+/* [2.1.2] Style tiêu đề modal hướng dẫn setup. */
+.setup-guide-modal h2 {
+    margin: 0 0 12px;
+    color: #2d3a8c;
+    font-size: 18px;
+}
+
+/* [2.1.2] Style nội dung hướng dẫn thao tác setup. */
+.setup-guide-modal p {
+    margin: 8px 0;
+    color: #4a5568;
+    font-size: 14px;
+}
+
+/* [2.1.2] Style tùy chọn không hiển thị lại hướng dẫn setup. */
+.setup-guide-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 14px 0;
+    color: #4a5568;
+    font-size: 13px;
+}
+
+/* [2.1.2] Style nút đóng modal hướng dẫn setup. */
+.setup-guide-close {
+    width: 100%;
+    padding: 10px 14px;
+    background: #4361ee;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    font-weight: 700;
 }

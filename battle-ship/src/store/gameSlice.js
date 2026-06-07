@@ -1,7 +1,12 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {PHASES, WINNER, CELL_STATE} from '../constants/gameConstants.js';
+import {
+  PHASES,
+  WINNER,
+  CELL_STATE,
+  getDifficultyById
+} from '../constants/gameConstants.js';
 import {createBoard} from '../utils/boardUtils.js';
-import {createFleet, validateFleetConfig} from '../utils/fleetConfig.js';
+import {createFleet, resetFleet} from '../utils/fleetConfig.js';
 import {
     isValidPlacement,
     placeShipOnBoard,
@@ -19,7 +24,7 @@ import {
     calculateComboMultiplier,
 } from '../utils/attackUtils.js';
 
-// 1.4a Trạng thái game ban đầu
+
 const initialState = {
     phase: null,
     playerBoard: createBoard(),
@@ -36,6 +41,8 @@ const initialState = {
     comboStreak: 0,
     comboMultiplier: 1,
     lastScoreDelta: 0,
+    //thêm độ khó vào
+    difficulty: null,//thêm trạng thái mới
 };
 
 const gameSlice = createSlice({
@@ -45,101 +52,99 @@ const gameSlice = createSlice({
         /**
          * UC-01: Khởi tạo ván chơi mới.
          */
-        startGame(state) {
+        startGame(state,action) {
             try {
-                // 1.4b gán PHASE = SETUP
-                state.phase = PHASES.SETUP;
-                state.error = null; // Reset lỗi nếu thành công
+                // [1.1.6] Hệ thống gọi startGame, khởi tạo ván chơi mới
+                state.phase = PHASES.SETUP;// [1.1.8] Chuyển giai đoạn thiết lập (UC-02)
+                state.errorMessage = null; // Reset lỗi nếu thành công
+                state.selectedShipId = null; // Reset tàu được chọn
+                state.winner = null; // Reset người thắng
+                state.lastAttackResult = null; // Reset kết quả tấn công cuối cùng
 
-                // [2.E2.1] kiểm tra sizes = {5,4,3,3,2}
-                validateFleetConfig();
+                const difficulty = getDifficultyById(action.payload);
+                state.difficulty = difficulty.id; //lấy độ khó từ giao diện
+
+                
+                // [2.1.1d] Khởi tạo hạm đội Máy tính, Player theo cấu hình của độ khó đã chọn
+                // và thiết lập bố cục ngẫu nhiên cho hạm đội Máy tính.
+                const boardSize = difficulty.boardSize;
+                state.boardSize = boardSize;
+
+                const {board: computerBoard, fleet: computerFleet} = placeFleetRandomly(
+                    createBoard(boardSize),
+                    createFleet(difficulty)
+                );
+                state.computerBoard = computerBoard;
+                state.computerFleet = computerFleet;
+
+                state.playerBoard = createBoard(boardSize);
+                state.playerFleet = createFleet(difficulty);
+
+                // Reset điểm số và combo
+                state.score = 0;
+                state.comboStreak = 0;
+                state.comboMultiplier = 1;
+                state.lastScoreDelta = 0;
             } catch (error) {
-                // 1.E1.1 ERR Javascript runtime / Out of memory -> stateUpdated(error)
-                state.error = "Không thể bắt đầu ván chơi. Vui lòng tải lại trang.";
-                state.phase = null; // Reset state
-
-                // [2.E2.1] error="FLEET_CONFIG_MISMATCH"
-                // [2.E2.2] phase='ERROR', block + ghi log
-                console.error('FLEET_CONFIG_MISMATCH', error.message);
-
-                // [2.E2.2] phase='ERROR', block
+                // [1.4.1] Phát hiện lỗi khởi tạo
+                // [2.6.1a] Hiển thị lỗi setup và dừng khởi tạo ván chơi.
+                state.errorMessage = "Không thể bắt đầu ván chơi. Vui lòng tải lại trang.";
+                // [1.4.2] Hiển thị thông báo lỗi (thông qua UI đọc state.phase)
                 state.phase = PHASES.ERROR;
-
-                // [2.E2.3] kết thúc không thành công
+                state.difficulty = null; // Reset độ khó khi có lỗi
+                console.error('FLEET_CONFIG_MISMATCH', error.message);
+                // [1.4.3] Kết thúc không thành công (không gọi UC-02)
+                // [2.6.2] Kết thúc thất bại.
+                return;
             }
-
-            // 1.6 Kích hoạt UC-02 (phase = SETUP)
-            // [2.1] createFleet(FLEET_CONFIG) → fleet[5]
-            const playerFleet = createFleet();
-
-            // [2.1] placeFleetRandomly(emptyBoard, fleet) → {computerBoard, computerFleet}
-            const {board: computerBoard, fleet: computerFleet} = placeFleetRandomly(
-                createBoard(),
-                createFleet()
-            );
-
-            // [2.1] phase='SETUP', playerFleet, computerBoard
-            state.phase = PHASES.SETUP;
-            state.playerBoard = createBoard();
-            state.computerBoard = computerBoard; // computerBoard — hidden from Player
-            state.playerFleet = playerFleet;
-            state.computerFleet = computerFleet;
-            state.selectedShipId = null;
-            state.winner = null;
-
-            //Reset điểm số và combo
-            state.score = 0;
-            state.comboStreak = 0;
-            state.comboMultiplier = 1;
-            state.lastScoreDelta = 0;
-
-            // [2.2] store updated → useSelector re-render board 10×10 + fleet list
         },
 
         /**
-         * UC-02 — Bước 2.3 / 2.A1.1: Player chọn tàu.
-         * - 2.3: chọn tàu chưa đặt
-         * - 2.A1.1: chọn tàu đã đặt → reposition
+         * UC-02 — Bước 2.2.2 / 2.3.1: Player chọn tàu.
+         * - 2.2.2: chọn tàu chưa đặt
+         * - 2.3.1: chọn tàu đã đặt để điều chỉnh
          */
         selectShip(state, action) {
-            // [2.4.1] dispatch(selectShip(shipId)) → bindSelectedShip, fleetPlaced+1
+            // [2.3.2] Lưu tàu đang được chọn để giao diện highlight và cho phép điều chỉnh.
             state.selectedShipId = action.payload.shipId;
             // store updated → useSelector re-render (highlight tàu được chọn)
         },
 
         /**
-         * UC-02 — Bước 2.4 → 2.7: Đặt tàu lên bảng.
-         * Bao gồm cả luồng thay thế 2.A1 (reposition).
+         * UC-02 — Bước 2.2.3 → 2.2.6: Đặt tàu lên bảng.
+         * Bao gồm cả AF1 2.3 khi điều chỉnh tàu đã đặt.
          */
         placeShip(state, action) {
+            // [2.2.2d] Nhận yêu cầu đặt hoặc điều chỉnh tàu từ SetupBoard.
             const { shipId, row, col, orientation } = action.payload;
-            // [2.4] dispatch(placeShip(shipId, row, col, dir))
+
+            // [2.2.3a] Chỉ cho phép đặt hoặc điều chỉnh tàu trong giai đoạn setup.
+            if (state.phase !== PHASES.SETUP && state.phase !== PHASES.INVALID_PLACEMENT) return;
 
             const shipIndex = state.playerFleet.findIndex((s) => s.id === shipId);
             if (shipIndex === -1) return;
 
             const ship = state.playerFleet[shipIndex];
 
-            // [2.A1.2] Nếu tàu đã đặt → removeShipFromBoard trước khi validate
-            // (tái đặt — reposition: gỡ tàu khỏi vị trí cũ, ô trở về trống)
+            // [2.2.3b] Nếu tàu đã đặt, gỡ vị trí cũ khỏi board tạm trước khi validate.
             let boardForValidation = state.playerBoard;
             if (ship.placed && ship.positions.length > 0) {
                 boardForValidation = removeShipFromBoard(state.playerBoard, ship.positions);
             }
 
-            // [2.5] isValidPlacement(board, row, col, size, dir) → boolean
+            // [2.2.3c] Kiểm tra vị trí hợp lệ
+            // — tàu nằm hoàn toàn trong bảng, không chồng ô với tàu đã đặt, không đặt chéo.
             const valid = isValidPlacement(boardForValidation, row, col, ship.size, orientation);
 
             if (!valid) {
-                // [2.E1.1] valid = false
-                // [2.E1.2] phase='INVALID_PLACEMENT' → SetupBoard hiển thị error msg
+                // [2.5.1] Giữ nguyên bố cục hợp lệ gần nhất khi vị trí không hợp lệ.
+                state.errorMessage = 'Vị trí không hợp lệ. Vui lòng chọn vị trí khác.';
+                // [2.5.2] Chuyển phase để giao diện hiển thị thông báo lỗi.
                 state.phase = PHASES.INVALID_PLACEMENT;
-                // [2.E1.3] Player nhận msg → back to 2.4
                 return;
             }
 
-            // alt [valid = true]
-            // [2.6] placeShipOnBoard(board, row, col, size, dir) → newBoard
+            // [2.2.4] Ghi nhận vị trí hợp lệ vào bố cục hạm đội Player.
             let newBoard = boardForValidation; // board đã remove ship cũ nếu reposition
             const { board: updatedBoard, positions } = placeShipOnBoard(
                 newBoard,
@@ -150,7 +155,7 @@ const gameSlice = createSlice({
                 shipId
             );
 
-            // [2.6] show position → cập nhật board + ship.positions
+            // [2.2.5] Cập nhật trạng thái tàu vừa đặt thành đã đặt.
             state.playerBoard = updatedBoard;
             state.playerFleet[shipIndex] = {
                 ...ship,
@@ -159,24 +164,57 @@ const gameSlice = createSlice({
                 placed: true,
             };
 
-            // [2.7] selectedShipId = null
-            state.selectedShipId = null;
-
-            // Reset phase về SETUP (xoá INVALID_PLACEMENT nếu có)
+            // Reset phase về SETUP (xoá errorMessage, INVALID_PLACEMENT nếu có)
             state.phase = PHASES.SETUP;
+            state.selectedShipId = shipId;
+            state.errorMessage = null;
             // store updated → useSelector re-render
         },
 
         /**
-         * UC-02 — Bước 2.9 / 2.10: Bắt đầu tấn công.
+         * UC-02 — AF2: Đặt tàu tự động.
+         */
+        autoPlacePlayerFleet(state) {
+            if (state.phase !== PHASES.SETUP && state.phase !== PHASES.INVALID_PLACEMENT) return;
+
+            try {
+                // [2.4.2] Xóa bố cục hạm đội Player hiện tại.
+                const emptyBoard = createBoard(state.boardSize);
+
+                // [2.4.3] Tạo ngẫu nhiên vị trí và hướng đặt tàu hợp lệ
+                // cho toàn bộ hạm đội của Player theo độ khó đã chọn.
+                const {board: autoBoard, fleet: autoFleet} = placeFleetRandomly(
+                    emptyBoard,
+                    resetFleet(state.playerFleet)
+                );
+
+                // [2.4.4] Cập nhật bố cục hạm đội Player theo kết quả đặt tự động.
+                state.playerBoard = autoBoard;
+                state.playerFleet = autoFleet;
+
+                // Reset trạng thái liên quan đến chọn tàu và lỗi setup
+                state.selectedShipId = null;
+                state.errorMessage = null;
+                state.phase = PHASES.SETUP;
+            } catch (error) {
+                // [2.6.1a] Hiển thị lỗi setup nếu hệ thống không thể tạo bố cục hợp lệ.
+                state.errorMessage = 'Lỗi thiết lập hạm đội. Vui lòng tải lại trang.';
+                state.phase = PHASES.ERROR;
+                console.error('FLEET_RANDOM_PLACEMENT_FAILED', error.message);
+            }
+        },
+
+        /**
+         * UC-02 — Bước 2.1.7 / 2.1.8: Bắt đầu tấn công.
          */
         startBattle(state) {
-            // [2.8] Guard: allPlaced = false → không làm gì
+            // [2.1.4] Guard: chưa đặt đủ hạm đội thì không chuyển phase.
             const allPlaced = state.playerFleet.every((s) => s.placed);
             if (!allPlaced) return;
 
-            // [2.10] phase='BATTLE' → ref UC-03
+            // [2.1.8c] Chuyển sang giai đoạn tấn công, kích hoạt UC-03.
             state.phase = PHASES.PLAYER_TURN;
+            state.errorMessage = null;
         },
 
         /**
@@ -227,7 +265,7 @@ const gameSlice = createSlice({
                 state.comboMultiplier = calculateComboMultiplier(state.comboStreak);
 
                 //Tính điểm nền của loại tàu vừa bắn trúng nhân hệ số combo
-                const basePoints = SHIP_POINTS[ship.id] || 0;
+                const basePoints = SHIP_POINTS[ship.type] || SHIP_POINTS[ship.id] || 0;
                 let currentTurnScore = basePoints * state.comboMultiplier;
 
                 // KIỂM TRA TRƯỜNG HỢP A: LUỒNG THAY THẾ 3.3 — NHẤN CHÌM TÀU (SUNK)
@@ -275,6 +313,11 @@ const gameSlice = createSlice({
             state.errorMessage = null;
         },
 
+        setGameError(state, action) {
+            state.errorMessage = action.payload;
+            state.phase = PHASES.ERROR;
+        },
+
         /**
          * UC-04: Máy tính tấn công một ô trên bảng Player.
          */
@@ -319,11 +362,11 @@ export const {
     setGameError,
     selectShip,
     placeShip,
+    autoPlacePlayerFleet,
     startBattle,
     playerAttack,
     computerAttack,
     restartGame,
-    addError,
     clearError,
 } = gameSlice.actions;
 

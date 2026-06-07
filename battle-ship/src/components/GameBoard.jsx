@@ -1,17 +1,14 @@
-/* eslint-disable no-unused-vars */
 import {useAppDispatch, useAppSelector} from '../store/index.js';
-import {playerAttack, clearError, computerAttack, addError} from '../store/gameSlice';
+import {playerAttack, clearError, computerAttack, setGameError} from '../store/gameSlice';
 import {DELAY_MS, PHASES} from '../constants/gameConstants';
 import Grid from './Grid.jsx';
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import {selectAttackCell} from "../utils/computerLogic.js";
 import ShipList from "./ShipList.jsx";
 import AttackToast from "./AttackToast.jsx"
 import '../styles/game-board.css';
-import '../styles/error.css';
 
 export default function GameBoard() {
-    const [errorMsg, setErrorMsg] = useState(null);
     const dispatch = useAppDispatch();
 
     // [4.2.2a] / [4.1.5a] Nhận trạng thái mới
@@ -27,9 +24,9 @@ export default function GameBoard() {
             try {
                 // [4.1.2a] Yêu cầu máy tính chọn ô tấn công
                 cell = selectAttackCell(playerBoard);
-            } catch (error) {
+            } catch {
                 // [4.3.1a] Set giá trị Thông báo lỗi
-                setErrorMsg("Kết quả lượt chơi gặp lỗi. Vui lòng tải lại trang.");
+                dispatch(setGameError("Kết quả lượt chơi gặp lỗi. Vui lòng tải lại trang."));
             }
 
             if (cell)
@@ -40,7 +37,7 @@ export default function GameBoard() {
 
         return () => clearTimeout(timer);
     }, [phase, playerBoard, dispatch]);
-// [3.1.1] / [3.1.7] isClickable = true ở lượt Player (bảng kích hoạt), false ở lượt CPU (vô hiệu hóa)
+    // [3.1.1] / [3.1.7] isClickable = true ở lượt Player (bảng kích hoạt), false ở lượt CPU (vô hiệu hóa)
     const isClickable = phase === PHASES.PLAYER_TURN;
 
     function handleCellClick(row, col) {
@@ -56,23 +53,10 @@ export default function GameBoard() {
             {/* 2. THÊM ATTACK TOAST VÀO GIAO DIỆN VÀ TRUYỀN RESULT */}
             <AttackToast result={lastAttackResult} />
 
-            {/* [4.3.1b] Hiển thị hộp thoại thông báo lỗi */}
-            {errorMsg &&
-                <div className="error-screen">
-                    <div className="error-message">
-                        <p>{errorMsg}</p>
-                        <button className="error-reload-btn"
-                                onClick={() => window.location.reload()}>
-                            Tải lại trang
-                        </button>
-                    </div>
-                </div>
-            }
-
             <div className="game-board">
                 {/* ── Your grid ── */}
                 <div className="game-section">
-                    <ShipList fleet={playerFleet} />
+                    <ShipList fleet={playerFleet} grouped />
                     <div className="game-board-area">
                         {/* [4.2.2] / [4.1.5b] Đánh dấu ô vừa bị tấn công
                         bằng ký hiệu tương ứng
@@ -96,7 +80,7 @@ export default function GameBoard() {
                             <span className="game-board-label-sub"> (Máy Tính)</span>
                         </p>
                     </div>
-                    <ShipList fleet={computerFleet} align="right" />
+                    <ShipList fleet={computerFleet} align="right" grouped />
                 </div>
             </div>
         </div>
