@@ -15,7 +15,7 @@ export default function GameBoard() {
     const dispatch = useAppDispatch();
 
     // [4.2.2a] / [4.1.5a] Nhận trạng thái mới
-    const {phase, playerBoard, playerFleet, computerBoard, computerFleet, lastAttackResult, score, comboStreak, comboMultiplier, lastScoreDelta} =
+    const {phase, playerBoard, playerFleet, computerBoard, computerFleet, lastAttackResult, errorMsg, highScore, isNewHighScore, score} =
         useAppSelector((state) => state.game);
 
     // [4.1.1] Nhận lượt từ hệ thống; bắt đầu xử lý. → (phase = CPU_TURN)
@@ -52,6 +52,16 @@ export default function GameBoard() {
 
     return (
         <div className="board-wrapper">
+        {/* High Score bar */}
+        <div className={`hs-bar ${isNewHighScore ? 'hs-bar--new' : ''}`}>
+            <span className="hs-bar__label">
+                {isNewHighScore ? '🏆 Kỷ lục mới!' : '🏆 High Score'}
+            </span>
+            <span className="hs-bar__score">{highScore}</span>
+            <span className="hs-bar__current">
+                Điểm hiện tại: <strong>{score}</strong>
+            </span>
+        </div>
             
             {/* 2. THÊM ATTACK TOAST VÀO GIAO DIỆN VÀ TRUYỀN RESULT */}
             <AttackToast result={lastAttackResult} />
