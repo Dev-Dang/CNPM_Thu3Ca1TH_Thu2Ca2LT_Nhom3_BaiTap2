@@ -42,9 +42,25 @@ export function getShipPositions(row, col, size, orientation) {
 }
 
 /**
+ * Tính ô đầu tàu từ ô/segment đang được giữ làm điểm neo khi kéo thả.
+ *
+ * @param {number} row
+ * @param {number} col
+ * @param {number} pivotIndex
+ * @param {string} orientation
+ * @returns {{ row: number, col: number }}
+ */
+export function getShipAnchorFromPivot(row, col, pivotIndex, orientation) {
+  return {
+    row: orientation === ORIENTATION.VERTICAL ? row - pivotIndex : row,
+    col: orientation === ORIENTATION.HORIZONTAL ? col - pivotIndex : col,
+  };
+}
+
+/**
  * Kiểm tra vị trí đặt tàu có hợp lệ không (UC-02: RUL-04, RUL-05).
  *
- * [2.2.3] isValidPlacement(board, row, col, size, dir) → boolean
+ * [2.2.3b/2.2.3c] isValidPlacement(board, row, col, size, dir) → boolean
  *       - RUL-04: Không vượt biên bảng
  *       - RUL-05: Không đè lên tàu khác
  *
@@ -136,7 +152,7 @@ export function isCellAlreadyAttacked(board, row, col) {
 /**
  * Đặt toàn bộ hạm đội ngẫu nhiên lên bảng. (UC-02 — khởi tạo hạm đội máy tính)
  *
- * [2.1] placeFleetRandomly(emptyBoard, fleet) → { computerBoard, computerFleet }
+ * [2.1.1d/2.4.3] placeFleetRandomly(emptyBoard, fleet) → { board, fleet }
  *
  * @param {Cell[][]} board
  * @param {Ship[]} fleet

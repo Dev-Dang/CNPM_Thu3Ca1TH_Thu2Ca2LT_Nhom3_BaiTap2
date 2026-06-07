@@ -3,6 +3,30 @@
     gap: 24px;
     align-items: flex-start;
     padding: 8px 0;
+    user-select: none;
+}
+
+.setup-drag-ghost {
+    position: fixed;
+    z-index: 60;
+    display: flex;
+    gap: 1px;
+    padding: 2px;
+    background: rgba(255, 255, 255, 0.28);
+    border: 1px dashed rgba(30, 64, 175, 0.55);
+    pointer-events: none;
+    opacity: 0.52;
+}
+
+.setup-drag-ghost-vertical {
+    flex-direction: column;
+}
+
+.setup-drag-ghost-cell {
+    width: 34px;
+    height: 34px;
+    background: rgba(30, 64, 175, 0.10);
+    border: 2px dashed rgba(30, 64, 175, 0.48);
 }
 
 .setup-sidebar {
@@ -27,6 +51,7 @@
     border: 1px solid #c8d0e8;
     border-radius: 6px;
     transition: border-color 0.15s;
+    user-select: none;
 }
 
 .setup-orient-btn:hover {
@@ -44,6 +69,7 @@
     border: 1px solid #c8d0e8;
     border-radius: 6px;
     transition: border-color 0.15s, color 0.15s, background 0.15s;
+    user-select: none;
 }
 
 .setup-auto-btn:hover {
@@ -73,6 +99,7 @@
     border: none;
     border-radius: 8px;
     transition: background 0.15s;
+    user-select: none;
 }
 
 .setup-start-btn:disabled {

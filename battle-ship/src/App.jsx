@@ -38,10 +38,10 @@ export default function App() {
             {/* 1.5 render label "Vs Máy tính" -> StatusBar */}
             {phase !== null && <StatusBar/>}
 
-            {/* 2.1.2 useAppSelector → render board 10x10 + fleet list */}
+            {/* [2.1.2a] Render SetupBoard khi game ở phase thiết lập. */}
             {(phase === PHASES.SETUP || phase === PHASES.INVALID_PLACEMENT) && <SetupBoard />}
 
-            {/* UC-03 & UC-04: Giai đoạn tấn công */}
+            {/* [2.1.8d] Unmount SetupBoard và mount GameBoard khi UC-02 hoàn tất. */}
             {(phase === PHASES.PLAYER_TURN || phase === PHASES.CPU_TURN) && <GameBoard />}
 
             {/* UC-05: Kết thúc ván chơi */}

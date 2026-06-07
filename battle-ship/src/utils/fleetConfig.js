@@ -36,7 +36,7 @@ export function validateFleetConfig(difficulty = DEFAULT_DIFFICULTY) {
 }
 
 /**
- * [2.1] createFleet(difficulty.fleet) → fleet[].
+ * [2.1.1c/2.1.1f] createFleet(difficulty) → fleet[].
  * Tạo hạm đội mới cho một ván chơi theo độ khó.
  *
  * @param {{ id: string, boardSize: number, fleet: object[] }} difficulty
