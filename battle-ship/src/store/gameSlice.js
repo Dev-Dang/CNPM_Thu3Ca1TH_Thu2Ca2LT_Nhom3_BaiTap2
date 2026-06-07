@@ -32,6 +32,8 @@ const initialState = {
     errorMessage: null,
     totalShots: 0,
     totalHits: 0,
+    highScore: parseInt(localStorage.getItem('highScore') || '0', 10),
+    isNewHighScore: false,
 
     //Các state quản lý điểm và combo
     score: 0,
@@ -96,6 +98,7 @@ const gameSlice = createSlice({
             state.comboStreak = 0;
             state.comboMultiplier = 1;
             state.lastScoreDelta = 0;
+            state.isNewHighScore = false;
 
             // [2.2] store updated → useSelector re-render board 10×10 + fleet list
         },
@@ -257,6 +260,7 @@ const gameSlice = createSlice({
 
                 // Cập nhật điểm số tổng và lưu lượng điểm thay đổi (delta) của lượt này vào state hệ thống
                 state.score = (state.score || 0) + currentTurnScore;
+                state.isNewHighScore = state.score > state.highScore;
                 state.lastScoreDelta = currentTurnScore;
                 state.computerBoard = newBoard;
             }
@@ -273,6 +277,11 @@ const gameSlice = createSlice({
                 state.score += 100;
                 state.lastScoreDelta += 100;
             }
+            if (state.score > state.highScore) {
+                    state.highScore = state.score;
+                    localStorage.setItem('highScore', state.score.toString());
+                    state.isNewHighScore = true;
+                }
         },
 
         // ── Xóa thông báo lỗi ────────────────────────────────────────────────────
