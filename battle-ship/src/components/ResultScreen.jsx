@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAppSelector, useAppDispatch } from '../store/index.js';
 import { startGame } from '../store/gameSlice.js';
 import { WINNER, CELL_STATE } from '../constants/gameConstants.js';
@@ -21,7 +21,7 @@ function EnemyBoardReveal({ board, fleet }) {
     }
 
     return (
-        <div className="rs-board-grid">
+        <div className="rs-board-grid" style={{'--board-cols': board[0]?.length ?? 10}}>
             {board.map((rowArr, r) =>
                 rowArr.map((cell, c) => {
                     const key = `${r}-${c}`;
@@ -58,13 +58,16 @@ export default function ResultScreen() {
     const [showEnemyBoard, setShowEnemyBoard] = useState(false);
 
     // Bước 5.1.0 & 5.2.0: Kích hoạt tự động lấy dữ liệu trạng thái từ Redux Store
-    const { winner, computerBoard, computerFleet } = useAppSelector((state) => state.game);
+    const { winner, computerBoard, computerFleet, difficulty } = useAppSelector((state) => state.game);
     
     // Bước 5.1.1, 5.1.2 & 5.2.1, 5.2.2: Kiểm tra điều kiện phân tách Luồng chính / Luồng thay thế
     const isPlayerWinner = winner === WINNER.PLAYER;
 
     // Luồng phụ 8.1 (Bước 1): Hàm xử lý khi Player click nút "Chơi lại"
-    const handleRestart = () => dispatch(startGame());
+    const handleRestart = () => {
+        // [2.1.0] Chơi lại với độ khó hiện tại để UC-02 khởi tạo đúng cấu hình.
+        dispatch(startGame({difficulty}));
+    };
     
     // Luồng phụ 8.2 (Bước 1): Hàm xử lý khi Player click nút "Quay về menu chính"
     const handleBackToMenu = () => window.location.reload();

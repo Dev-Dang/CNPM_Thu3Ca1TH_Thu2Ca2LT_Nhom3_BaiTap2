@@ -3,10 +3,12 @@
     flex-direction: column;
     gap: 6px;
     padding-top: 22px; /* align with grid rows below header */
+    width: 142px;
+    user-select: none;
 }
 
 .ship-list-right {
-    align-items: flex-end;
+    align-items: stretch;
 }
 
 /* ── Ship entry card ── */
@@ -18,10 +20,23 @@
     border-radius: 6px;
     cursor: default;
     transition: background 0.15s;
+    width: 100%;
+    min-height: 48px;
+    user-select: none;
 }
 
 .ship-entry-selectable {
     cursor: pointer;
+}
+
+/* [2.2.2] Style trạng thái có thể kéo thả tàu từ danh sách. */
+.ship-entry-draggable {
+    cursor: grab;
+}
+
+/* [2.2.2] Style con trỏ khi đang kéo tàu từ danh sách. */
+.ship-entry-draggable:active {
+    cursor: grabbing;
 }
 
 .ship-entry-selectable:hover {
@@ -34,15 +49,30 @@
     outline-offset: 1px;
 }
 
-.ship-entry-sunk {
-    opacity: 0.30;
+.ship-entry-completed {
+    opacity: 0.38;
+    filter: grayscale(0.25);
+    cursor: not-allowed;
+}
+
+.ship-entry-completed:hover {
+    background: transparent;
 }
 
 /* ── Block row: emoji + colored blocks ── */
+.ship-entry-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-width: 0;
+}
+
 .ship-block-row {
     display: flex;
     align-items: center;
     gap: 3px;
+    min-width: 0;
 }
 
 .ship-icon {
@@ -63,9 +93,31 @@
     transition: background 0.15s, border-color 0.15s;
 }
 
-.ship-block-sunk {
-    border-color: #e53e3e !important;
-    background: rgba(229, 62, 62, 0.15) !important;
+.ship-block-completed {
+    border-color: #94a3b8 !important;
+    background: rgba(148, 163, 184, 0.18) !important;
+}
+
+.ship-count {
+    flex: 0 0 auto;
+    min-width: 30px;
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: rgba(99, 119, 214, 0.10);
+    color: #5466c6;
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 16px;
+    text-align: center;
+}
+
+.ship-drag-blank {
+    position: fixed;
+    top: -1000px;
+    left: -1000px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
 }
 
 /* ── Ship name label ── */
@@ -75,4 +127,7 @@
     color: #7888b0;
     letter-spacing: 0.02em;
     padding-left: 20px; /* indent to align under blocks */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
