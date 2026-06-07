@@ -13,7 +13,8 @@ export const SHIP_POINTS = {
 };
 
 /**
- * [3.1.3] / [3.6.2] Kiểm tra ô đã chọn: xác nhận nằm trong bảng 10x10 và chưa bị tấn công.
+ * [UC-03 / 3.1.3, 3.6.2] Kiểm tra ô đã chọn: xác nhận nằm trong bảng 10x10 và chưa bị tấn công.
+ * [UC-04 / 4.2.1] Dùng lại để lọc ô hợp lệ trong computerTargetQueue (Luồng thay thế 4.2).
  */
 export function validateCoordinate(row, col, board) {
     const rowCount = board.length;
@@ -25,7 +26,8 @@ export function validateCoordinate(row, col, board) {
 }
 
 /**
- * [3.1.4] / [3.2.1] / [3.3.1] Xác định kết quả tấn công (kiểm tra tàu và đếm số ô còn lại)
+ * [UC-03 / 3.1.4, 3.2.1, 3.3.1] Xác định kết quả tấn công (kiểm tra tàu và đếm số ô còn lại).
+ * [UC-04 / 4.1.3] Dùng lại bên trong processAttack để xác định Miss / Hit / Sunk.
  */
 export function getCellAttackInfo(row, col, board, fleet) {
     const cell = board[row][col];
@@ -43,7 +45,8 @@ export function getCellAttackInfo(row, col, board, fleet) {
 }
 
 /**
- * [3.1.5] / [3.2.2] Đánh dấu ô vừa tấn công bằng ký hiệu Miss/Hit
+ * [UC-03 / 3.1.5, 3.2.2] Đánh dấu ô vừa tấn công bằng ký hiệu Miss/Hit.
+ * [UC-04 / 4.1.3] Dùng lại bên trong processAttack để cập nhật board sau khi xác định kết quả.
  */
 export function markCell(row, col, newState, board) {
     const newBoard = board.map((r) => r.map((c) => ({...c})));
@@ -52,7 +55,8 @@ export function markCell(row, col, newState, board) {
 }
 
 /**
- * [3.3.2] Đánh dấu toàn bộ ô của tàu bị nhấn chìm đồng loạt bằng ký hiệu Sunk.
+ * [UC-03 / 3.3.2] Đánh dấu toàn bộ ô của tàu bị nhấn chìm đồng loạt bằng ký hiệu Sunk.
+ * [UC-04 / 4.1.3] Dùng lại bên trong processAttack cho trường hợp kết quả Sunk.
  */
 export function markAllShipCells(ship, board) {
     const newBoard = board.map((r) => r.map((c) => ({...c})));
@@ -63,35 +67,22 @@ export function markAllShipCells(ship, board) {
 }
 
 /**
- * [3.1.6] / [3.4.1] Kiểm tra điều kiện kết thúc ván (toàn bộ tàu đối thủ bị nhấn chìm)
+ * [UC-03 / 3.1.6, 3.4.1] Kiểm tra điều kiện kết thúc ván (toàn bộ tàu đối thủ bị nhấn chìm).
+ * [UC-04 / 4.1.5] Dùng lại trong computerAttack để kiểm tra isGameOver sau bước 4.1.4.
+ * Lưu ý: với lượt Máy tính, isGameOver đã được tính sẵn bên trong processAttack (bước 4.1.3),
+ * hàm này được gọi trực tiếp ở UC-03 (playerAttack) và gián tiếp qua isFleetDefeated ở UC-04.
  */
 export function checkEndGame(fleet, board) {
     return fleet.every((ship) =>
         ship.positions.every(({row: r, col: c}) => board[r][c].state === CELL_STATE.SUNK)
     );
 }
-
-/**
- * Xác định kết quả lượt tấn công
- *
- * @param {Cell[][]} board  - bảng mục tiêu
- * @param {Ship[]}   fleet  - hàm đội mục tiêu
- * @param {number}   row
- * @param {number}   col
- * @returns {{
- *   board: Cell[][],
- *   fleet: Ship[],
- *   result: 'miss' | 'hit' | 'sunk',
- *   isGameOver: boolean
- * }}
- */
 export function processAttack(board, fleet, row, col) {
-    // Kiểm tra ô bị tấn công
+    // [4.1.3] Kiểm tra ô bị tấn công: xác định có tàu không và còn bao nhiêu ô chưa bị bắn
     const {hasShip, ship, remainingCells} = getCellAttackInfo(row, col, board, fleet);
 
     if (!hasShip) {
-        // Cập nhật trạng thái board
-        // [4.1.3c] Trả kết quả lượt tấn công
+        // [4.1.3 — Miss] Ô không chứa tàu → đánh dấu Miss, trả kết quả
         return {
             board: markCell(row, col, CELL_STATE.MISS, board),
             fleet,
@@ -100,20 +91,18 @@ export function processAttack(board, fleet, row, col) {
         };
     }
 
-    // Cập nhật đội tàu với hitCount mới
+    // Ô chứa tàu → tăng hitCount
     const newFleet = fleet.map((s) =>
         s.id === ship.id ? {...s, hitCount: s.hitCount + 1} : s
     );
 
     if (remainingCells === 0) {
-        // Lấy ra tàu bị đánh trúng
+        // [4.1.3 — Sunk] Đây là ô cuối cùng của tàu → đánh dấu toàn bộ ô tàu bằng ký hiệu Sunk
         const updatedShip = newFleet.find((s) => s.id === ship.id);
 
-        // Kiểm tra điều kiện kết thúc
+        // [4.1.5] Tính sẵn cờ isGameOver để computerAttack dùng ở bước 4.1.5
         const checkGameOver = isFleetDefeated(newFleet);
 
-        // Cập nhật trạng thái board
-        // [4.1.3c] Trả kết quả lượt tấn công
         return {
             board: markAllShipCells(updatedShip, markCell(row, col, CELL_STATE.HIT, board)),
             fleet: newFleet,
@@ -122,8 +111,7 @@ export function processAttack(board, fleet, row, col) {
         };
     }
 
-    // Cập nhật trạng thái board
-    // [4.1.3c] Trả kết quả lượt tấn công
+    // [4.1.3 — Hit] Tàu còn ô khác chưa bị tấn công → đánh dấu Hit
     return {
         board: markCell(row, col, CELL_STATE.HIT, board),
         fleet: newFleet,
