@@ -93,8 +93,8 @@ Sau khi bắn, hệ thống cập nhật board và fleet, sau đó kiểm tra k�
 
 | Bước      | Actor    | Hành động / Phản hồi |
 |-----------|----------|----------------------|
-| **4.3.1** | Hệ thống | Xác định toàn bộ tàu `Player` đã bị nhấn chìm (`isGameOver = true`). Board đã được đánh dấu đầy đủ ký hiệu Sunk từ bước 4.1.3. |
-| **4.3.2** | Hệ thống | Kích hoạt UC-05 với kết quả `Player` thua (`phase = GAME_OVER`, `winner = COMPUTER`). |
+| **4.3.1** | Hệ thống | Xác định toàn bộ tàu `Player` đã bị nhấn chìm. Board đã được đánh dấu đầy đủ ký hiệu Sunk từ bước 4.1.3. |
+| **4.3.2** | Hệ thống | Kích hoạt UC-05 với kết quả `Player` thua . |
 | **4.3.3** | Hệ thống | Kết thúc. |
 
 ---
