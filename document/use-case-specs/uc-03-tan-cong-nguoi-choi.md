@@ -129,8 +129,8 @@ Không có.
 |----|---------|-------|
 | RUL-06 | Mỗi ô trên bảng chỉ có thể bị tấn công một lần trong ván chơi. | BRD §4.2 |
 | RUL-07 | Người chơi thực hiện lượt đầu tiên; sau đó luân phiên với đối thủ máy tính. | BRD §4.2 |
-| RUL-08 | Khi bắn trúng hoặc nhấn chìm tàu, người chơi được cộng điểm bằng điểm nền của loại tàu nhân với hệ số combo. Thưởng thêm 50 điểm khi nhấn chìm tàu và 100 điểm khi thắng ván chơi. | BRD / Design |
-| RUL-09 | Hệ số combo tăng theo chuỗi bắn trúng liên tiếp: Phát 1 (x1), phát 2 (x2), từ phát 3 trở đi (x3). Bắn trượt sẽ reset chuỗi combo về 0. | BRD / Design |
+| RUL-08 | Khi bắn trúng hoặc nhấn chìm tàu, người chơi được cộng điểm bằng điểm nền của loại tàu nhân với hệ số combo. Thưởng thêm 50 điểm khi nhấn chìm tàu và 100 điểm khi thắng ván chơi. | BRD §4.2 |
+| RUL-09 | Hệ số combo tăng theo chuỗi bắn trúng liên tiếp: Phát 1 (x1), phát 2 (x2), từ phát 3 trở đi (x3). Bắn trượt sẽ reset chuỗi combo về 0. | BRD §4.2 |
 
 ## 11. Yêu cầu phi chức năng (Non-Functional Requirements)
 
