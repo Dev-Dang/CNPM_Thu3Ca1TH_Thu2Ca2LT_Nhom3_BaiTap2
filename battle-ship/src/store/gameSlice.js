@@ -1,5 +1,10 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {PHASES, WINNER, CELL_STATE} from '../constants/gameConstants.js';
+import {
+  PHASES,
+  WINNER,
+  CELL_STATE,
+  getDifficultyById
+} from '../constants/gameConstants.js';
 import {createBoard} from '../utils/boardUtils.js';
 import {createFleet, validateFleetConfig} from '../utils/fleetConfig.js';
 import {
@@ -171,7 +176,40 @@ const gameSlice = createSlice({
         },
 
         /**
-         * UC-02 — Bước 2.9 / 2.10: Bắt đầu tấn công.
+         * UC-02 — AF2: Đặt tàu tự động.
+         */
+        autoPlacePlayerFleet(state) {
+            if (state.phase !== PHASES.SETUP && state.phase !== PHASES.INVALID_PLACEMENT) return;
+
+            try {
+                // [2.4.2] Xóa bố cục hạm đội Player hiện tại.
+                const emptyBoard = createBoard(state.boardSize);
+
+                // [2.4.3] Tạo ngẫu nhiên vị trí và hướng đặt tàu hợp lệ
+                // cho toàn bộ hạm đội của Player theo độ khó đã chọn.
+                const {board: autoBoard, fleet: autoFleet} = placeFleetRandomly(
+                    emptyBoard,
+                    resetFleet(state.playerFleet)
+                );
+
+                // [2.4.4] Cập nhật bố cục hạm đội Player theo kết quả đặt tự động.
+                state.playerBoard = autoBoard;
+                state.playerFleet = autoFleet;
+
+                // Reset trạng thái liên quan đến chọn tàu và lỗi setup
+                state.selectedShipId = null;
+                state.errorMessage = null;
+                state.phase = PHASES.SETUP;
+            } catch (error) {
+                // [2.6.1] Hiển thị lỗi setup nếu hệ thống không thể tạo bố cục hợp lệ.
+                state.errorMessage = 'Lỗi thiết lập hạm đội. Vui lòng tải lại trang.';
+                state.phase = PHASES.ERROR;
+                console.error('FLEET_RANDOM_PLACEMENT_FAILED', error.message);
+            }
+        },
+
+        /**
+         * UC-02 — Bước 2.1.7 / 2.1.8: Bắt đầu tấn công.
          */
         startBattle(state) {
             // [2.8] Guard: allPlaced = false → không làm gì
@@ -278,6 +316,11 @@ const gameSlice = createSlice({
             state.errorMessage = null;
         },
 
+        setGameError(state, action) {
+            state.errorMessage = action.payload;
+            state.phase = PHASES.ERROR;
+        },
+
         /**
          * UC-04: Máy tính tấn công một ô trên bảng Player.
          */
@@ -322,11 +365,11 @@ export const {
     setGameError,
     selectShip,
     placeShip,
+    autoPlacePlayerFleet,
     startBattle,
     playerAttack,
     computerAttack,
     restartGame,
-    addError,
     clearError,
 } = gameSlice.actions;
 
