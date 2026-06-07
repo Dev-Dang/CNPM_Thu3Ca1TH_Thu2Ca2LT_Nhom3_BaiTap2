@@ -14,38 +14,38 @@ export default function GameBoard() {
     const [errorMsg, setErrorMsg] = useState(null);
     const dispatch = useAppDispatch();
 
-    // [4.2.2a] / [4.1.5a] Nhận trạng thái mới
-    // [UC-04 v2] Thêm difficulty và computerTargetQueue từ Redux
+    // [4.1.1] Nhận trạng thái từ hệ thống để xác định lượt hiện tại và dữ liệu bảng
+    // difficulty và computerTargetQueue dùng cho bước 4.1.2 (chọn ô theo độ khó)
     const {phase, playerBoard, playerFleet, computerBoard, computerFleet, lastAttackResult,
         difficulty, computerTargetQueue} =
         useAppSelector((state) => state.game);
 
-    // [4.1.1] Nhận lượt từ hệ thống; bắt đầu xử lý. → (phase = CPU_TURN)
+    // [4.1.1] Nhận lượt từ hệ thống; bắt đầu xử lý lượt tấn công khi phase = CPU_TURN
     useEffect(() => {
         if (phase !== PHASES.CPU_TURN) return;
 
         const timer = setTimeout(() => {
             let cell = null;
             try {
-                // [4.1.2a] Yêu cầu máy tính chọn ô tấn công
-                // [UC-04 v2] Truyền difficulty và targetQueue để hỗ trợ Normal Hunt-and-Target
+                // [4.1.2] Chọn ô tấn công theo độ khó đang áp dụng
+                // Normal truyền thêm computerTargetQueue để thực hiện Hunt-and-Target (Luồng thay thế 4.2)
                 cell = selectAttackCell(playerBoard, {
                     difficulty,
                     targetQueue: computerTargetQueue,
                 });
             } catch (error) {
-                // [4.3.1a] Set giá trị Thông báo lỗi
+                // [4.4.1 → 4.4.2] Phát hiện lỗi khi chọn ô → hiển thị thông báo lỗi
                 setErrorMsg("Kết quả lượt chơi gặp lỗi. Vui lòng tải lại trang.");
             }
 
             if (cell)
-                // [4.1.3a] Gửi yêu cầu xử lý
+                // [4.1.3] Gửi ô đã chọn để hệ thống xử lý lượt tấn công
                 dispatch(computerAttack({row: cell.row, col: cell.col}));
 
         }, DELAY_MS);
 
         return () => clearTimeout(timer);
-        // [UC-04 v2] Thêm difficulty và computerTargetQueue vào dep array
+        // dependency: phase (kích hoạt 4.1.1), playerBoard + difficulty + computerTargetQueue (dữ liệu cho 4.1.2)
     }, [phase, playerBoard, difficulty, computerTargetQueue, dispatch]);
 
 // [3.1.1] / [3.1.7] isClickable = true ở lượt Player (bảng kích hoạt), false ở lượt CPU (vô hiệu hóa)
@@ -64,7 +64,7 @@ export default function GameBoard() {
             {/* 2. THÊM ATTACK TOAST VÀO GIAO DIỆN VÀ TRUYỀN RESULT */}
             <AttackToast result={lastAttackResult} />
 
-            {/* [4.3.1b] Hiển thị hộp thoại thông báo lỗi */}
+            {/* [4.4.2] Hiển thị thông báo lỗi khi không thể chọn ô tấn công (Ngoại lệ 4.4) */}
             {errorMsg &&
                 <div className="error-screen">
                     <div className="error-message">
@@ -82,9 +82,8 @@ export default function GameBoard() {
                 <div className="game-section">
                     <ShipList fleet={playerFleet} />
                     <div className="game-board-area">
-                        {/* [4.2.2] / [4.1.5b] Đánh dấu ô vừa bị tấn công
-                        bằng ký hiệu tương ứng
-                        (Miss/Hit/Sunk) trên bảng Player.`.*/}
+                        {/* [UC-04 / Post-condition 1, 2] Hiển thị kết quả lượt Máy tính trên bảng Player
+                            Ô được chọn mang ký hiệu Miss / Hit / Sunk sau bước 4.1.3 */}
                         <Grid board={playerBoard} disabled />
                         <p className="game-board-label">Bảng Của Bạn</p>
                     </div>

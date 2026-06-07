@@ -299,33 +299,33 @@ const gameSlice = createSlice({
         },
 
         /**
-         * UC-04 v2: Máy tính tấn công một ô trên bảng Player.
+         * [UC-04] Máy tính tấn công một ô trên bảng Player.
          *
-         * Thay đổi so với v1:
-         * - Normal + hit/sunk → giữ phase = CPU_TURN (bắn tiếp, RUL-07 / BR-16)
-         * - Easy hoặc Normal miss → chuyển phase = PLAYER_TURN
-         * - Normal: cập nhật computerTargetQueue sau khi hit (thêm ô liền kề)
-         * - Normal: loại ô vừa bắn ra khỏi queue dù kết quả nào
+         * Luồng chính  : 4.1.3 → 4.1.4 → [4.5] → 4.1.5 → 4.1.6
+         * Luồng thay thế 4.5 (Normal): cập nhật computerTargetQueue sau bước 4.1.4.
+         * Luồng thay thế 4.3 (end-game): kích hoạt UC-05 khi isGameOver = true.
+         * RUL-07: Hit hoặc Sunk → giữ lượt Máy tính (cả Easy lẫn Normal).
+         *         Miss           → chuyển lượt sang Player.
          */
         computerAttack(state, action) {
             const {row, col} = action.payload;
 
-            // [4.1.3b] Xử lý logic lượt tấn công
+            // [4.1.3] Xử lý lượt tấn công, xác định kết quả và cập nhật trạng thái board
             const attack = processAttack(state.playerBoard, state.playerFleet, row, col);
 
-            // [4.1.3d] Cập nhật trạng thái
+            // [4.1.4] Cập nhật board và fleet của Player theo kết quả vừa xử lý
             state.playerBoard = attack.board;
             state.playerFleet = attack.fleet;
 
-            // [UC-04 v2] Loại ô vừa bắn ra khỏi queue (dù trúng hay trượt)
+            // [4.5.1] Loại ô vừa bắn ra khỏi computerTargetQueue (dù kết quả là Miss, Hit hay Sunk)
             state.computerTargetQueue = state.computerTargetQueue.filter(
                 (cell) => !(cell.row === row && cell.col === col)
             );
 
-            // [UC-04 v2] Cập nhật computerTargetQueue cho Normal (Hunt-and-Target)
+            // [4.5 — Normal only] Cập nhật computerTargetQueue sau bước 4.1.4
             if (state.difficulty === 'normal') {
                 if (attack.result === 'hit' || attack.result === 'sunk') {
-                    // Thêm các ô liền kề hợp lệ quanh ô vừa bắn trúng vào queue
+                    // [4.5.2] Hit hoặc Sunk: bổ sung các ô liền kề hợp lệ vào queue
                     const adjacents = getAdjacentTargets(row, col, attack.board);
                     adjacents.forEach((adj) => {
                         const alreadyQueued = state.computerTargetQueue.some(
@@ -336,39 +336,37 @@ const gameSlice = createSlice({
                         }
                     });
                 }
-                // miss: không thêm target mới, queue giữ nguyên (có thể vẫn còn từ hit trước)
+                // [4.5.2] Miss: không thêm ô mới, giữ nguyên queue
             }
 
-            // [4.1.4a] Kiểm tra điều kiện kết thúc ván
+            // [4.1.5] Kiểm tra điều kiện kết thúc ván
             if (attack.isGameOver) {
-                // [4.2.1] Xác định toàn bộ tàu `Player` đã bị nhấn chìm
-                // → Cập nhật trạng thái mới
+                // [4.3.1] Toàn bộ tàu Player đã bị nhấn chìm
+                // [4.3.2] Kích hoạt UC-05 với kết quả Player thua
                 state.phase = PHASES.GAME_OVER;
                 state.winner = WINNER.COMPUTER;
 
-                // [4.2.3] Kích hoạt UC-05 với kết quả `Player` thua
             } else if (
                 attack.result === 'hit' ||
                 attack.result === 'sunk'
             ) {
-                // [UC-04 v2 / RUL-07] Normal + bắn trúng → tiếp tục lượt, giữ CPU_TURN
+                // [4.1.6 / RUL-07] Hit hoặc Sunk và ván chưa kết thúc → giữ lượt Máy tính, bắn tiếp
                 state.phase = PHASES.CPU_TURN;
             } else {
-                // [4.1.4b] Cập nhật trạng thái mới (Easy bất kể kết quả; Normal miss)
+                // [4.1.6] Miss → chuyển sang lượt Player, kích hoạt UC-03
                 state.phase = PHASES.PLAYER_TURN;
-
-                // [4.1.6] Kích hoạt UC-03
             }
-        },
+            },
 
-        /**
-         * UC-05: Chơi lại — reset toàn bộ về trạng thái ban đầu.
-         */
-        restartGame() {
-            // TODO: UC-05 — Implement
+
+            /**
+             * UC-05: Chơi lại — reset toàn bộ về trạng thái ban đầu.
+             */
+            restartGame() {
+                // TODO: UC-05 — Implement
+            },
         },
-    },
-});
+    });
 
 export const {
     startGame,
