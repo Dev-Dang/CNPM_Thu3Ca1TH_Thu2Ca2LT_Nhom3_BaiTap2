@@ -1,4 +1,4 @@
-import {BOARD_SIZE, CELL_STATE} from '../constants/gameConstants';
+import {CELL_STATE} from '../constants/gameConstants';
 import {isFleetDefeated} from "./fleetConfig.js";
 
 /**
@@ -16,7 +16,10 @@ export const SHIP_POINTS = {
  * [3.1.3] / [3.6.2] Kiểm tra ô đã chọn: xác nhận nằm trong bảng 10x10 và chưa bị tấn công.
  */
 export function validateCoordinate(row, col, board) {
-    if (row < 0 || row >= BOARD_SIZE || col < 0 || col >= BOARD_SIZE) return false;
+    const rowCount = board.length;
+    const colCount = board[0]?.length ?? 0;
+
+    if (row < 0 || row >= rowCount || col < 0 || col >= colCount) return false;
     const state = board[row][col].state;
     return state !== CELL_STATE.HIT && state !== CELL_STATE.MISS && state !== CELL_STATE.SUNK;
 }

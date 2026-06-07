@@ -12,6 +12,8 @@ export default function App() {
     const phase = useAppSelector((state) => state.game.phase);
     const errorMessage = useAppSelector((state) => state.game.errorMessage);
 
+    // 1.E1.2 toast: "Không thể bắt đầu ván chơi"
+    // [4.3.1b] Hiển thị hộp thoại thông báo lỗi
     if (phase === PHASES.ERROR) {
         return (
             <div className="app">

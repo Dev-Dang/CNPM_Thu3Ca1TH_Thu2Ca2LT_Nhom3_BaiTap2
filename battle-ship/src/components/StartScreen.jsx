@@ -1,26 +1,14 @@
-import {useAppDispatch, useAppSelector} from '../store/index.js';
+import {useState} from 'react';
+import {useAppDispatch} from '../store/index.js';
 import {startGame} from '../store/gameSlice.js';
+import {DIFFICULTY, DEFAULT_DIFFICULTY} from '../constants/gameConstants.js';
 import '../styles/start-screen.css';
-import { useState } from 'react';
+
 export default function StartScreen() {
     const dispatch = useAppDispatch();
-    const errorMsg = useAppSelector((state) => state.game.errorMessage);
-    const [difficulty, setDifficulty] = useState(null);
+    const [difficultyId, setDifficultyId] = useState(DEFAULT_DIFFICULTY.id);
     return (
         <>
-            {/* 1.E1.2 toast: "Không thể bắt đầu ván chơi" */}
-            {errorMsg &&
-                <div className="error-screen">
-                    <div className="error-message">
-                        <p>{errorMsg}</p>
-                        <button className="error-reload-btn"
-                                onClick={() => window.location.reload()}>
-                            Tải lại trang
-                        </button>
-                    </div>
-                </div>
-            }
-
             {/* 1.2 render StartScreen với nút "Bắt đầu ván mới" */}
             <div className="start-screen">
                 <div className="start-icon">⚓</div>
@@ -32,15 +20,15 @@ export default function StartScreen() {
                         Chọn độ khó:
                     </label>
                     <div className="difficulty-buttons">
-                        <button 
-                            className={`diff-btn easy ${difficulty === 'easy' ? 'active' : ''}`}
-                            onClick={() => setDifficulty('easy')}
+                        <button
+                            className={`diff-btn easy ${difficultyId === DIFFICULTY.EASY.id ? 'active' : ''}`}
+                            onClick={() => setDifficultyId(DIFFICULTY.EASY.id)}
                         >
                             Easy
                         </button>
-                        <button 
-                            className={`diff-btn normal ${difficulty === 'normal' ? 'active' : ''}`}
-                            onClick={() => setDifficulty('normal')}
+                        <button
+                            className={`diff-btn normal ${difficultyId === DIFFICULTY.NORMAL.id ? 'active' : ''}`}
+                            onClick={() => setDifficultyId(DIFFICULTY.NORMAL.id)}
                         >
                             Normal
                         </button>
@@ -49,10 +37,11 @@ export default function StartScreen() {
 
 
                 {/* 1.3 click "Bắt đầu ván mới"  +  1.4 dispatch(startGame()) */}
-                <button 
-                    className="start-btn" 
-                    onClick={() => dispatch(startGame(difficulty))}
-                    disabled={!difficulty}
+                {/* [2.1.0] Gửi độ khó đã chọn để kích hoạt UC-02 theo đúng cấu hình. */}
+                <button
+                    className="start-btn"
+                    onClick={() => dispatch(startGame(difficultyId))}
+                    disabled={!difficultyId}
                 >
                     Bắt Đầu Ván Mới
                 </button>

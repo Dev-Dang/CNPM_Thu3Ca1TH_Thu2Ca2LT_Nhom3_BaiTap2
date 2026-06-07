@@ -3,44 +3,78 @@
 //                  UC-03/05 (isShipSunk, isFleetDefeated)
 // ================================================================
 
-import { SHIP_TYPES, ORIENTATION } from '../constants/gameConstants.js';
+import {
+  DEFAULT_DIFFICULTY,
+  DIFFICULTY,
+  ORIENTATION,
+} from '../constants/gameConstants.js';
 
-/** Cấu hình hạm đội tiêu chuẩn (RUL-02). */
-export const FLEET_CONFIG = [
-    SHIP_TYPES.CARRIER,       // size: 5
-    SHIP_TYPES.BATTLESHIP,    // size: 4
-    SHIP_TYPES.CRUISER,       // size: 3
-    SHIP_TYPES.SUBMARINE,     // size: 3
-    SHIP_TYPES.DESTROYER,     // size: 2
-];
-export function validateFleetConfig() {
-    const EXPECTED_SIZES = [5, 4, 3, 3, 2];
-    const actualSizes = FLEET_CONFIG.map((type) => type.size);
+/**
+ * Validate fleet sizes theo độ khó.
+ * Nếu sai → throw Error('FLEET_CONFIG_MISMATCH').
+ *
+ * @param {{ id: string, boardSize: number, fleet: object[] }} difficulty
+ * @throws {Error} FLEET_CONFIG_MISMATCH
+ */
+export function validateFleetConfig(difficulty = DEFAULT_DIFFICULTY) {
+  const EXPECTED_SIZES =
+    difficulty.id === DIFFICULTY.NORMAL.id
+      ? [5, 4, 4, 3, 3, 3, 2, 2]
+      : [5, 4, 3, 3, 2];
 
-    const isValid =
-        actualSizes.length === EXPECTED_SIZES.length &&
-        actualSizes.every((size, i) => size === EXPECTED_SIZES[i]);
+  const actualSizes = difficulty.fleet.flatMap((entry) =>
+    Array(entry.count).fill(entry.ship.size)
+  );
 
-    if (!isValid) {
-        // [2.3.1] error="FLEET_CONFIG_MISMATCH"
-        throw new Error('FLEET_CONFIG_MISMATCH');
-    }
+  const isValid =
+    actualSizes.length === EXPECTED_SIZES.length &&
+    actualSizes.every((size, i) => size === EXPECTED_SIZES[i]);
+
+  if (!isValid) {
+    throw new Error('FLEET_CONFIG_MISMATCH');
+  }
 }
 
 /**
- * [2.1.1] createFleet(FLEET_CONFIG) → fleet[5].
- * Tạo hạm đội mới cho một ván chơi.
+ * [2.1] createFleet(difficulty.fleet) → fleet[].
+ * Tạo hạm đội mới cho một ván chơi theo độ khó.
+ *
+ * @param {{ id: string, boardSize: number, fleet: object[] }} difficulty
  * @returns {Ship[]}
  */
+export function createFleet(difficulty = DEFAULT_DIFFICULTY) {
+  validateFleetConfig(difficulty);
 
-export function createFleet() {
-    return FLEET_CONFIG.map((type) => ({
-        ...type,
+  const fleet = [];
+
+  for (const entry of difficulty.fleet) {
+    const ship = entry.ship;
+
+    for (let i = 1; i <= entry.count; i += 1) {
+      fleet.push({
+        id: entry.count === 1 ? ship.id : `${ship.id}-${i}`,
+        type: ship.id,
+        name: ship.name,
+        size: ship.size,
         orientation: ORIENTATION.HORIZONTAL,
         positions: [],
         hitCount: 0,
         placed: false,
-    }));
+      });
+    }
+  }
+
+  return fleet;
+}
+
+/**
+ * Reset trạng thái đặt tàu.
+ *
+ * @param {Ship[]} fleet
+ * @returns {Ship[]}
+ */
+export function resetFleet(fleet) {
+  return fleet.map((ship) => ({...ship, orientation: ORIENTATION.HORIZONTAL, positions: [], hitCount: 0, placed: false}));
 }
 
 /**
