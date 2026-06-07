@@ -71,3 +71,83 @@
 .attack-toast__label {
     line-height: 1;
 }
+
+/* ── Giao diện Bảng Điểm & Combo ── */
+.scoreboard-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+    font-family: sans-serif;
+}
+
+.scoreboard-card {
+    background: #1a202c;
+    border: 2px solid #2d3748;
+    padding: 0.5rem 1.5rem;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 120px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.scoreboard-title {
+    font-size: 0.75rem;
+    color: #a0aec0;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+}
+
+.scoreboard-number {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #fff;
+}
+
+/* Hiệu ứng khi có chuỗi combo trúng liên tiếp */
+.scoreboard-card.active-streak {
+    border-color: #ed8936;
+    box-shadow: 0 0 12px rgba(237, 137, 54, 0.4);
+    background: #2c1a0e;
+}
+
+.scoreboard-card.active-streak .scoreboard-number {
+    color: #ed8936;
+    animation: pulse 1.5s infinite alternate;
+}
+
+.scoreboard-multiplier {
+    font-size: 1rem;
+    color: #fc8181;
+}
+
+/* Số điểm cộng thêm (+Δđ) hiện ra động */
+.scoreboard-delta {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #48bb78;
+    background: rgba(72, 187, 120, 0.1);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    border: 1px solid rgba(72, 187, 120, 0.3);
+}
+
+@keyframes pulse {
+    from { transform: scale(1); }
+    to { transform: scale(1.05); }
+}
+
+.animation-pop {
+    animation: popEffect 0.3s ease-out;
+}
+
+@keyframes popEffect {
+    0% { transform: scale(0.5); opacity: 0; }
+    70% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+}

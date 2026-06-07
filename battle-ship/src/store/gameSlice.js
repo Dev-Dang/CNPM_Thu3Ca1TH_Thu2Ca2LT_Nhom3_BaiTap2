@@ -30,17 +30,14 @@ const initialState = {
     winner: null,
     lastAttackResult: null,
     errorMessage: null,
-
     totalShots: 0,
     totalHits: 0,
-
 
     //Các state quản lý điểm và combo
     score: 0,
     comboStreak: 0,
     comboMultiplier: 1,
     lastScoreDelta: 0,
-
 };
 
 const gameSlice = createSlice({
@@ -201,7 +198,7 @@ const gameSlice = createSlice({
 
             // Xóa thông báo lỗi cũ nếu tọa độ được chọn hoàn toàn hợp lệ
             state.errorMessage = null;
-
+            // [3.1.4] / [3.2.1] / [3.3.1] Hệ thống xác định kết quả tấn công (Trượt, Trúng, hoặc Nhấn chìm)
             state.totalShots += 1;
             // [3.4] checkCell — kiểm tra ô có tàu không, trả về ship và remainingCells
             const {hasShip, ship, remainingCells} = getCellAttackInfo(
@@ -225,12 +222,10 @@ const gameSlice = createSlice({
                 // Chuyển lượt sang máy (BR-16 / US-14)
                 state.phase = PHASES.CPU_TURN;
             } else {
-
                 // [3.A1.2] Hit — tàu chưa bị nhấn chìm, đánh dấu ô HIT
                 state.totalHits += 1;
-
+                
                 // [3.2.1] Ô chứa tàu đối thủ. Đánh dấu Hit tạm thời.
-
                 newBoard = markCell(row, col, CELL_STATE.HIT, state.computerBoard);
                 // Cập nhật số lần trúng đạn (hitCount) vào thông tin hạm đội của Máy tính
                 const shipIndex = state.computerFleet.findIndex((s) => s.id === ship.id);
@@ -277,10 +272,6 @@ const gameSlice = createSlice({
                 // Cộng thêm +100 điểm thưởng chiến thắng ván đấu cho người chơi
                 state.score += 100;
                 state.lastScoreDelta += 100;
-            } else {
-                // [3.1.6] Còn ít nhất một tàu đối thủ chưa bị nhấn chìm → chưa kết thúc.
-                // [3.1.7] Vô hiệu hóa bảng đối thủ. Chuyển sang lượt Máy tính, kích hoạt UC-04.
-                state.phase = PHASES.CPU_TURN;
             }
         },
 
