@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useAppSelector, useAppDispatch } from '../store/index.js';
 import { startGame } from '../store/gameSlice.js';
 import { WINNER, CELL_STATE } from '../constants/gameConstants.js';
@@ -55,7 +55,7 @@ function EnemyBoardReveal({ board, fleet }) {
  */
 export default function ResultScreen() {
     const dispatch = useAppDispatch();
-    const [showEnemyBoard, setShowEnemyBoard] = useState(false);
+
 
     // Bước 5.1.0 & 5.2.0: Kích hoạt tự động lấy dữ liệu trạng thái từ Redux Store
     const { winner, computerBoard, computerFleet } = useAppSelector((state) => state.game);
@@ -107,42 +107,24 @@ export default function ResultScreen() {
                         Tiết lộ hạm đội của Máy tính để Player xem lại vị trí. 
                     */}
                     <div className="rs-reveal-section">
-                        {!showEnemyBoard ? (
-                            <button
-                                className="rs-btn-outline"
-                                onClick={() => setShowEnemyBoard(true)}
-                            >
-                                👁️ Xem vị trí tàu đối thủ
-                            </button>
-                        ) : (
-                            <div className="rs-enemy-reveal-box">
-                                <p className="rs-stats-label">Hạm đội của Máy tính</p>
-
-                                <EnemyBoardReveal
-                                    board={computerBoard}
-                                    fleet={computerFleet}
-                                />
-
-                                {/* Legend giải thích các ký hiệu trên bảng khi kết thúc */}
-                                <div className="rs-legend">
-                                    <span className="rs-legend-item">
-                                        <span className="rs-legend-dot rs-legend-dot--miss" />
-                                        Bắn trượt
-                                    </span>
-                                    <span className="rs-legend-item">
-                                        <span className="rs-legend-dot rs-legend-dot--sunk" />
-                                        Nhấn chìm
-                                    </span>
-                                </div>
-
-                                <button
-                                    className="rs-link-action"
-                                    onClick={() => setShowEnemyBoard(false)}
-                                >
-                                    Đóng lại
-                                </button>
+                        <div className="rs-enemy-reveal-box">
+                            <p className="rs-stats-label">Hạm đội của Máy tính</p>
+                            <EnemyBoardReveal board={computerBoard} fleet={computerFleet} />
+                            <div className="rs-legend">
+                                <span className="rs-legend-item">
+                                    <span className="rs-legend-dot rs-legend-dot--miss" />
+                                    Bắn trượt
+                                </span>
+                                <span className="rs-legend-item">
+                                    <span className="rs-legend-dot rs-legend-dot--sunk" />
+                                    Nhấn chìm
+                                </span>
+                                <span className="rs-legend-item">
+                                    <span className="rs-legend-dot rs-legend-dot--ship-reveal" />
+                                    Chưa bị bắn
+                                </span>
                             </div>
-                        )}
+                        </div>
                     </div>
 
                     {/* Bước 5.1.6 / 5.2.6 & Mục 11 (NFR): 
