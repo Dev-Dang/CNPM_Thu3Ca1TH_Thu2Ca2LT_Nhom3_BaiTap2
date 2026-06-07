@@ -6,9 +6,27 @@ import SetupBoard from "./components/SetupBoard.jsx";
 import GameBoard from './components/GameBoard.jsx';
 import ResultScreen from './components/ResultScreen.jsx';
 import './styles/app.css';
+import './styles/error.css';
 
 export default function App() {
     const phase = useAppSelector((state) => state.game.phase);
+    const errorMessage = useAppSelector((state) => state.game.errorMessage);
+
+    if (phase === PHASES.ERROR) {
+        return (
+            <div className="app">
+                <div className="error-screen">
+                    <div className="error-message">
+                        <p>{errorMessage}</p>
+                        <button className="error-reload-btn"
+                                onClick={() => window.location.reload()}>
+                            Tải lại trang
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="app">
