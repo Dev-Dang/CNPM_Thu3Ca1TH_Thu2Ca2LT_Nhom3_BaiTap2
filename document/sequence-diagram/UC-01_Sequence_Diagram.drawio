@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net">
+<mxfile host="app.diagrams.net" pages="2">
   <diagram id="ENR4-YwkK51Wq30wmgLH" name="Page-2">
     <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -270,6 +270,280 @@
         </mxCell>
         <mxCell id="-H4Ype6jnl1MCfwLLXFr-165" parent="1" style="fillColor=#ffff88;strokeColor=#9E916F;fontColor=light-dark(#333333,#cccccc);" value="// 1.2.1.3 Kết thúc&#xa;1.A2.3 end" vertex="1">
           <mxGeometry height="34" width="81" x="1666.5" y="2118" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="P7tZJ3wWjJuv5zhd2NFP" name="Uc-01V2">
+    <mxGraphModel dx="1273" dy="649" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-94" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};participant=umlActor;verticalAlign=bottom;labelPosition=center;verticalLabelPosition=top;align=center;size=65;" value="Player" vertex="1">
+          <mxGeometry height="2718" width="35" x="20" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-95" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};size=65;" value="Browser" vertex="1">
+          <mxGeometry height="2718" width="150" x="335" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-96" parent="Hesr5UwM-iMhO5dArgX3-95" style="points=[];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};" value="" vertex="1">
+          <mxGeometry height="314" width="10" x="70" y="181" as="geometry" />
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-97" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};size=65;" value="main.jsx" vertex="1">
+          <mxGeometry height="2718" width="150" x="551" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-98" parent="Hesr5UwM-iMhO5dArgX3-97" style="points=[];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};" value="" vertex="1">
+          <mxGeometry height="228" width="10" x="70" y="257" as="geometry" />
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-99" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};size=65;" value="App.jsx" vertex="1">
+          <mxGeometry height="2718" width="150" x="808" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-100" parent="Hesr5UwM-iMhO5dArgX3-99" style="points=[];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};" value="" vertex="1">
+          <mxGeometry height="2280" width="10" x="70" y="333" as="geometry" />
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-101" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};size=65;" value="StartScreen.jsx" vertex="1">
+          <mxGeometry height="2718" width="150" x="1237" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-102" parent="Hesr5UwM-iMhO5dArgX3-101" style="points=[];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};" value="" vertex="1">
+          <mxGeometry height="1213" width="10" x="70" y="409" as="geometry" />
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-103" parent="Hesr5UwM-iMhO5dArgX3-101" style="points=[];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};" value="" vertex="1">
+          <mxGeometry height="66" width="10" x="70" y="2250" as="geometry" />
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-104" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};size=65;" value="StatusBar.jsx" vertex="1">
+          <mxGeometry height="2718" width="150" x="1555" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-105" parent="Hesr5UwM-iMhO5dArgX3-104" style="points=[];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};" value="" vertex="1">
+          <mxGeometry height="66" width="10" x="70" y="1402" as="geometry" />
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-106" parent="Hesr5UwM-iMhO5dArgX3-104" style="points=[];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};" value="" vertex="1">
+          <mxGeometry height="971" width="10" x="70" y="1622" as="geometry" />
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-107" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};size=65;" value="gameSlice.js" vertex="1">
+          <mxGeometry height="2718" width="150" x="2079" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-108" parent="Hesr5UwM-iMhO5dArgX3-107" style="points=[];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};" value="" vertex="1">
+          <mxGeometry height="450" width="10" x="70" y="866" as="geometry" />
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-109" parent="Hesr5UwM-iMhO5dArgX3-107" style="points=[];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};" value="" vertex="1">
+          <mxGeometry height="66" width="10" x="70" y="2030" as="geometry" />
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-110" parent="1" style="shape=umlFrame;dashed=1;pointerEvents=0;dropTarget=0;height=20;width=30;" value="alt" vertex="1">
+          <mxGeometry height="756" width="2473" x="84" y="906" as="geometry" />
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-112" parent="Hesr5UwM-iMhO5dArgX3-110" style="shape=line;dashed=1;whiteSpace=wrap;verticalAlign=top;labelPosition=center;verticalLabelPosition=middle;align=center;" value="[[Khởi tạo thành công]]" vertex="1">
+          <mxGeometry height="4" width="2473" y="272" as="geometry" />
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-113" parent="1" style="shape=umlFrame;dashed=1;pointerEvents=0;dropTarget=0;height=20;width=30;" value="alt" vertex="1">
+          <mxGeometry height="762" width="2085" x="84" y="1871" as="geometry" />
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-114" parent="Hesr5UwM-iMhO5dArgX3-113" style="text;align=center;verticalAlign=middle;whiteSpace=wrap;" value="[[Xác nhận hủy ván]]" vertex="1">
+          <mxGeometry height="20" width="2055" x="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-115" parent="Hesr5UwM-iMhO5dArgX3-113" style="shape=line;dashed=1;whiteSpace=wrap;verticalAlign=top;labelPosition=center;verticalLabelPosition=middle;align=center;" value="[[Luồng thay thế 1.3] Hủy yêu cầu]" vertex="1">
+          <mxGeometry height="4" width="2085" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-116" parent="1" style="shape=umlFrame;dashed=1;pointerEvents=0;dropTarget=0;height=20;width=30;" value="alt" vertex="1">
+          <mxGeometry height="2118" width="2493" x="74" y="525" as="geometry" />
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-117" parent="Hesr5UwM-iMhO5dArgX3-116" style="text;align=center;verticalAlign=middle;whiteSpace=wrap;" value="[[NF] Không có ván đang chơi]" vertex="1">
+          <mxGeometry height="20" width="2463" x="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-118" parent="Hesr5UwM-iMhO5dArgX3-116" style="shape=line;dashed=1;whiteSpace=wrap;verticalAlign=top;labelPosition=center;verticalLabelPosition=middle;align=center;" value="[[Luồng thay thế 1.2] Bắt đầu ván mới khi đang chơi dở]" vertex="1">
+          <mxGeometry height="4" width="2493" y="1152" as="geometry" />
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-119" edge="1" parent="1" source="Hesr5UwM-iMhO5dArgX3-94" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="Hesr5UwM-iMhO5dArgX3-96" value="// 1.1.1 Truy cập trang chủ trò chơi&#xa;Navigate(URL)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="261" y="201" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-120" edge="1" parent="1" source="Hesr5UwM-iMhO5dArgX3-96" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="Hesr5UwM-iMhO5dArgX3-98" value="// Mount ứng dụng&#xa;createRoot().render()">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="529" y="277" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-121" edge="1" parent="1" source="Hesr5UwM-iMhO5dArgX3-98" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="Hesr5UwM-iMhO5dArgX3-100" value="// Render Component gốc&#xa;render()">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="765" y="353" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-122" edge="1" parent="1" source="Hesr5UwM-iMhO5dArgX3-100" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="Hesr5UwM-iMhO5dArgX3-102" value="// 1.1.2 Hiển thị giao diện chào mừng (StartScreen)&#xa;render()">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1108" y="429" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-123" edge="1" parent="1" source="Hesr5UwM-iMhO5dArgX3-102" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;dashed=1;dashPattern=2 3;endArrow=block;" target="Hesr5UwM-iMhO5dArgX3-94" value="// 1.1.2 Hiển thị UI chọn độ khó (Nút Bắt đầu vô hiệu hóa)&#xa;UI Update">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="713" y="505" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-124" edge="1" parent="1" source="Hesr5UwM-iMhO5dArgX3-94" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="Hesr5UwM-iMhO5dArgX3-102" value="// 1.1.3 Nhấn chọn một trong hai nút độ khó (&quot;Easy&quot; hoặc &quot;Normal&quot;)&#xa;onClick()">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="710" y="628" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-125" edge="1" parent="1" source="Hesr5UwM-iMhO5dArgX3-102" style="curved=0;endArrow=block;rounded=0;strokeColor=default;align=left;verticalAlign=middle;spacingLeft=2;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" target="Hesr5UwM-iMhO5dArgX3-102" value="// 1.1.4 Ghi nhận lựa chọn, kích hoạt nút Bắt đầu&#xa;setDifficulty(difficulty)">
+          <mxGeometry relative="1" x="0.2308" y="24" as="geometry">
+            <mxPoint x="14" y="-5" as="offset" />
+            <Array as="points">
+              <mxPoint x="1367" y="704" />
+              <mxPoint x="1367" y="734" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-126" edge="1" parent="1" source="Hesr5UwM-iMhO5dArgX3-94" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="Hesr5UwM-iMhO5dArgX3-102" value="// 1.1.5 Chọn nút &quot;Bắt đầu ván mới&quot;&#xa;onClick()">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="710" y="810" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-127" edge="1" parent="1" source="Hesr5UwM-iMhO5dArgX3-102" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="Hesr5UwM-iMhO5dArgX3-108" value="// 1.1.6 Gọi action startGame, khởi tạo ván chơi mới: đặt lại trạng thái cũ&#xa;dispatch(startGame({ difficulty }))">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1744" y="886" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-128" edge="1" parent="1" source="Hesr5UwM-iMhO5dArgX3-108" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;dashed=1;dashPattern=2 3;endArrow=block;" target="Hesr5UwM-iMhO5dArgX3-102" value="// 1.4.1 Phát hiện lỗi khởi tạo tại bước 1.4&#xa;catch(error) / set state.error">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1745" y="1009" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-129" edge="1" parent="1" source="Hesr5UwM-iMhO5dArgX3-102" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;dashed=1;dashPattern=2 3;endArrow=block;" target="Hesr5UwM-iMhO5dArgX3-94" value="// 1.4.2 Hiển thị thông báo lỗi &quot;Không thể bắt đầu ván chơi...&quot;&#xa;render() {errorMsg &amp;&amp; ...}">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="713" y="1085" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-130" edge="1" parent="1" source="Hesr5UwM-iMhO5dArgX3-107" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;dashed=1;dashPattern=2 3;endArrow=block;" target="Hesr5UwM-iMhO5dArgX3-100" value="// Cập nhật state (phase = SETUP)&#xa;useSelector()">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1530" y="1346" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-131" edge="1" parent="1" source="Hesr5UwM-iMhO5dArgX3-100" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="Hesr5UwM-iMhO5dArgX3-105" value="// 1.1.7 Hiển thị label chế độ &quot;vs Computer&quot; và nhãn độ khó&#xa;render()">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1267" y="1422" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-132" edge="1" parent="1" source="Hesr5UwM-iMhO5dArgX3-104" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;dashed=1;dashPattern=2 3;endArrow=block;" target="Hesr5UwM-iMhO5dArgX3-94" value="// 1.1.7 Giao diện StatusBar hiển thị xuyên suốt ván&#xa;UI Update">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="872" y="1498" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-133" edge="1" parent="1" source="Hesr5UwM-iMhO5dArgX3-100" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;dashed=1;dashPattern=2 3;endArrow=block;" target="Hesr5UwM-iMhO5dArgX3-94" value="// 1.1.9 Kết thúc&#xa;UI Update">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="499" y="1642" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-134" edge="1" parent="1" source="Hesr5UwM-iMhO5dArgX3-94" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="Hesr5UwM-iMhO5dArgX3-106" value="// 1.2.1 Chọn nút &quot;Bắt đầu ván mới&quot; (Ván Mới) khi đang diễn ra&#xa;onClick()">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="869" y="1775" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-135" edge="1" parent="1" source="Hesr5UwM-iMhO5dArgX3-106" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;dashed=1;dashPattern=2 3;endArrow=block;" target="Hesr5UwM-iMhO5dArgX3-94" value="// 1.2.2 Hiển thị hộp xác nhận hủy ván&#xa;setShowConfirmDialog(true)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="872" y="1851" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-136" edge="1" parent="1" source="Hesr5UwM-iMhO5dArgX3-94" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="Hesr5UwM-iMhO5dArgX3-106" value="// 1.2.4 Chọn nút &quot;Xác nhận&quot;&#xa;onClick()">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="869" y="1974" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-137" edge="1" parent="1" source="Hesr5UwM-iMhO5dArgX3-106" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="Hesr5UwM-iMhO5dArgX3-109" value="// 1.2.5 Hủy ván chơi đang diễn ra, đặt lại trạng thái về mặc định&#xa;dispatch(startscrren(newDifficulty))">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1903" y="2050" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-138" edge="1" parent="1" source="Hesr5UwM-iMhO5dArgX3-107" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;dashed=1;dashPattern=2 3;endArrow=block;" target="Hesr5UwM-iMhO5dArgX3-100" value="// Reset phase = null&#xa;useSelector()">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1530" y="2126" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-139" edge="1" parent="1" source="Hesr5UwM-iMhO5dArgX3-100" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="Hesr5UwM-iMhO5dArgX3-103" value="// 1.1.2 Hiển thị giao diện chào mừng (StartScreen)&#xa;render()">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1108" y="2270" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-140" edge="1" parent="1" source="Hesr5UwM-iMhO5dArgX3-101" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;dashed=1;dashPattern=2 3;endArrow=block;" target="Hesr5UwM-iMhO5dArgX3-94" value="// 1.1.2 Hiển thị lại UI StartScreen để chọn độ khó&#xa;UI Update">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="713" y="2346" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-141" edge="1" parent="1" source="Hesr5UwM-iMhO5dArgX3-94" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="Hesr5UwM-iMhO5dArgX3-106" value="// 1.3.1 Chọn nút &quot;Hủy&quot; trên hộp xác nhận&#xa;onClick()">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="869" y="2469" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-142" edge="1" parent="1" source="Hesr5UwM-iMhO5dArgX3-106" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;dashed=1;dashPattern=2 3;endArrow=block;" target="Hesr5UwM-iMhO5dArgX3-94" value="// 1.3.2 Đóng hộp xác nhận, duy trì nguyên trạng&#xa;setShowConfirmDialog(false)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="872" y="2545" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-143" parent="1" style="fillColor=#fff2cc;strokeColor=#d6b656;" value="LUỒNG CHÍNH (Normal Flow) - Bắt đầu ván mới" vertex="1">
+          <mxGeometry height="50" width="2109" x="70" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-144" parent="1" style="fillColor=#fff2cc;strokeColor=#d6b656;" value="// 1.4.3 Kết thúc không thành công&#xa;End" vertex="1">
+          <mxGeometry height="68" width="268" x="1337" y="1105" as="geometry" />
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-146" parent="1" style="fillColor=#fff2cc;strokeColor=#d6b656;" value="// 1.1.8 Chuyển sang giai đoạn thiết lập&#xa;Kích hoạt UC-02" vertex="1">
+          <mxGeometry height="68" width="299" x="734" y="1518" as="geometry" />
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-147" parent="1" style="fillColor=#fff2cc;strokeColor=#d6b656;" value="// Quay lại bước 1.1.2 của Luồng chính&#xa;Navigate to StartScreen" vertex="1">
+          <mxGeometry height="68" width="293" x="737" y="2146" as="geometry" />
+        </mxCell>
+        <mxCell id="Hesr5UwM-iMhO5dArgX3-148" parent="1" style="fillColor=#fff2cc;strokeColor=#d6b656;" value="// 1.3.3 Kết thúc&#xa;End" vertex="1">
+          <mxGeometry height="68" width="150" x="1655" y="2565" as="geometry" />
+        </mxCell>
+        <mxCell id="bt9IMgmc1yMLtWuUsCQr-1" edge="1" parent="1" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" value="// 1.2.3 Chọn nút &quot;Độ khó&quot;&#xa;onClick()">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="870" y="1944" />
+            </Array>
+            <mxPoint x="38" y="1944" as="sourcePoint" />
+            <mxPoint x="1626" y="1944" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>

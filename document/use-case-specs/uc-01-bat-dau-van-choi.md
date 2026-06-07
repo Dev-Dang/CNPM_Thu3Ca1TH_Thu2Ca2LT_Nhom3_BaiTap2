@@ -6,7 +6,7 @@
 |-----------|------|---------|-------|
 | 1.0 | 27/04/2026 | Võ Khương Đại Bảo | Phiên bản đầu tiên — sinh từ URD v2.0 (US-01, US-02) |
 | 1.1 | 13/05/2026 | Võ Khương Đại Bảo | Thêm bước 1.1.0 (tiền điều kiện + trigger) vào luồng chính; đổi tiêu đề luồng thay thế 7.2 từ "1.2" thành "1.3"; sửa tham chiếu nội bộ tại bước → (1.4 → 1.1.4) và mục 9 (bước 1.6 → 1.1.6). |
-| 3.0 | 05/06/2026 | Hồ Ngọc Hoàn Sơn | **Nâng cấp tính năng chọn độ khó (Easy/Normal) và cấu hình bảng/hạm đội động:**<br>- Chỉnh sửa mô tả usecase<br>- **Luồng chính (Mục 6):**   Cập nhật bước 1.1.2 (Hiển thị UI chọn độ khó và vô hiệu hóa nút Bắt đầu). Bổ sung bước 1.1.3 (Player chọn độ khó) và 1.1.4 (Hệ thống kích hoạt nút Bắt đầu). Cập nhật hành động nhấn nút thành bước 1.1.5. Đẩy các bước khởi tạo xuống thành từ 1.1.6 đến 1.1.9.<br>- **Luồng thay thế 1.2 (Mục 7.1):**   Cập nhật đích đến của luồng khi xác nhận tạo ván mới là quay lại bước 1.1.2 (StartScreen).<br>- **Luồng ngoại lệ 1.4 (Mục 8.1):**  đổi điểm rẽ nhánh thành 1.1.6 và bổ sung kịch bản bắt lỗi cấu hình (`FLEET_CONFIG_MISMATCH`).<br>- **Mục 5 & 10:** Bổ sung hậu điều kiện lưu `difficulty`/`boardSize` và thêm các quy tắc RUL-01, RUL-02, RUL-12, RUL-13. |
+| 2.0 | 05/06/2026 | Hồ Ngọc Hoàn Sơn | **Nâng cấp tính năng chọn độ khó (Easy/Normal) và cấu hình bảng/hạm đội động:**<br>- Chỉnh sửa mô tả usecase<br>- **Luồng chính (Mục 6):**   Cập nhật bước 1.1.2 (Hiển thị UI chọn độ khó và vô hiệu hóa nút Bắt đầu). Bổ sung bước 1.1.3 (Player chọn độ khó) và 1.1.4 (Hệ thống kích hoạt nút Bắt đầu). Cập nhật hành động nhấn nút thành bước 1.1.5. Đẩy các bước khởi tạo xuống thành từ 1.1.6 đến 1.1.9.<br>- **Luồng thay thế 1.2 (Mục 7.1):**   Cập nhật đích đến của luồng khi xác nhận tạo ván mới là quay lại bước 1.1.2 (StartScreen).<br>- **Luồng ngoại lệ 1.4 (Mục 8.1):**  đổi điểm rẽ nhánh thành 1.1.6 và bổ sung kịch bản bắt lỗi cấu hình (`FLEET_CONFIG_MISMATCH`).<br>- **Mục 5 & 10:** Bổ sung hậu điều kiện lưu `difficulty`/`boardSize` và thêm các quy tắc RUL-01, RUL-02, RUL-12, RUL-13. |
 
 ## 1. Giới thiệu
 
@@ -57,7 +57,7 @@
 | **1.1.3** | `Player` | Nhấn chọn một trong hai nút độ khó ("Easy" hoặc "Normal"). |
 | **1.1.4** | Hệ thống | Ghi nhận lựa chọn, hiển thị trạng thái nổi bật cho nút độ khó vừa chọn, đồng thời kích hoạt (làm sáng) nút "Bắt đầu ván mới". |
 | **1.1.5** | `Player` | Chọn nút "Bắt đầu ván mới". |
-| **1.1.6** | Hệ thống | Gọi action startGame({ difficulty }). Khởi tạo ván chơi mới: đặt lại toàn bộ trạng thái cũ, thiết lập kích thước bảng, tạo các thực thể tàu với ID duy nhất (ví dụ: battleship-1, battleship-2 ở chế độ Normal) và sinh tọa độ ngẫu nhiên ẩn cho Máy tính dựa trên độ khó. Nếu lỗi → Chuyển sang 1.4. |
+| **1.1.6** | Hệ thống | Gọi action startGame({ difficulty }). Khởi tạo ván chơi mới: đặt lại toàn bộ trạng thái cũ Nếu lỗi → Chuyển sang 1.4. |
 | **1.1.7** | Hệ thống | Hiển thị giao diện ván chơi với label chế độ ("vs Computer") và nhãn độ khó ở vị trí cố định trên StatusBar, hiển thị xuyên suốt ván chơi. |
 | **1.1.8** | Hệ thống | Chuyển sang giai đoạn thiết lập — đặt tàu, kích hoạt UC-02. |
 | **1.1.9** | Hệ thống | Kết thúc. |
@@ -71,9 +71,10 @@
 | Bước | Actor | Hành động / Phản hồi |
 |------|-------|----------------------|
 | **1.2.1** | `Player` | Chọn nút "Bắt đầu ván mới" trong khi một ván chơi đang diễn ra. |
-| **1.2.2** | Hệ thống | Hiển thị hộp xác nhận với nội dung "Ván chơi hiện tại sẽ bị hủy. Bạn có chắc muốn bắt đầu ván mới không?" và hai nút: "Xác nhận" và "Hủy". |
-| **1.2.3** | `Player` | Chọn nút "Xác nhận". |
-| **1.2.4** | Hệ thống | Hủy ván chơi đang diễn ra, đặt lại trạng thái trong bộ nhớ về mặc định. |
+| **1.2.2** | Hệ thống | Hiển thị hộp xác nhận với nội dung "Ván chơi hiện tại sẽ bị hủy. Bạn có chắc muốn bắt đầu ván mới không?"Cho phép chọn lại độ khó của ván mới và hai nút: "Xác nhận" và "Hủy". |
+| **1.2.3** | `Player` | Chọn nút "easy hoặc normal". |
+| **1.2.4** | `Player` | Chọn nút "Xác nhận". |
+| **1.2.5** | Hệ thống | Hủy ván chơi đang diễn ra, đặt lại trạng thái trong bộ nhớ về mặc định. |
 | **→** | Hệ thống | Quay lại bước 1.1.2 của Luồng chính. |
 
 ### 7.2. Luồng thay thế 1.3 — Hủy yêu cầu bắt đầu ván mới
