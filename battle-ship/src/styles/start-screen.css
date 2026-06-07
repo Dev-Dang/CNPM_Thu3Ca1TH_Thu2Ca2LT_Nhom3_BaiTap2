@@ -26,7 +26,7 @@
   color: #7888b0;
 }
 
-.start-btn {
+/* .start-btn {
   margin-top: 20px;
   padding: 14px 44px;
   font-size: 16px;
@@ -42,4 +42,82 @@
 .start-btn:hover {
   background: #3451d1;
   box-shadow: 0 4px 18px rgba(67, 97, 238, 0.5);
+} */
+/* --- PHẦN STYLE CHO CHỌN ĐỘ KHÓ --- */
+.difficulty-section {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.difficulty-label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2d3a8c;
+}
+
+.difficulty-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+/* Style chung cho nút độ khó */
+.diff-btn {
+  padding: 8px 24px;
+  cursor: pointer;
+  background: #ddd;
+  color: #333;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: bold;
+  transition: background 0.2s, color 0.2s, transform 0.1s;
+}
+
+.diff-btn:active {
+  transform: scale(0.95);
+}
+
+/* Trạng thái Active của nút Easy */
+.diff-btn.easy.active {
+  background: #4CAF50;
+  color: #ffffff;
+}
+
+/* Trạng thái Active của nút Normal */
+.diff-btn.normal.active {
+  background: #2196F3;
+  color: #ffffff;
+}
+
+/* --- NÚT BẮT ĐẦU --- */
+.start-btn {
+  margin-top: 20px;
+  padding: 14px 44px;
+  font-size: 16px;
+  font-weight: 700;
+  background: #4361ee;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(67, 97, 238, 0.35);
+  /* Thêm transition cho opacity */
+  transition: background 0.2s, box-shadow 0.2s, opacity 0.3s ease; 
+}
+
+/* Trạng thái Hover khi nút không bị disabled */
+.start-btn:not(:disabled):hover {
+  background: #3451d1;
+  box-shadow: 0 4px 18px rgba(67, 97, 238, 0.5);
+  cursor: pointer;
+}
+
+/* Trạng thái khi nút bị vô hiệu hóa (disabled) */
+.start-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none; /* Bỏ viền bóng khi bị mờ để trông thật hơn */
 }
