@@ -8,4 +8,14 @@ export default defineConfig({
     react(),
     babel({ presets: [reactCompilerPreset()] })
   ],
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: './src/test/setup.js',
+    coverage: {
+      reporter: ['text', 'html'],
+      include: ['src/**/*.js', 'src/**/*.jsx'],
+      exclude: ['src/main.jsx']
+    }
+  }
 })
