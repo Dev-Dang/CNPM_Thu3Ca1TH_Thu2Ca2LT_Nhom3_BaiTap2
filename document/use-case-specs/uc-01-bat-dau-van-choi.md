@@ -5,6 +5,7 @@
 | Phiên bản | Ngày | Tác giả | Mô tả |
 |-----------|------|---------|-------|
 | 1.0 | 27/04/2026 | Võ Khương Đại Bảo | Phiên bản đầu tiên — sinh từ URD v2.0 (US-01, US-02) |
+| 1.1 | 13/05/2026 | Võ Khương Đại Bảo | Thêm bước 1.1.0 (tiền điều kiện + trigger) vào luồng chính; đổi tiêu đề luồng thay thế 7.2 từ "1.2" thành "1.3"; sửa tham chiếu nội bộ tại bước → (1.4 → 1.1.4) và mục 9 (bước 1.6 → 1.1.6). |
 
 ## 1. Giới thiệu
 
@@ -27,7 +28,7 @@
 
 ## 4. Sự kiện kích hoạt (Trigger)
 
-`Player` chọn nút "Bắt đầu ván mới" trên giao diện chính của trò chơi.
+`Player` chọn nút "Bắt đầu ván mới" trên giao diện chính.
 
 ## 5. Hậu điều kiện (Post-conditions)
 
@@ -41,49 +42,53 @@
 
 | Bước | Actor | Hành động / Phản hồi |
 |------|-------|----------------------|
-| **1.1** | `Player` | Truy cập trang chủ trò chơi Battleship trên trình duyệt. |
-| **1.2** | Hệ thống | Hiển thị giao diện chính với nút "Bắt đầu ván mới" ở vị trí trung tâm màn hình. |
-| **1.3** | `Player` | Chọn nút "Bắt đầu ván mới". |
-| **1.4** | Hệ thống | Khởi tạo ván chơi mới, đặt lại toàn bộ trạng thái trong bộ nhớ về giá trị mặc định. |
-| **1.5** | Hệ thống | Hiển thị giao diện ván chơi với label chế độ đơn người chơi (ví dụ: tiêu đề hoặc text label "vs Computer") ở vị trí cố định, hiển thị xuyên suốt ván chơi. |
-| **1.6** | Hệ thống | Chuyển sang giai đoạn thiết lập — đặt tàu, kích hoạt UC-02. |
-| **1.7** | Hệ thống | Kết thúc. |
+| **1.1.0** | Tiền điều kiện + trigger | 
+- Player đang ở trang chủ trò chơi.
+- Trang đã tải thành công.
+- Trigger: Player chọn nút "Bắt đầu ván mới". |
+| **1.1.1** | `Player` | Truy cập trang chủ trò chơi Battleship trên trình duyệt. |
+| **1.1.2** | Hệ thống | Hiển thị giao diện chính với nút "Bắt đầu ván mới" ở vị trí trung tâm màn hình. |
+| **1.1.3** | `Player` | Chọn nút "Bắt đầu ván mới". |
+| **1.1.4** | Hệ thống | Khởi tạo ván chơi mới, đặt lại toàn bộ trạng thái trong bộ nhớ về giá trị mặc định. |
+| **1.1.5** | Hệ thống | Hiển thị giao diện ván chơi với label chế độ đơn người chơi (ví dụ: tiêu đề hoặc text label "vs Computer") ở vị trí cố định, hiển thị xuyên suốt ván chơi. |
+| **1.1.6** | Hệ thống | Chuyển sang giai đoạn thiết lập — đặt tàu, kích hoạt UC-02. |
+| **1.1.7** | Hệ thống | Kết thúc. |
 
 ## 7. Luồng thay thế (Alternate Flows)
 
-### 7.1. Luồng thay thế 1.A1 — Bắt đầu ván mới khi đang ở giữa một ván chơi
+### 7.1. Luồng thay thế 1.2 — Bắt đầu ván mới khi đang ở giữa một ván chơi
 
-> Rẽ nhánh từ bước **1.3** — Áp dụng khi `Player` chọn “Bắt đầu ván mới” trong khi một ván chơi khác vẫn đang diễn ra.
+> Rẽ nhánh từ bước **1.1.3** — Áp dụng khi `Player` chọn “Bắt đầu ván mới” trong khi một ván chơi khác vẫn đang diễn ra.
 
 | Bước | Actor | Hành động / Phản hồi |
 |------|-------|----------------------|
-| **1.A1.1** | `Player` | Chọn nút "Bắt đầu ván mới" trong khi một ván chơi đang diễn ra. |
-| **1.A1.2** | Hệ thống | Hiển thị hộp xác nhận với nội dung "Ván chơi hiện tại sẽ bị hủy. Bạn có chắc muốn bắt đầu ván mới không?" và hai nút: "Xác nhận" và "Hủy". |
-| **1.A1.3** | `Player` | Chọn nút "Xác nhận". |
-| **1.A1.4** | Hệ thống | Hủy ván chơi đang diễn ra, đặt lại trạng thái trong bộ nhớ về mặc định. |
+| **1.2.1** | `Player` | Chọn nút "Bắt đầu ván mới" trong khi một ván chơi đang diễn ra. |
+| **1.2.2** | Hệ thống | Hiển thị hộp xác nhận với nội dung "Ván chơi hiện tại sẽ bị hủy. Bạn có chắc muốn bắt đầu ván mới không?" và hai nút: "Xác nhận" và "Hủy". |
+| **1.2.3** | `Player` | Chọn nút "Xác nhận". |
+| **1.2.4** | Hệ thống | Hủy ván chơi đang diễn ra, đặt lại trạng thái trong bộ nhớ về mặc định. |
 | **→** | Hệ thống | Quay lại bước 1.4 của Luồng chính. |
 
-### 7.2. Luồng thay thế 1.A2 — Hủy yêu cầu bắt đầu ván mới
+### 7.2. Luồng thay thế 1.3 — Hủy yêu cầu bắt đầu ván mới
 
-> Rẽ nhánh từ bước **1.A1.3** — Áp dụng khi `Player` chọn nút “Hủy” và muốn tiếp tục ván chơi hiện tại.
+> Rẽ nhánh từ bước **1.2.3** — Áp dụng khi `Player` chọn nút “Hủy” và muốn tiếp tục ván chơi hiện tại.
 
 | Bước | Actor | Hành động / Phản hồi |
 |------|-------|----------------------|
-| **1.A2.1** | `Player` | Chọn nút "Hủy" trên hộp xác nhận. |
-| **1.A2.2** | Hệ thống | Đóng hộp xác nhận, duy trì nguyên trạng ván chơi đang diễn ra. |
-| **1.A2.3** | Hệ thống | Kết thúc. |
+| **1.3.1** | `Player` | Chọn nút "Hủy" trên hộp xác nhận. |
+| **1.3.2** | Hệ thống | Đóng hộp xác nhận, duy trì nguyên trạng ván chơi đang diễn ra. |
+| **1.3.3** | Hệ thống | Kết thúc. |
 
 ## 8. Luồng ngoại lệ (Exception Flows)
 
-### 8.1. Ngoại lệ 1.E1 — Khởi tạo ván chơi thất bại
+### 8.1. Ngoại lệ 1.4 — Khởi tạo ván chơi thất bại
 
-> Rẽ nhánh từ bước **1.4** — Áp dụng khi hệ thống không thể khởi tạo trạng thái ván chơi mới.
+> Rẽ nhánh từ bước **1.1.4** — Áp dụng khi hệ thống không thể khởi tạo trạng thái ván chơi mới.
 
 | Bước | Actor | Hành động / Phản hồi |
 |------|-------|----------------------|
-| **1.E1.1** | Hệ thống | Phát hiện lỗi trong quá trình khởi tạo trạng thái ván chơi mới tại bước 1.4 (ví dụ: lỗi JavaScript runtime, bộ nhớ không đủ). |
-| **1.E1.2** | Hệ thống | Hiển thị thông báo lỗi "Không thể bắt đầu ván chơi. Vui lòng tải lại trang." tại vị trí trung tâm màn hình. |
-| **1.E1.3** | Hệ thống | Kết thúc không thành công. |
+| **1.4.1** | Hệ thống | Phát hiện lỗi trong quá trình khởi tạo trạng thái ván chơi mới tại bước 1.4 (ví dụ: lỗi JavaScript runtime, bộ nhớ không đủ). |
+| **1.4.2** | Hệ thống | Hiển thị thông báo lỗi "Không thể bắt đầu ván chơi. Vui lòng tải lại trang." tại vị trí trung tâm màn hình. |
+| **1.4.3** | Hệ thống | Kết thúc không thành công. |
 
 ## 9. Quan hệ Use Case (Includes / Extends)
 
@@ -117,6 +122,6 @@ Không có.
 
 **Nguồn & Tham chiếu:**
 - **Nguồn URD:** US-01 (EP-01), US-02 (EP-01) — `document/user-requirements.md`
-- **Use case liên quan:** UC-02 (Đặt tàu) là use case tiếp theo sau khi UC-01 hoàn tất.
+- **Use case liên quan:**  UC-02 (Đặt tàu), được kích hoạt tại bước 1.1.6.
 - **Sơ đồ use case:** `document/use-case-diagram.md`
 - Ván chơi mới không yêu cầu dữ liệu từ trận trước — mỗi lần bắt đầu là phiên sạch hoàn toàn. *(US-01 — Ghi chú)*
