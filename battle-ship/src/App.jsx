@@ -12,7 +12,7 @@ export default function App() {
     const phase = useAppSelector((state) => state.game.phase);
     const errorMessage = useAppSelector((state) => state.game.errorMessage);
 
-    // 1.E1.2 toast: "Không thể bắt đầu ván chơi"
+   // [1.4.2] Hiển thị hộp thoại thông báo lỗi
     // [4.3.1b] Hiển thị hộp thoại thông báo lỗi
     if (phase === PHASES.ERROR) {
         return (
@@ -32,13 +32,14 @@ export default function App() {
 
     return (
         <div className="app">
-            {/*  1.1c render(<StartScreen />)  */}
+            {/*  // [1.1.2] Render giao diện chào mừng (StartScreen)  */}
             {phase === null && <StartScreen/>}
 
-            {/* 1.5 render label "Vs Máy tính" -> StatusBar */}
+            {/*// [1.1.7] Hiển thị StatusBar (hiển thị xuyên suốt ván chơi)*/}
             {phase !== null && <StatusBar/>}
 
             {/* [2.1.2a] Render SetupBoard khi game ở phase thiết lập. */}
+            {/*// [1.1.8] Kích hoạt UC-02 (SetupBoard)*/}
             {(phase === PHASES.SETUP || phase === PHASES.INVALID_PLACEMENT) && <SetupBoard />}
 
             {/* [2.1.8d] Unmount SetupBoard và mount GameBoard khi UC-02 hoàn tất. */}

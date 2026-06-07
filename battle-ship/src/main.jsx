@@ -8,7 +8,7 @@ import './index.css';
 createRoot(document.getElementById('root')).render(
     <StrictMode>
         <Provider store={store}>
-            {/*  1.1b createRoot().render(<App />)  */}
+            {/* [1.1.1] Player truy cập trang chủ trò chơi */}
             <App/>
         </Provider>
     </StrictMode>,

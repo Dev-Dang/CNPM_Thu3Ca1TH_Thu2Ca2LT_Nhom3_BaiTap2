@@ -24,7 +24,7 @@ import {
     calculateComboMultiplier,
 } from '../utils/attackUtils.js';
 
-// 1.4a Trạng thái game ban đầu
+
 const initialState = {
     phase: null,
     playerBoard: createBoard(),
@@ -54,8 +54,8 @@ const gameSlice = createSlice({
          */
         startGame(state,action) {
             try {
-                // 1.4b gán PHASE = SETUP
-                state.phase = PHASES.SETUP;
+                // [1.1.6] Hệ thống gọi startGame, khởi tạo ván chơi mới
+                state.phase = PHASES.SETUP;// [1.1.8] Chuyển giai đoạn thiết lập (UC-02)
                 state.errorMessage = null; // Reset lỗi nếu thành công
                 state.selectedShipId = null; // Reset tàu được chọn
                 state.winner = null; // Reset người thắng
@@ -64,7 +64,7 @@ const gameSlice = createSlice({
                 const difficulty = getDifficultyById(action.payload);
                 state.difficulty = difficulty.id; //lấy độ khó từ giao diện
 
-                // 1.6 Kích hoạt UC-02 (phase = SETUP)
+                
                 // [2.1.1d] Khởi tạo hạm đội Máy tính, Player theo cấu hình của độ khó đã chọn
                 // và thiết lập bố cục ngẫu nhiên cho hạm đội Máy tính.
                 const boardSize = difficulty.boardSize;
@@ -86,13 +86,14 @@ const gameSlice = createSlice({
                 state.comboMultiplier = 1;
                 state.lastScoreDelta = 0;
             } catch (error) {
-                // 1.4.1 ERR Javascript runtime / Out of memory -> stateUpdated(error)
+                // [1.4.1] Phát hiện lỗi khởi tạo
                 // [2.6.1a] Hiển thị lỗi setup và dừng khởi tạo ván chơi.
                 state.errorMessage = "Không thể bắt đầu ván chơi. Vui lòng tải lại trang.";
+                // [1.4.2] Hiển thị thông báo lỗi (thông qua UI đọc state.phase)
                 state.phase = PHASES.ERROR;
                 state.difficulty = null; // Reset độ khó khi có lỗi
                 console.error('FLEET_CONFIG_MISMATCH', error.message);
-
+                // [1.4.3] Kết thúc không thành công (không gọi UC-02)
                 // [2.6.2] Kết thúc thất bại.
                 return;
             }

@@ -9,7 +9,7 @@ export default function StartScreen() {
     const [difficultyId, setDifficultyId] = useState(DEFAULT_DIFFICULTY.id);
     return (
         <>
-            {/* 1.2 render StartScreen với nút "Bắt đầu ván mới" */}
+            {/* // [1.1.2] Render StartScreen (tiêu đề, nút chọn độ khó, nút bắt đầu) */}
             <div className="start-screen">
                 <div className="start-icon">⚓</div>
                 <h1 className="start-title">BATTLESHIP</h1>
@@ -20,6 +20,8 @@ export default function StartScreen() {
                         Chọn độ khó:
                     </label>
                     <div className="difficulty-buttons">
+                        {/* [1.1.3] Player nhấn chọn một trong hai nút độ khó */}
+                        {/* [1.1.4] Hệ thống ghi nhận lựa chọn, nổi bật nút, kích hoạt nút Bắt đầu */}
                         <button
                             className={`diff-btn easy ${difficultyId === DIFFICULTY.EASY.id ? 'active' : ''}`}
                             onClick={() => setDifficultyId(DIFFICULTY.EASY.id)}
@@ -36,7 +38,8 @@ export default function StartScreen() {
                 </div>
 
 
-                {/* 1.3 click "Bắt đầu ván mới"  +  1.4 dispatch(startGame()) */}
+                {/* [1.1.5] Player chọn nút "Bắt đầu ván mới" */}
+                {/* [1.1.6] Hệ thống gọi action startGame */}
                 {/* [2.1.0] Gửi độ khó đã chọn để kích hoạt UC-02 theo đúng cấu hình. */}
                 <button
                     className="start-btn"
