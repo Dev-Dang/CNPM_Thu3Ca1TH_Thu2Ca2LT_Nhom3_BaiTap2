@@ -9,6 +9,7 @@ import ShipList from "./ShipList.jsx";
 import AttackToast from "./AttackToast.jsx"
 import '../styles/game-board.css';
 import '../styles/error.css';
+import { validateCoordinate } from '../utils/attackUtils.js';
 
 export default function GameBoard() {
     const [errorMsg, setErrorMsg] = useState(null);
@@ -45,7 +46,14 @@ export default function GameBoard() {
 
     function handleCellClick(row, col) {
         if (!isClickable) return;
+        
          // [3.1.2] / [3.5.1] Player click vào một ô trên bảng đối thủ.
+        if (!validateCoordinate(row, col, computerBoard)) {
+            setErrorMsg("Ô này đã bị tấn công. Vui lòng chọn ô khác.");
+            setTimeout(() => setErrorMsg(null), 2000);
+            return;
+        }
+
         dispatch(clearError());
         dispatch(playerAttack({row, col}));
     }
