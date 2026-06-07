@@ -36,6 +36,8 @@ const initialState = {
     comboStreak: 0,
     comboMultiplier: 1,
     lastScoreDelta: 0,
+    //thêm độ khó vào 
+    difficulty: null,//thêm trạng thái mới
 };
 
 const gameSlice = createSlice({
@@ -45,18 +47,19 @@ const gameSlice = createSlice({
         /**
          * UC-01: Khởi tạo ván chơi mới.
          */
-        startGame(state) {
+        startGame(state,action) {
             try {
                 // 1.4b gán PHASE = SETUP
                 state.phase = PHASES.SETUP;
                 state.error = null; // Reset lỗi nếu thành công
-
+                state.difficulty = action.payload;//lấy độ khó từ giao diện
                 // [2.E2.1] kiểm tra sizes = {5,4,3,3,2}
                 validateFleetConfig();
             } catch (error) {
                 // 1.E1.1 ERR Javascript runtime / Out of memory -> stateUpdated(error)
                 state.error = "Không thể bắt đầu ván chơi. Vui lòng tải lại trang.";
                 state.phase = null; // Reset state
+                state.difficulty = null; // Reset độ khó khi có lỗi
 
                 // [2.E2.1] error="FLEET_CONFIG_MISMATCH"
                 // [2.E2.2] phase='ERROR', block + ghi log

@@ -15,10 +15,10 @@ const PHASE_LABELS = {
 export default function StatusBar() {
     const dispatch = useAppDispatch();
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-
+    const [newDifficulty, setNewDifficulty] = useState(null);
     // Lấy PHASE từ state 1.4 trả vê
     const phase = useAppSelector((state) => state.game.phase);
-
+    
     const handleNewGameClick = () => {
         // 1.A1.2 render confirm dialog
         setShowConfirmDialog(true);
@@ -27,7 +27,7 @@ export default function StatusBar() {
     // 1.A1.4 Khởi tạo lại ván mới -> dispatch(startGame())
     const handleConfirmNewGame = () => {
         setShowConfirmDialog(false);
-        dispatch(startGame());
+        dispatch(startGame(newDifficulty));
     };
 
     // 1.A2.2 close dialog, ván giữ nguyên
@@ -59,7 +59,24 @@ export default function StatusBar() {
                         <p className="dialog-text">
                             Ván chơi hiện tại sẽ bị hủy. Bạn có chắc muốn bắt đầu ván mới không?
                         </p>
-
+                        {/* --- PHẦN CHỌN ĐỘ KHÓ --- */}
+                        <div className="dialog-difficulty">
+                            <p className="dialog-difficulty-title">Chọn độ khó cho ván mới:</p>
+                            <div className="dialog-difficulty-buttons">
+                                <button 
+                                    className={`dialog-diff-btn easy ${newDifficulty === 'easy' ? 'active' : ''}`}
+                                    onClick={() => setNewDifficulty('easy')}
+                                >
+                                    Easy
+                                </button>
+                                <button 
+                                    className={`dialog-diff-btn normal ${newDifficulty === 'normal' ? 'active' : ''}`}
+                                    onClick={() => setNewDifficulty('normal')}
+                                >
+                                    Normal
+                                </button>
+                            </div>
+                        </div>
                         <div className="dialog-actions">
                             {/* [[A1.3] Xác nhận] */}
                             <button className="dialog-btn confirm" onClick={handleConfirmNewGame}>
