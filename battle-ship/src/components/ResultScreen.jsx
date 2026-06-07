@@ -58,7 +58,8 @@ export default function ResultScreen() {
 
 
     // Bước 5.1.0 & 5.2.0: Kích hoạt tự động lấy dữ liệu trạng thái từ Redux Store
-    const { winner, computerBoard, computerFleet } = useAppSelector((state) => state.game);
+    const { winner, computerBoard, computerFleet, playerFleet, totalShots, totalHits, highScore, isNewHighScore, score } =
+        useAppSelector((s) => s.game);
     
     // Bước 5.1.1, 5.1.2 & 5.2.1, 5.2.2: Kiểm tra điều kiện phân tách Luồng chính / Luồng thay thế
     const isPlayerWinner = winner === WINNER.PLAYER;
@@ -102,6 +103,17 @@ export default function ResultScreen() {
 
                 <div className="rs-modal-body">
                     <hr className="rs-divider" />
+                    {/* High Score */}
+                    {isNewHighScore && (
+                        <div className="rs-new-record">
+                            🏆 Kỷ lục mới! High Score: <strong>{highScore}</strong>
+                        </div>
+                    )}
+                    {!isNewHighScore && (
+                        <div className="rs-highscore">
+                            High Score hiện tại: <strong>{highScore}</strong>
+                        </div>
+                    )}
 
                     {/* Hậu điều kiện 3 (Mục 5) & Bước 5.1.5 / 5.2.5: 
                         Tiết lộ hạm đội của Máy tính để Player xem lại vị trí. 
