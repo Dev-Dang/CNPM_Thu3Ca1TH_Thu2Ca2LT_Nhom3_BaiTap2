@@ -4,35 +4,41 @@ import { useAppSelector } from '../store/index.js';
 import '../styles/attack-toast.css';
 
 const TOAST_CONFIG = {
-    miss:  { label: 'Trượt!', icon: '💨', mod: 'attack-toast--miss' },
-    hit:   { label: 'Trúng!', icon: '🔥', mod: 'attack-toast--hit'  },
-    sunk:  { label: 'Đã nhấn chìm tàu!', icon: '💥', mod: 'attack-toast--sunk' },
+  miss:  { typeLabel: '— trượt mục tiêu —',    sub: 'Không có tàu tại tọa độ này', icon: '💨', mod: 'attack-toast--miss' },
+  hit:   { typeLabel: '▲ xác nhận bắn trúng',  sub: null, icon: '🔥', mod: 'attack-toast--hit'  },
+  sunk:  { typeLabel: '▼▼ tàu địch bị tiêu diệt', sub: null, icon: '💥', mod: 'attack-toast--sunk' },
 };
-//thời gian hiển thị toast
-const DURATION_MS = 2000;
 
-//logic của AttackToast: sẽ lấy thông tin bản đồ khi có sự thay đổi trên bản đồ sẽ hiển thị ra thông báo
+const DURATION_MS = 2000;
 
 export default function AttackToast({ result }) {
     const [visible, setVisible] = useState(false);
     const [current, setCurrent] = useState(null);
     const timerRef = useRef(null);
 
-    // 1. Lấy thông tin 2 bản đồ đấu từ Redux store
-    const playerBoard = useAppSelector((state) => state.game.playerBoard);
-    const computerBoard = useAppSelector((state) => state.game.computerBoard);
+    // Lấy thông tin bản đồ, chuỗi combo và điểm số vừa nhận từ Redux store
+    const { playerBoard, computerBoard, comboStreak, comboMultiplier, lastScoreDelta } = 
+        useAppSelector((state) => state.game);
 
     useEffect(() => {
         if (!result || !TOAST_CONFIG[result]) return;
 
-        // Tắt ngay bộ đếm thời gian cũ và ẩn toast hiện tại để chuẩn bị cho hiệu ứng mới
         clearTimeout(timerRef.current);
         setVisible(false);
 
-        // Ép trình duyệt render lại frame giao diện mới (Reset hoàn toàn Animation)
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
-                setCurrent(TOAST_CONFIG[result]);
+                // Tạo một bản sao cấu hình thông báo để chỉnh sửa nội dung động
+                let toastData = { ...TOAST_CONFIG[result] };
+
+                // Nếu bắn trúng hoặc nhấn chìm tàu, đính kèm thông tin chuỗi combo liên tiếp
+                if (result === 'hit') {
+                    toastData.label = `Trúng! Chuỗi liên tiếp: ${comboStreak} phát (x${comboMultiplier}) +${lastScoreDelta}đ`;
+                } else if (result === 'sunk') {
+                    toastData.label = `Hạ gục tàu! Chuỗi liên tiếp: ${comboStreak} phát +${lastScoreDelta}đ`;
+                }
+
+                setCurrent(toastData);
                 setVisible(true);
 
                 timerRef.current = setTimeout(() => {
@@ -43,8 +49,6 @@ export default function AttackToast({ result }) {
 
         return () => clearTimeout(timerRef.current);
         
-    // 2. THẦN CHÚ Ở ĐÂY: Đưa playerBoard và computerBoard vào mảng phụ thuộc (dependencies)
-    // Mỗi khi bắn, 1 trong 2 bảng thay đổi reference -> useEffect chắc chắn sẽ chạy lại từ đầu!
     }, [result, playerBoard, computerBoard]);
 
     if (!current) return null;
@@ -55,8 +59,15 @@ export default function AttackToast({ result }) {
             role="status"
             aria-live="polite"
         >
+            <div className="attack-toast__stripe" />
+            <div className="attack-toast__icon-wrap">
             <span className="attack-toast__icon">{current.icon}</span>
-            <span className="attack-toast__label">{current.label}</span>
+            </div>
+            <div className="attack-toast__body">
+            <span className="attack-toast__type">{current.typeLabel}</span>
+            {current.sub && <span className="attack-toast__sub">{current.sub}</span>}
+            </div>
+            <div className="attack-toast__ping" />
         </div>,
         document.body
     );

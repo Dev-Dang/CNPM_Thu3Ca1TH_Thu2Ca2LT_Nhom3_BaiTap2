@@ -15,7 +15,7 @@ export default function GameBoard() {
     const dispatch = useAppDispatch();
 
     // [4.2.2a] / [4.1.5a] Nhận trạng thái mới
-    const {phase, playerBoard, playerFleet, computerBoard, computerFleet, lastAttackResult} =
+    const {phase, playerBoard, playerFleet, computerBoard, computerFleet, lastAttackResult, errorMsg, highScore, isNewHighScore, score} =
         useAppSelector((state) => state.game);
 
     // [4.1.1] Nhận lượt từ hệ thống; bắt đầu xử lý. → (phase = CPU_TURN)
@@ -52,9 +52,44 @@ export default function GameBoard() {
 
     return (
         <div className="board-wrapper">
+        {/* High Score bar */}
+        <div className={`hs-bar ${isNewHighScore ? 'hs-bar--new' : ''}`}>
+            <span className="hs-bar__label">
+                {isNewHighScore ? '🏆 Kỷ lục mới!' : '🏆 High Score'}
+            </span>
+            <span className="hs-bar__score">{highScore}</span>
+            <span className="hs-bar__current">
+                Điểm hiện tại: <strong>{score}</strong>
+            </span>
+        </div>
             
             {/* 2. THÊM ATTACK TOAST VÀO GIAO DIỆN VÀ TRUYỀN RESULT */}
             <AttackToast result={lastAttackResult} />
+
+            {/* ==================== BẢNG ĐIỂM & THÔNG TIN COMBO ==================== */}
+            <div className="scoreboard-container">
+                <div className="scoreboard-card score-box">
+                    <span className="scoreboard-title">🏆 TỔNG ĐIỂM</span>
+                    <span className="scoreboard-number">{score}</span>
+                </div>
+                
+                {/* Chỉ hiển thị số điểm vừa cộng nếu phát bắn trúng/chìm tàu */}
+                {lastScoreDelta > 0 && (
+                    <div className="scoreboard-delta animation-pop">
+                        +{lastScoreDelta}đ
+                    </div>
+                )}
+
+                <div className={`scoreboard-card combo-box ${comboStreak > 0 ? 'active-streak' : ''}`}>
+                    <span className="scoreboard-title">🔥 CHUỖI LIÊN TIẾP</span>
+                    <span className="scoreboard-number">
+                        {comboStreak} 
+                        {comboMultiplier > 1 && (
+                            <span className="scoreboard-multiplier"> (x{comboMultiplier})</span>
+                        )}
+                    </span>
+                </div>
+            </div>
 
             {/* [4.3.1b] Hiển thị hộp thoại thông báo lỗi */}
             {errorMsg &&

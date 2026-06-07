@@ -28,3 +28,28 @@
   font-size: 12px;
   color: #a0aec0;
 }
+.hs-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 1rem;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    transition: background 0.3s;
+}
+
+.hs-bar--new {
+    background: rgba(255, 200, 0, 0.2);
+    border: 1px solid gold;
+    animation: hs-pulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes hs-pulse {
+    from { box-shadow: 0 0 4px gold; }
+    to   { box-shadow: 0 0 16px gold; }
+}
+
+.hs-bar__label { font-weight: bold; }
+.hs-bar__score { font-size: 1.2rem; font-weight: bold; color: goldenrod; }
+.hs-bar__current { margin-left: auto; opacity: 0.8; }
