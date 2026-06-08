@@ -3,7 +3,7 @@ import {useAppDispatch, useAppSelector} from '../store/index.js';
 import {playerAttack, clearError, computerAttack, addError} from '../store/gameSlice';
 import {DELAY_MS, PHASES} from '../constants/gameConstants';
 import Grid from './Grid.jsx';
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import {selectAttackCell} from "../utils/computerLogic.js";
 import ShipList from "./ShipList.jsx";
 import AttackToast from "./AttackToast.jsx"
@@ -11,11 +11,13 @@ import '../styles/game-board.css';
 import '../styles/error.css';
 
 export default function GameBoard() {
-    const [errorMsg, setErrorMsg] = useState(null);
+
     const dispatch = useAppDispatch();
 
     // [4.2.2a] / [4.1.5a] Nhận trạng thái mới
-    const {phase, playerBoard, playerFleet, computerBoard, computerFleet, lastAttackResult, errorMsg, highScore, isNewHighScore, score} =
+    const {phase, playerBoard, playerFleet, computerBoard, computerFleet,
+           lastAttackResult, errorMessage, highScore, isNewHighScore,
+           score, lastScoreDelta, comboStreak, comboMultiplier} =
         useAppSelector((state) => state.game);
 
     // [4.1.1] Nhận lượt từ hệ thống; bắt đầu xử lý. → (phase = CPU_TURN)
@@ -29,7 +31,7 @@ export default function GameBoard() {
                 cell = selectAttackCell(playerBoard);
             } catch (error) {
                 // [4.3.1a] Set giá trị Thông báo lỗi
-                setErrorMsg("Kết quả lượt chơi gặp lỗi. Vui lòng tải lại trang.");
+                dispatch(addError({message: "Kết quả lượt chơi gặp lỗi. Vui lòng tải lại trang."}));
             }
 
             if (cell)
@@ -92,10 +94,10 @@ export default function GameBoard() {
             </div>
 
             {/* [4.3.1b] Hiển thị hộp thoại thông báo lỗi */}
-            {errorMsg &&
+            {errorMessage &&
                 <div className="error-screen">
                     <div className="error-message">
-                        <p>{errorMsg}</p>
+                        <p>{errorMessage}</p>
                         <button className="error-reload-btn"
                                 onClick={() => window.location.reload()}>
                             Tải lại trang
