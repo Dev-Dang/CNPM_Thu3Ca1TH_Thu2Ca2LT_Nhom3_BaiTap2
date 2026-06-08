@@ -1,7 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {PHASES, WINNER, CELL_STATE} from '../constants/gameConstants.js';
+import {PHASES, WINNER, CELL_STATE, getDifficultyById} from '../constants/gameConstants.js';
 import {createBoard} from '../utils/boardUtils.js';
-import {createFleet, validateFleetConfig} from '../utils/fleetConfig.js';
+import {createFleet, resetFleet} from '../utils/fleetConfig.js';
 import {
     isValidPlacement,
     placeShipOnBoard,

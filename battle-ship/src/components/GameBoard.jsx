@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import {useAppDispatch, useAppSelector} from '../store/index.js';
-import {playerAttack, clearError, computerAttack, addError} from '../store/gameSlice';
+import {playerAttack, clearError, computerAttack} from '../store/gameSlice';
 import {DELAY_MS, PHASES} from '../constants/gameConstants';
 import Grid from './Grid.jsx';
 import {useEffect, useState} from "react";
